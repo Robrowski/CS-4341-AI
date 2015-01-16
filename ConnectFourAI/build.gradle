@@ -11,12 +11,11 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 // Apply the java plugin to add support for Java
  
- 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-
+sourceCompatibility = 1.8
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -47,11 +46,19 @@ dependencies {
 
 eclipse{
 	project{
+		//Mark as Gradle project for Gradle plugin in case it is installed
+		natures 'org.springsource.ide.eclipse.gradle.core.nature'
+		
 		if (Os.isFamily(Os.FAMILY_WINDOWS)) {
 			buildCommand 'org.eclipse.ui.externaltools.ExternalToolBuilder', LaunchConfigHandle: '<project>/.externalToolBuilders/Gradle-Windows.launch'
 		} else {
 			buildCommand 'org.eclipse.ui.externaltools.ExternalToolBuilder', LaunchConfigHandle: '<project>/.externalToolBuilders/Gradle-Unix.launch'
 		}
+	}
+	
+	classpath{
+		downloadSources = true
+		downloadJavadoc = true //This is false otherwise, we love to read JavaDoc to help use understand libraries :)
 	}
 }
 task randomPlayerJar(type: Jar) {
