@@ -61,6 +61,7 @@ eclipse{
 		downloadJavadoc = true //This is false otherwise, we love to read JavaDoc to help use understand libraries :)
 	}
 }
+
 task randomPlayerJar(type: Jar) {
 	from(sourceSets.main.output) {
 		include "player/RandomPlayer*"
@@ -70,6 +71,20 @@ task randomPlayerJar(type: Jar) {
 	manifest.attributes['Main-Class'] = "player.RandomPlayer"
 	archiveName = "RandomPlayer.jar"
 }
+
+task SamplePlayerJar(type: Jar) {
+	from(sourceSets.main.output) {
+		include "player/SamplePlayer*"
+		include "common"
+	}
+	
+	manifest.attributes['Main-Class'] = "player.SamplePlayer"
+	archiveName = "SamplePlayer.jar"
+}
+
+/** 
+ * Add new tasks above this line!! 
+ */
 
 task allJars(){
 	
