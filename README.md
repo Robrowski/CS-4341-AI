@@ -14,7 +14,7 @@ Have the following:
 
 By command line, go to the root of the eclipse project. If you don't have gradle installed:
 
-* Call `gradlew eclipse`. This will create eclipse project files, etc.
+* Call `gradlew.bat eclipse`. This will create eclipse project files, etc.
 
 Else:
 
