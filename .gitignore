@@ -302,3 +302,8 @@ nbactions.xml
 nb-configuration.xml
 .nb-gradle
 .nb-gradle-properties
+
+
+################
+##  Random
+*_log.txt

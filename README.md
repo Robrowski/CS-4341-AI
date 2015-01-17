@@ -43,9 +43,20 @@ Use the run configurations. Its super easy. Commandline also works if yout want 
 1. Rename the configuration
 1. Pick the **ConnectFourAI** project
 1. Pick the **referee.Referee** Main class
-1. "java -jar JAR1" "java -jar JAR2" 6 7 3 10 10
+1. "java -jar JAR1 args" "java -jar JAR2 args" 6 7 3 10 10
     1. JAR1 and JAR2 should be absolute file paths inside the project
     1. The numbers at the end represent configurations for the game. See the project instructions
+    1. _args_ is optional. See [Aguments for AI Players](#player_args)
+
+
+### <a name='player_args' />Aguments for AI Players
+These arguments can be used for player AI.
+| Arg Number  | Name  | Description  |
+|---|---|---|
+| 0  | Player Name  | The name of a player (so that player jars can be duplicated)  |
+| 1  |   |   |  
+| 2  |   |   | 
+
 
 ### Jar File Locations
 Inside the ConnectFourAI project, the given jars are in the **libs** folder. Generated player jars are located in **build\libs**.
