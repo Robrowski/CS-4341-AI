@@ -8,10 +8,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+// TODO add some timing construct so we can just check how much time we have left at any point during a turn
+
 abstract class AbstractPlayer {
 	protected String playerName = "GiveANameAsAnArgument";
 	protected int width, height, numToWin, playerNumber, timeLimit,
-			opponentNum;
+			opponentNum, playerTurn;
 	private boolean game_over = false;
 
 	private BufferedReader input = new BufferedReader(new InputStreamReader(
@@ -31,16 +33,11 @@ abstract class AbstractPlayer {
 		try {
 			logWriter = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(playerName + "_log.txt"), "utf-8"));
-			logWriter.write("Something");
 		} catch (IOException ex) {
-			// report
+			ex.printStackTrace();
 		}
-		// try {
-		// logWriter = new PrintWriter(playerName + "_log.txt", "UTF-8");
-		// } catch (FileNotFoundException | UnsupportedEncodingException e) {
-		// System.out.println("PROBLEM");
-		// }
-		printlnLog("abstract initialized");
+
+		printlnLog("Abstract initialized");
 
 	}
 
@@ -53,6 +50,7 @@ abstract class AbstractPlayer {
 	protected void run() throws IOException {
 		// Step 1. Send the player name to the Referee
 		System.out.println(playerName);
+		System.out.flush();
 
 		// Step 2. Wait for the game configuration
 		waitForGameConfiguration();
@@ -61,17 +59,16 @@ abstract class AbstractPlayer {
 		// TODO Are we going to make a "Board" class? how to represent?
 
 		// Step 4. If going second, wait for opponent to make a move
-		if (playerNumber == 2) {
+		if (playerNumber != playerTurn) {
 			waitForOpponentsMove();
 		}
 
 		// Step 5. Start main loop (Waiting for move, making move)
 		while (!game_over) { // until game ends
 			// Make a move
-			// TODO make a move!
 			int column = decideNextMove();
-			recordMove(column, playerNumber);
 			sendMove(column);
+			recordMove(column, playerNumber);
 
 			// Wait for opponent to make a move
 			waitForOpponentsMove();
@@ -98,17 +95,30 @@ abstract class AbstractPlayer {
 	 * @throws IOException
 	 */
 	private void waitForGameConfiguration() throws IOException {
-		String[] gameConfig = listenToReferee();
-		if (gameConfig.length != 5)
+		// Read the statement of player numbers
+		String[] player_assignment = listenToReferee();
+		printlnLog("Player assignment received.");
+		if (player_assignment.length < 4) { // names can have spaces....
+			printlnLog("Invalid player assignment given.");
 			return;
+		}
+		playerNumber = (player_assignment[1].equals(playerName)) ? 1 : 2;
+		opponentNum = (playerNumber == 1) ? 2 : 1;
+		printlnLog("Player number: " + playerNumber);
+
+		// Read the game configuration
+		String[] gameConfig = listenToReferee();
+		printlnLog("Game configuration received.");
+		if (gameConfig.length != 5) {
+			printlnLog("Invalid configuration given.");
+			return;
+		}
 
 		height = Integer.parseInt(gameConfig[0]);
 		width = Integer.parseInt(gameConfig[1]);
 		numToWin = Integer.parseInt(gameConfig[2]);
-		playerNumber = Integer.parseInt(gameConfig[3]);
+		playerTurn = Integer.parseInt(gameConfig[3]);
 		timeLimit = Integer.parseInt(gameConfig[4]);
-		opponentNum = (playerNumber == 1) ? 2 : 1;
-		printlnLog("Game config: " + gameConfig);
 	}
 
 	/**
@@ -121,6 +131,7 @@ abstract class AbstractPlayer {
 	 */
 	private void sendMove(int column) {
 		System.out.println(Integer.toString(column) + " 1");
+		System.out.flush();
 	}
 
 	/**
@@ -133,6 +144,7 @@ abstract class AbstractPlayer {
 
 		// If there is only one string received, the game has ended
 		if (opponents_move.length == 1) {
+			// TODO translate game-over codes
 			printlnLog("Game over!");
 			logWriter.close();
 			game_over = true;
@@ -148,12 +160,7 @@ abstract class AbstractPlayer {
 	 * @throws IOException
 	 */
 	private String[] listenToReferee() throws IOException {
-		String[] in = input.readLine().split(" ");
-		if (in.length == 4) {
-			printlnLog("WTF");
-			throw new RuntimeException("WTF");
-		}
-		return in;
+		return input.readLine().split(" ");
 	}
 
 	/**
@@ -164,9 +171,9 @@ abstract class AbstractPlayer {
 	protected void printlnLog(String msg) {
 		// logWriter.println(msg);
 		try {
-			logWriter.write(msg);
+			logWriter.write(msg + "\n");
+			logWriter.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
