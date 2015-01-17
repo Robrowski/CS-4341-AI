@@ -30,7 +30,7 @@ dependencies {
     //compile 'org.slf4j:slf4j-api:1.7.7'
 	
 	compile fileTree(dir: rootDir.toString()+'/libs', includes: ['*.jar']) //db4o jar that isn't on Maven, and any other new dependencies placed in the libs directory
-
+	compile fileTree(dir: rootDir.toString()+'/build/libs', includes: ['*.jar'])
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
@@ -56,24 +56,41 @@ eclipse{
 	}
 }
 
+/** Helper function some day */
+//def compile_jar(class_name ){
+//	from(sourceSets.main.output) {
+//		include "player/**"
+//	}
+//	
+//	manifest.attributes['Class-Path'] = "."
+//	manifest.attributes['Main-Class'] = "player." + class_name
+//	archiveName = class_name + ".jar"
+//}
+
+
+/** Task that makes the RandomPlayer jar */
 task randomPlayerJar(type: Jar) {
+	String class_name = "RandomPlayer"
 	from(sourceSets.main.output) {
-		include "player/RandomPlayer*"
-		include "common"
+		include "player/**"
 	}
 	
-	manifest.attributes['Main-Class'] = "player.RandomPlayer"
-	archiveName = "RandomPlayer.jar"
+	manifest.attributes['Class-Path'] = "."
+	manifest.attributes['Main-Class'] = "player." + class_name
+	archiveName = class_name + ".jar"
 }
 
+
+/** Task that makes the SamplePlayer jar */
 task SamplePlayerJar(type: Jar) {
+	String class_name = "SamplePlayer"
 	from(sourceSets.main.output) {
-		include "player/SamplePlayer*"
-		include "common"
+		include "player/**"
 	}
 	
-	manifest.attributes['Main-Class'] = "player.SamplePlayer"
-	archiveName = "SamplePlayer.jar"
+	manifest.attributes['Class-Path'] = "."
+	manifest.attributes['Main-Class'] = "player." + class_name
+	archiveName = class_name + ".jar"
 }
 
 /** 

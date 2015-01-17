@@ -56,14 +56,16 @@ Inside the ConnectFourAI project, the given jars are in the **libs** folder. Gen
 1. Fill out the overriden methods
 1. In build.gradle above the _task allJars_ declaration, add the following with CLASS_NAME replaced with the name of your class.
 ``` groovy
-task CLASS_NAMEPlayerJar(type: Jar) {
-	from(sourceSets.main.output) {
-		include "player/CLASS_NAME*"
-		include "common"
-	}
-	
-	manifest.attributes['Main-Class'] = "player.CLASS_NAME"
-	archiveName = "CLASS_NAME.jar"
+/** Task that makes the CLASS_NAME jar */
+task CLASS_NAMEJar(type: Jar) {
+  String class_name = "CLASS_NAME"
+  from(sourceSets.main.output) {
+    include "player/**"
+  }
+  
+  manifest.attributes['Class-Path'] = "."
+  manifest.attributes['Main-Class'] = "player." + class_name
+  archiveName = class_name + ".jar"
 }
 ```
 
