@@ -73,6 +73,7 @@ task randomPlayerJar(type: Jar) {
 	String class_name = "RandomPlayer"
 	from(sourceSets.main.output) {
 		include "player/**"
+		include "common/**"
 	}
 	
 	manifest.attributes['Class-Path'] = "."
@@ -86,6 +87,7 @@ task SamplePlayerJar(type: Jar) {
 	String class_name = "SamplePlayer"
 	from(sourceSets.main.output) {
 		include "player/**"
+		include "common/**"
 	}
 	
 	manifest.attributes['Class-Path'] = "."

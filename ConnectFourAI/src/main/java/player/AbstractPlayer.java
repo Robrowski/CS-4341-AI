@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import common.Board;
+import common.FileLogger;
+
 // TODO add some timing construct so we can just check how much time we have left at any point during a turn
 
 abstract class AbstractPlayer {
@@ -20,6 +23,8 @@ abstract class AbstractPlayer {
 			System.in));
 	private Writer logWriter;
 
+	private FileLogger logger;
+	private Board boardGame;
 	/**
 	 * Constructor and argument parser for core Player settings
 	 * 
@@ -30,14 +35,16 @@ abstract class AbstractPlayer {
 			playerName = args[0];
 		}
 
-		try {
-			logWriter = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(playerName + "_log.txt"), "utf-8"));
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		printlnLog("Abstract initialized");
+//		try {
+//			logWriter = new BufferedWriter(new OutputStreamWriter(
+//					new FileOutputStream(playerName + "_log.txt"), "utf-8"));
+//		} catch (IOException ex) {
+//			ex.printStackTrace();
+//		}
+		logger = FileLogger.getInstance();
+		logger.init(playerName);
+		logger.println("Abstract initialized");
+//		boardGame = new Board(6,7);
 
 	}
 
@@ -57,6 +64,8 @@ abstract class AbstractPlayer {
 
 		// Step 3. Initialize game board, game state, etc.
 		// TODO Are we going to make a "Board" class? how to represent?
+		boardGame = new Board(6,7);
+//		printlnLog(boardGame.toString());
 
 		// Step 4. If going second, wait for opponent to make a move
 		if (playerNumber != playerTurn) {
@@ -86,7 +95,7 @@ abstract class AbstractPlayer {
 	private void recordMove(int column, int playerNumber) {
 		// TODO Put the move into the board
 
-		printlnLog("Move made: " + column + " " + playerNumber);
+		logger.println("Move made: " + column + " " + playerNumber);
 	}
 
 	/**
@@ -97,20 +106,20 @@ abstract class AbstractPlayer {
 	private void waitForGameConfiguration() throws IOException {
 		// Read the statement of player numbers
 		String[] player_assignment = listenToReferee();
-		printlnLog("Player assignment received.");
+		logger.println("Player assignment received1.");
 		if (player_assignment.length < 4) { // names can have spaces....
-			printlnLog("Invalid player assignment given.");
+			logger.println("Invalid player assignment given.");
 			return;
 		}
 		playerNumber = (player_assignment[1].equals(playerName)) ? 1 : 2;
 		opponentNum = (playerNumber == 1) ? 2 : 1;
-		printlnLog("Player number: " + playerNumber);
+		logger.println("Player number: " + playerNumber);
 
 		// Read the game configuration
 		String[] gameConfig = listenToReferee();
-		printlnLog("Game configuration received.");
+		logger.println("Game configuration received.");
 		if (gameConfig.length != 5) {
-			printlnLog("Invalid configuration given.");
+			logger.println("Invalid configuration given.");
 			return;
 		}
 
@@ -145,7 +154,7 @@ abstract class AbstractPlayer {
 		// If there is only one string received, the game has ended
 		if (opponents_move.length == 1) {
 			// TODO translate game-over codes
-			printlnLog("Game over!");
+			logger.println("Game over!");
 			logWriter.close();
 			game_over = true;
 			return;
@@ -163,20 +172,6 @@ abstract class AbstractPlayer {
 		return input.readLine().split(" ");
 	}
 
-	/**
-	 * Writes the given message to the appropriate log file
-	 * 
-	 * @param msg
-	 */
-	protected void printlnLog(String msg) {
-		// logWriter.println(msg);
-		try {
-			logWriter.write(msg + "\n");
-			logWriter.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Decide the next move that the player should make.
