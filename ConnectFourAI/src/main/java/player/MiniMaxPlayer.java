@@ -37,6 +37,11 @@ public class MiniMaxPlayer extends AbstractPlayer{
 	 * 
 	 * Currently Recurses through every possibility of moves, 
 	 * up to a certain depth.
+	 * 
+	 * TODO: instead of passing board copies, pass a list of moves instead
+	 * TODO: Consider possibility of using a stack for board and pop changes
+	 * 		when going back up recursion tree.
+	 * 
 	 * @param parentMove The previous move made at a parent state
 	 * @param current The current board state we are looking at
 	 * @param depth the current depth of the tree we are at
