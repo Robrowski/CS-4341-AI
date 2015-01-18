@@ -1,5 +1,6 @@
 package common;
 
+import java.util.List;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -57,11 +58,38 @@ public class FileLogger {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void printList(List lst){
+		println(lst.toString());
+	}
+	
+	/**
+	 * Writes a given board to the appropriate log file 
+	 * formatted similiar to how the referee would print.
+	 * 
+	 * @param board
+	 */
 	public void printBoard(Board board) {
 		if (!active)
 			return;
 
+		int[][] gameBoard = board.getBoard();
+		for (int[] row : gameBoard) {
+			println(Arrays.toString(row));
+		}
+	}
+	
+	/**
+	 * Writes a given board to the appropriate log file 
+	 * formatted similiar to how the referee would print.
+	 * 
+	 * @param board
+	 */
+	public void printBoard(Board board,int depth) {
+		if (!active)
+			return;
+		String tabs = "";
+				
 		int[][] gameBoard = board.getBoard();
 		for (int[] row : gameBoard) {
 			println(Arrays.toString(row));

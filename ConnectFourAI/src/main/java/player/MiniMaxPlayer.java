@@ -13,7 +13,6 @@ public class MiniMaxPlayer extends AbstractPlayer{
 	
 	public MiniMaxPlayer(String[] args) {
 		super(args);
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -24,8 +23,10 @@ public class MiniMaxPlayer extends AbstractPlayer{
 
 	@Override
 	protected int decideNextMove() {
-		// TODO Auto-generated method stub
-		MoveHolder next = miniMax(-1, this.gameBoard,0,this.playerNumber);
+		Board copy = new Board(this.gameBoard);
+		
+		MoveHolder next = miniMax(-1, copy,0,this.playerNumber);
+		logger.println("next move is: " + next.getCol());
 		return next.getCol();
 	}
 	
@@ -45,11 +46,16 @@ public class MiniMaxPlayer extends AbstractPlayer{
 	 * @return The decided best move
 	 */
 	private MoveHolder miniMax(int parentMove, Board current, int depth, int player){
+		logger.println("current depth is: " + depth);
+		logger.println("current board is: ");
+		logger.printBoard(current);
 		List<Integer> moves = current.getPossibleMoves();
-		
+		logger.println("possible moves are: ");
+		logger.printList(moves);
 		/** If depth limit reached or If no possible moves, 
 		 * we can procede to estimate the current board's value */
 		if (depth == MAXDEPTH || moves.size() == 0){
+			logger.println("depth = max, stopping");
 			int estimate = estimateBoard(current);
 			MoveHolder moveEval = new MoveHolder(parentMove,estimate);
 			return moveEval;
@@ -67,8 +73,9 @@ public class MiniMaxPlayer extends AbstractPlayer{
 					
 					/** Run miniMax on the next layer of the tree, which
 					 * is to maximize the move of the opponent. */
+					int newDepth = depth + 1;
 					MoveHolder minMaxMove = miniMax(move,newBoard,
-											depth++,this.opponentNum);
+											newDepth,this.opponentNum);
 					
 					if (minMaxMove.getValue() > bestMove.getValue()){
 						/** 
@@ -96,8 +103,9 @@ public class MiniMaxPlayer extends AbstractPlayer{
 					
 					/** Run miniMax on the next layer of the tree, which
 					 * is to maximize the move of the opponent. */
+					int newDepth = depth + 1;
 					MoveHolder minMaxMove = miniMax(move,newBoard,
-											depth++,this.playerNumber);
+											newDepth,this.playerNumber);
 					if (minMaxMove.getValue() < bestMove.getValue()){
 						/** 
 						 * set the best move value to the better move
