@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.List;
 
 public class FileLogger {
 
@@ -28,7 +29,13 @@ public class FileLogger {
 		return instance;
 	}
 
-	public void init(String playerName) {
+	public void init(String playerName, List<String> args) {
+		// Check for the '--no-logs' argument
+		if (args.contains("--no-logs")) {
+			FileLogger.deactivate();
+			// Don't return because the logger can still be activated later
+		}
+
 		try {
 			logWriter = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(playerName + "_log.txt"), "utf-8"));
@@ -39,7 +46,16 @@ public class FileLogger {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		println("logger initialized");
+		println("Logger initialized");
+	}
+
+	/** Close up the log writing service */
+	public void close() {
+		try {
+			logWriter.close();
+		} catch (IOException e) {
+			logException(e);
+		}
 	}
 
 	/**

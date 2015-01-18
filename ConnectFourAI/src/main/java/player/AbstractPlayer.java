@@ -8,6 +8,7 @@ import java.util.List;
 
 import common.Board;
 import common.FileLogger;
+import common.timing.CountDownTimer;
 
 // TODO add some timing construct so we can just check how much time we have left at any point during a turn
 
@@ -35,8 +36,14 @@ abstract class AbstractPlayer {
 	/** A logger for recording debug and game state information */
 	protected FileLogger logger;
 
+	/** The count down timer used to keep time during moves */
+	CountDownTimer ctd;
+
 	/** A game board to keep track of moves played */
 	protected Board gameBoard;
+
+	/** A copy of the arguments input into the program */
+	private List<String> argsList;
 
 	/**
 	 * Constructor and argument parser for core Player settings
@@ -53,14 +60,8 @@ abstract class AbstractPlayer {
 		} else {
 			playerName = "DefaultPlayerName";
 		}
-
-		// Check for the '--no-logs' argument
-		if (argsList.contains("--no-logs")) {
-			FileLogger.deactivate();
-		}
-
 		logger = FileLogger.getInstance();
-		logger.init(playerName);
+		logger.init(playerName, argsList);
 		logger.println("AbstractPlayer initialized. ");
 	}
 
@@ -75,6 +76,8 @@ abstract class AbstractPlayer {
 
 			// Step 2. Wait for the game configuration
 			waitForGameConfiguration();
+			ctd = CountDownTimer.getInstance();
+			ctd.init(playerName, timeLimit, argsList);
 
 			// Step 3. Initialize game board, game state, etc.
 			gameBoard = new Board(width, height);
@@ -86,13 +89,18 @@ abstract class AbstractPlayer {
 
 			// Step 5. Start main loop (Make a move, wait for opponent's move)
 			while (!game_over) {
+				ctd.start();
 				sendMove(decideNextMove());
+				ctd.stop();
+				logger.println("Time taken making a move: "
+						+ CountDownTimer.elapsed_milli + " milliseconds");
 				waitForOpponentsMove();
 			}
 		} catch (Exception e) {
 			logger.logException(e);
-			return; // TODO graceful failure
 		}
+		logger.close();
+		ctd.close();
 	}
 
 	/**
