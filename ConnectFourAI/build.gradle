@@ -67,6 +67,18 @@ eclipse{
 //	archiveName = class_name + ".jar"
 //}
 
+/** Task that makes the MiniMaxPlayer jar */
+task miniMaxPlayerJar(type: Jar) {
+	String class_name = "MiniMaxPlayer"
+	from(sourceSets.main.output) {
+		include "player/**"
+		include "common/**"
+	}
+	
+	manifest.attributes['Class-Path'] = "."
+	manifest.attributes['Main-Class'] = "player." + class_name
+	archiveName = class_name + ".jar"
+}
 
 /** Task that makes the RandomPlayer jar */
 task randomPlayerJar(type: Jar) {
