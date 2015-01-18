@@ -30,10 +30,18 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Board class constructor for making a deep copy of another board
+	 * @param toCopy
+	 */
 	public Board(Board toCopy){
-		this.board = toCopy.board;
 		this.height = toCopy.height;
 		this.width = toCopy.width;
+		this.board = new int[height][width];
+		
+		for (int i = 0; i < height; i++)
+		     board[i] = Arrays.copyOf(toCopy.board[i], width);
+		
 	}
 	
 	/**
