@@ -23,8 +23,9 @@ abstract class AbstractPlayer {
 			System.in));
 	private Writer logWriter;
 
-	private FileLogger logger;
-	private Board boardGame;
+	protected FileLogger logger;
+	private Board gameBoard;
+	
 	/**
 	 * Constructor and argument parser for core Player settings
 	 * 
@@ -35,16 +36,9 @@ abstract class AbstractPlayer {
 			playerName = args[0];
 		}
 
-//		try {
-//			logWriter = new BufferedWriter(new OutputStreamWriter(
-//					new FileOutputStream(playerName + "_log.txt"), "utf-8"));
-//		} catch (IOException ex) {
-//			ex.printStackTrace();
-//		}
 		logger = FileLogger.getInstance();
 		logger.init(playerName);
 		logger.println("Abstract initialized");
-//		boardGame = new Board(6,7);
 
 	}
 
@@ -64,8 +58,7 @@ abstract class AbstractPlayer {
 
 		// Step 3. Initialize game board, game state, etc.
 		// TODO Are we going to make a "Board" class? how to represent?
-		boardGame = new Board(6,7);
-//		printlnLog(boardGame.toString());
+		gameBoard = new Board(width,height);
 
 		// Step 4. If going second, wait for opponent to make a move
 		if (playerNumber != playerTurn) {
@@ -94,8 +87,11 @@ abstract class AbstractPlayer {
 	 */
 	private void recordMove(int column, int playerNumber) {
 		// TODO Put the move into the board
-
+		gameBoard.addPiece(column, playerNumber);
+		
 		logger.println("Move made: " + column + " " + playerNumber);
+		logger.println("column " + column + 
+				" has " + gameBoard.countPiecesInCol(column) + " pieces");
 	}
 
 	/**

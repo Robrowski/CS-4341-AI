@@ -26,7 +26,7 @@ public class RandomPlayer extends AbstractPlayer {
 		}
 
 		int randomNum = rng.nextInt(width);
-
+		
 		// TODO Check that 'randomNum' is a valid move
 
 		return randomNum;
