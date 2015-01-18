@@ -1,6 +1,8 @@
 package common;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Board {
 
@@ -28,6 +30,12 @@ public class Board {
 		}
 	}
 	
+	public Board(Board toCopy){
+		this.board = toCopy.board;
+		this.height = toCopy.height;
+		this.width = toCopy.width;
+	}
+	
 	/**
 	 * Adds a player piece to the board in the given column.
 	 * 
@@ -46,7 +54,7 @@ public class Board {
 	
 	/**
 	 * Method for returning the number of pieces currently filled
-	 * in a column of the board
+	 * in a column of the board.
 	 * 
 	 * @param col The column to count
 	 * @return int The number of pieces in a column
@@ -59,7 +67,30 @@ public class Board {
 		return count;
 	}
 	
+	/**
+	 * Method for producing all the columns that 
+	 * are valid possible moves at the current board state.
+	 * 
+	 * @return a List of the possible moves
+	 */
+	public  List<Integer> getPossibleMoves(){
+		List<Integer> moves = new ArrayList<Integer>();
+		for (int col = 0; col < width; col++){
+			int colPieces = countPiecesInCol(col);
+			if (colPieces != 0) { moves.add(col); }
+		}
+		
+		return moves;
+	}
+	
+	/**
+	 *  Getter Method for retrieving raw current board state data
+	 *  
+	 * @return int[][] representing the board
+	 */
 	public int[][] getBoard(){
 		return board;
 	}
+	
+	
 }

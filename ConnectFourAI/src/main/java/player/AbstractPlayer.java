@@ -24,7 +24,7 @@ abstract class AbstractPlayer {
 	private Writer logWriter;
 
 	protected FileLogger logger;
-	private Board gameBoard;
+	protected Board gameBoard;
 	
 	/**
 	 * Constructor and argument parser for core Player settings
@@ -57,7 +57,6 @@ abstract class AbstractPlayer {
 		waitForGameConfiguration();
 
 		// Step 3. Initialize game board, game state, etc.
-		// TODO Are we going to make a "Board" class? how to represent?
 		gameBoard = new Board(width,height);
 
 		// Step 4. If going second, wait for opponent to make a move
@@ -86,7 +85,6 @@ abstract class AbstractPlayer {
 	 *            the player number/ID
 	 */
 	private void recordMove(int column, int playerNumber) {
-		// TODO Put the move into the board
 		gameBoard.addPiece(column, playerNumber);
 		
 		logger.println("Move made: " + column + " " + playerNumber);
