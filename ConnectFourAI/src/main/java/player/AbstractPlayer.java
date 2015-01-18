@@ -1,31 +1,41 @@
 package player;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import common.Board;
 import common.FileLogger;
 
 // TODO add some timing construct so we can just check how much time we have left at any point during a turn
 
+/**
+ * The AbstractPlayer is intended to be the AI player framework for the game of
+ * Connect-N. This framework handles all move logic, basic logging,
+ * communication with the referee, basic time keeping and makes is so a new
+ * Player just needs to decide moves.
+ */
 abstract class AbstractPlayer {
-	protected String playerName = "GiveANameAsAnArgument";
+	/** The name of the current player */
+	protected String playerName;
+
+	/** Game configuration details */
 	protected int width, height, numToWin, playerNumber, timeLimit,
-			opponentNum, playerTurn;
+			opponentNum, firstTurn;
+
+	/** State of the game */
 	private boolean game_over = false;
 
+	/** A buffer read to read standard I/O for communication with the referee */
 	private BufferedReader input = new BufferedReader(new InputStreamReader(
 			System.in));
-	private Writer logWriter;
 
+	/** A logger for recording debug and game state information */
 	protected FileLogger logger;
+
+	/** A game board to keep track of moves played */
 	protected Board gameBoard;
-	
+
 	/**
 	 * Constructor and argument parser for core Player settings
 	 * 
@@ -34,19 +44,17 @@ abstract class AbstractPlayer {
 	public AbstractPlayer(String[] args) {
 		if (args.length == 1) {
 			playerName = args[0];
+		} else {
+			playerName = "DefaultPlayerName";
 		}
 
 		logger = FileLogger.getInstance();
 		logger.init(playerName);
-		logger.println("Abstract initialized");
-
+		logger.println("AbstractPlayer initialized. ");
 	}
 
 	/**
-	 * Take the args input into the program and runs the AI
-	 * 
-	 * @param args
-	 *            straight from the main function
+	 * Runs the AI through a game of Connect-N
 	 */
 	protected void run() throws IOException {
 		// Step 1. Send the player name to the Referee
@@ -57,21 +65,16 @@ abstract class AbstractPlayer {
 		waitForGameConfiguration();
 
 		// Step 3. Initialize game board, game state, etc.
-		gameBoard = new Board(width,height);
+		gameBoard = new Board(width, height);
 
 		// Step 4. If going second, wait for opponent to make a move
-		if (playerNumber != playerTurn) {
+		if (playerNumber != firstTurn) {
 			waitForOpponentsMove();
 		}
 
-		// Step 5. Start main loop (Waiting for move, making move)
-		while (!game_over) { // until game ends
-			// Make a move
-			int column = decideNextMove();
-			sendMove(column);
-			recordMove(column, playerNumber);
-
-			// Wait for opponent to make a move
+		// Step 5. Start main loop (Make a move, wait for opponent's move)
+		while (!game_over) {
+			sendMove(decideNextMove());
 			waitForOpponentsMove();
 		}
 	}
@@ -86,10 +89,10 @@ abstract class AbstractPlayer {
 	 */
 	private void recordMove(int column, int playerNumber) {
 		gameBoard.addPiece(column, playerNumber);
-		
-		logger.println("Move made: " + column + " " + playerNumber);
-		logger.println("column " + column + 
-				" has " + gameBoard.countPiecesInCol(column) + " pieces");
+
+		logger.println("\nMove made: " + column + " " + playerNumber);
+		logger.println("column " + column + " has "
+				+ gameBoard.countPiecesInCol(column) + " pieces");
 		logger.printBoard(gameBoard);
 	}
 
@@ -101,11 +104,13 @@ abstract class AbstractPlayer {
 	private void waitForGameConfiguration() throws IOException {
 		// Read the statement of player numbers
 		String[] player_assignment = listenToReferee();
-		logger.println("Player assignment received1.");
+		logger.println("Player assignment received.");
 		if (player_assignment.length < 4) { // names can have spaces....
-			logger.println("Invalid player assignment given.");
+			logger.println("!!!!! Invalid player assignment given.");
 			return;
 		}
+
+		// The name of player 1 will be the second string - as documented
 		playerNumber = (player_assignment[1].equals(playerName)) ? 1 : 2;
 		opponentNum = (playerNumber == 1) ? 2 : 1;
 		logger.println("Player number: " + playerNumber);
@@ -114,14 +119,15 @@ abstract class AbstractPlayer {
 		String[] gameConfig = listenToReferee();
 		logger.println("Game configuration received.");
 		if (gameConfig.length != 5) {
-			logger.println("Invalid configuration given.");
+			logger.println("!!!!! Invalid configuration given.");
 			return;
 		}
 
+		// Read the components of the configuration as documented
 		height = Integer.parseInt(gameConfig[0]);
 		width = Integer.parseInt(gameConfig[1]);
 		numToWin = Integer.parseInt(gameConfig[2]);
-		playerTurn = Integer.parseInt(gameConfig[3]);
+		firstTurn = Integer.parseInt(gameConfig[3]);
 		timeLimit = Integer.parseInt(gameConfig[4]);
 	}
 
@@ -136,6 +142,7 @@ abstract class AbstractPlayer {
 	private void sendMove(int column) {
 		System.out.println(Integer.toString(column) + " 1");
 		System.out.flush();
+		recordMove(column, playerNumber);
 	}
 
 	/**
@@ -150,7 +157,6 @@ abstract class AbstractPlayer {
 		if (opponents_move.length == 1) {
 			// TODO translate game-over codes
 			logger.println("Game over!");
-			logWriter.close();
 			game_over = true;
 			return;
 		}
@@ -167,11 +173,10 @@ abstract class AbstractPlayer {
 		return input.readLine().split(" ");
 	}
 
-
 	/**
 	 * Decide the next move that the player should make.
 	 * 
-	 * @return
+	 * @return the column number to place a piece
 	 */
 	abstract protected int decideNextMove();
 }
