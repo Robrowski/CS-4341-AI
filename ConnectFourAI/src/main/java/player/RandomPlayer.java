@@ -28,7 +28,7 @@ public class RandomPlayer extends AbstractPlayer {
 	 * @param args
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		RandomPlayer rp = new RandomPlayer(args);
 		rp.run();
 	}

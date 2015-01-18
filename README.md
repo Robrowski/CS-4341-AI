@@ -50,13 +50,14 @@ Use the run configurations. Its super easy. Commandline also works if yout want 
 
 
 ### <a name='player_args' />Aguments for AI Players
-These arguments can be used for player AI.
+These arguments can be used for player AI. A "?" denotes an optional argument that can go anywhere
+
 | Arg Number  | Name  | Description  |
 |---|---|---|
 | 0  | Player Name  | The name of a player (so that player jars can be duplicated)  |
 | 1  |   |   |  
 | 2  |   |   | 
-
+| ?  | --no-logs | Turns off the logging feature |
 
 ### Jar File Locations
 Inside the ConnectFourAI project, the given jars are in the **libs** folder. Generated player jars are located in **build\libs**.

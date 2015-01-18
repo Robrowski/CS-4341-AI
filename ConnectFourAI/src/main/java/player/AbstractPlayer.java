@@ -3,6 +3,8 @@ package player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 import common.Board;
 import common.FileLogger;
@@ -42,10 +44,19 @@ abstract class AbstractPlayer {
 	 * @param args
 	 */
 	public AbstractPlayer(String[] args) {
-		if (args.length == 1) {
+		// Parse the arguments
+		List<String> argsList = Arrays.asList(args);
+
+		// First argument is expected to be a player name
+		if (args.length >= 1) {
 			playerName = args[0];
 		} else {
 			playerName = "DefaultPlayerName";
+		}
+
+		// Check for the '--no-logs' argument
+		if (argsList.contains("--no-logs")) {
+			FileLogger.deactivate();
 		}
 
 		logger = FileLogger.getInstance();
@@ -56,26 +67,31 @@ abstract class AbstractPlayer {
 	/**
 	 * Runs the AI through a game of Connect-N
 	 */
-	protected void run() throws IOException {
-		// Step 1. Send the player name to the Referee
-		System.out.println(playerName);
-		System.out.flush();
+	protected void run() {
+		try {
+			// Step 1. Send the player name to the Referee
+			System.out.println(playerName);
+			System.out.flush();
 
-		// Step 2. Wait for the game configuration
-		waitForGameConfiguration();
+			// Step 2. Wait for the game configuration
+			waitForGameConfiguration();
 
-		// Step 3. Initialize game board, game state, etc.
-		gameBoard = new Board(width, height);
+			// Step 3. Initialize game board, game state, etc.
+			gameBoard = new Board(width, height);
 
-		// Step 4. If going second, wait for opponent to make a move
-		if (playerNumber != firstTurn) {
-			waitForOpponentsMove();
-		}
+			// Step 4. If going second, wait for opponent to make a move
+			if (playerNumber != firstTurn) {
+				waitForOpponentsMove();
+			}
 
-		// Step 5. Start main loop (Make a move, wait for opponent's move)
-		while (!game_over) {
-			sendMove(decideNextMove());
-			waitForOpponentsMove();
+			// Step 5. Start main loop (Make a move, wait for opponent's move)
+			while (!game_over) {
+				sendMove(decideNextMove());
+				waitForOpponentsMove();
+			}
+		} catch (Exception e) {
+			logger.logException(e);
+			return; // TODO graceful failure
 		}
 	}
 
