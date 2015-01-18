@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.Arrays;
 
 public class FileLogger {
 
@@ -48,6 +49,13 @@ public class FileLogger {
 			logWriter.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void printBoard(Board board){
+		int[][] gameBoard = board.getBoard();
+		for (int[] row : gameBoard){
+			println(Arrays.toString(row));
 		}
 	}
 

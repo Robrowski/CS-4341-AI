@@ -92,6 +92,7 @@ abstract class AbstractPlayer {
 		logger.println("Move made: " + column + " " + playerNumber);
 		logger.println("column " + column + 
 				" has " + gameBoard.countPiecesInCol(column) + " pieces");
+		logger.printBoard(gameBoard);
 	}
 
 	/**

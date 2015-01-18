@@ -58,4 +58,8 @@ public class Board {
 		}
 		return count;
 	}
+	
+	public int[][] getBoard(){
+		return board;
+	}
 }
