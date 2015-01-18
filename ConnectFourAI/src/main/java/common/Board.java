@@ -77,7 +77,8 @@ public class Board {
 		List<Integer> moves = new ArrayList<Integer>();
 		for (int col = 0; col < width; col++){
 			int colPieces = countPiecesInCol(col);
-			if (colPieces != 0) { moves.add(col); }
+			logger.println("pieces in " + col + ": " + colPieces);
+			if (colPieces != height) { moves.add(col); }
 		}
 		
 		return moves;
