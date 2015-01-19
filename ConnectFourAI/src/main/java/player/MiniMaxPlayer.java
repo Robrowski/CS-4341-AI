@@ -13,18 +13,11 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	private boolean alpha_beta_enabled = false;
 	private int tabbed_logging_activated = 0;
 	/** The maximum depth we will allow for mini max */
-	int MAXDEPTH = 4;
+	private int MAXDEPTH = 4;
 	Random random = new Random();
 
-	/**
-	 * The current max for a given move across all branches Intended to be the
-	 * highest valued move for the next immediate move. Depth = 0 choice
-	 */
-	int max_value_found;
-	/**
-	 * Min value moved found so far (unused)
-	 */
-	int min_value_found;
+	/* The following are statistics on each move */
+	private int leaves_visited, branches_made;
 
 	public MiniMaxPlayer(String[] args) {
 		super(args);
@@ -35,6 +28,18 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		}
 		if (argsList.contains("--tabbed-logging")) {
 			tabbed_logging_activated = 1;
+		}
+		// Read for a max depth and the next number after it
+		if (argsList.contains("MAXDEPTH=")) {
+			String max_depth_arg = argsList
+					.get(argsList.indexOf("MAXDEPTH=") + 1);
+			try {
+				MAXDEPTH = Integer.parseInt(max_depth_arg);
+				logger.println("Max depth set to " + MAXDEPTH);
+			} catch (NumberFormatException mne) {
+				logger.println("Couldn't read the argument for MAXDEPTH= ... arg = "
+						+ max_depth_arg);
+			}
 		}
 	}
 
@@ -47,10 +52,13 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	protected int decideNextMove() {
 		Board copy = new Board(this.gameBoard);
 
-		min_value_found = Integer.MAX_VALUE;
-		max_value_found = Integer.MIN_VALUE;
-		MoveHolder next = miniMax(-1, copy, 0, this.playerNumber);
+		leaves_visited = 0;
+		branches_made = 0;
+		MoveHolder next = miniMax(-1, copy, 0, this.playerNumber,
+				Integer.MIN_VALUE);
 		logger.println("next move is: " + next.getCol());
+		logger.println("Leaves: " + leaves_visited + "   Branches: "
+				+ branches_made);
 		return next.getCol();
 	}
 
@@ -79,27 +87,36 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 * @return The decided best move
 	 */
 	private MoveHolder miniMax(int parentMove, Board current, int depth,
-			int player) {
-		logger.println("Current depth is: " + depth, tabbed_logging_activated
-				* depth);
+			int player, int bestValue) {
+		// logger.println("Current depth is: " + depth, tabbed_logging_activated
+		// * depth);
 		List<Integer> moves = current.getPossibleMoves();
+		// TODO basic move ordering by ordering the Moves from center to edge.
+		// EX. We think the center might have better moves, so we check center
+		// moves first.
+
+		// TODO Popping out might be best to consider first because it will get
+		// sneaky wins that other students' AI's won't get.
+
 		/**
 		 * If depth limit reached or If no possible moves, we can procede to
 		 * estimate the current board's value
 		 */
 		if (depth == MAXDEPTH || moves.size() == 0) {
-			logger.println("depth = max, stopping at move " + parentMove,
-					tabbed_logging_activated * depth);
+			// logger.println("depth = max, stopping at move " + parentMove,
+			// tabbed_logging_activated * depth);
+			this.leaves_visited += 1;
 			int estimate = estimateBoard(current, depth);
 			MoveHolder moveEval = new MoveHolder(parentMove, estimate);
 			return moveEval;
 		} else {
-			if (player == this.playerNumber) { // maximizing score
-				// Even number depth moves?
+			int newDepth = depth + 1; // Depth of the proposed moves
+			this.branches_made += 1; // recording number of branches made
 
-				int bestValue = Integer.MIN_VALUE;
-				MoveHolder bestMove = new MoveHolder(parentMove, bestValue);
-				int newDepth = depth + 1; // Depth of the proposed moves
+			if (player == this.playerNumber) { // maximizing score
+
+				MoveHolder bestMove = new MoveHolder(parentMove,
+						Integer.MIN_VALUE);
 				for (int move : moves) {
 					/**
 					 * copy the current board in order to split and add a new
@@ -113,7 +130,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					 * maximize the move of the opponent.
 					 */
 					MoveHolder minMaxMove = miniMax(move, newBoard, newDepth,
-							this.opponentNum);
+							this.opponentNum, bestMove.getValue());
 
 					if (minMaxMove.getValue() > bestMove.getValue()) {
 						/**
@@ -125,12 +142,16 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						bestMove.setValue(minMaxMove.getValue());
 						bestMove.setCol(move);
 
-						if (alpha_beta_enabled && newDepth == 1) {
-							// Keep track for AB pruning
-							// - simple pruning from the top branch
-							// TODO keep track of MAX/MIN at each branching?
-							max_value_found = Math
-									.max(max_value_found, bestMove.getValue());
+						// AB pruning - break out when the current max is
+						// less than the Best found for the branch above because
+						// it won't be picked as min anyways
+						if (alpha_beta_enabled
+								&& bestMove.getValue() > bestValue
+								&& depth != 0) {
+							logger.println("AB PRUNNED. Min already chosen: "
+									+ bestValue,
+									tabbed_logging_activated * depth);
+							break;
 						}
 					}
 				}
@@ -141,9 +162,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 				return bestMove;
 			} else { // minimizing score
 
-				int bestValue = Integer.MAX_VALUE;
-				MoveHolder bestMove = new MoveHolder(parentMove, bestValue);
-				int newDepth = depth + 1; // Depth of the proposed moves
+				MoveHolder bestMove = new MoveHolder(parentMove,
+						Integer.MAX_VALUE);
 				for (int move : moves) {
 					/**
 					 * copy the current board in order to split and add a new
@@ -157,7 +177,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					 * maximize the move of the opponent.
 					 */
 					MoveHolder minMaxMove = miniMax(move, newBoard, newDepth,
-							this.playerNumber);
+							this.playerNumber, bestMove.getValue());
 
 					if (minMaxMove.getValue() < bestMove.getValue()) {
 						/**
@@ -171,11 +191,13 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						bestMove.setValue(minMaxMove.getValue());
 						bestMove.setCol(move);
 
-						// Basic AB pruning - break out when the current min is
-						// less than the Best found for the top branch
+						// AB pruning - break out when the current min is
+						// less than the Best found for the branch above because
+						// it won't be picked as max anyways
 						if (alpha_beta_enabled
-								&& bestMove.getValue() < this.max_value_found) {
-							logger.println("AB PRUNNED",
+								&& bestMove.getValue() < bestValue) {
+							logger.println("AB PRUNNED. Max already chosen: "
+									+ bestValue,
 									tabbed_logging_activated * depth);
 							break;
 						}

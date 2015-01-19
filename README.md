@@ -59,6 +59,16 @@ These arguments can be used for player AI. A "?" denotes an optional argument th
 | 2  |   |   | 
 | ?  | --no-logs | Turns off the logging feature |
 
+
+MiniMax Arguments
+
+| Arg Number  | Name  | Description  |
+|---|---|---|
+| ? | --alpha-beta | Enables alpha beta pruning |
+| ? | --tabbed-logging | Enables tabbed logging to make the log look like a tree |
+| ? | MAXDEPTH= | Set the max depth for MiniMax. A number must follow a space after this arg |
+
+
 ### Jar File Locations
 Inside the ConnectFourAI project, the given jars are in the **libs** folder. Generated player jars are located in **build\libs**.
 

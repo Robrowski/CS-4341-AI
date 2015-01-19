@@ -10,8 +10,6 @@ import common.Board;
 import common.FileLogger;
 import common.timing.CountDownTimer;
 
-// TODO add some timing construct so we can just check how much time we have left at any point during a turn
-
 /**
  * The AbstractPlayer is intended to be the AI player framework for the game of
  * Connect-N. This framework handles all move logic, basic logging,
