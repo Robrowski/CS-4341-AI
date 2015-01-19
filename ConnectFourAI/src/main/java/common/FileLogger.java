@@ -1,6 +1,5 @@
 package common;
 
-import java.util.List;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -75,6 +74,20 @@ public class FileLogger {
 		}
 	}
 	
+	/**
+	 * Writes the given message to the appropriate log file with tabs
+	 * 
+	 * @param msg
+	 *            the message
+	 * @param tabs
+	 *            the number of tabs
+	 */
+	public void println(String msg, int tabs) {
+		for (int i = 0; i < tabs; i++)
+			msg = "    " + msg;
+		println(msg);
+	}
+
 	public void printList(List lst){
 		println(lst.toString());
 	}
@@ -104,7 +117,6 @@ public class FileLogger {
 	public void printBoard(Board board,int depth) {
 		if (!active)
 			return;
-		String tabs = "";
 				
 		int[][] gameBoard = board.getBoard();
 		for (int[] row : gameBoard) {
@@ -142,4 +154,8 @@ public class FileLogger {
 		}
 
 	}
+
+	/* The following functions are utilities specific to the minimax algorithm */
+	// TODO asynchronously generate a tree...
+	// TODO generate a tree image..
 }

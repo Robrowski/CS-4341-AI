@@ -11,6 +11,7 @@ import common.MoveHolder;
 public class MiniMaxPlayer extends AbstractPlayer {
 
 	private boolean alpha_beta_enabled = false;
+	private int tabbed_logging_activated = 0;
 	/** The maximum depth we will allow for mini max */
 	int MAXDEPTH = 4;
 	Random random = new Random();
@@ -31,6 +32,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		List<String> argsList = Arrays.asList(args);
 		if (argsList.contains("--alpha-beta")) {
 			alpha_beta_enabled = true;
+		}
+		if (argsList.contains("--tabbed-logging")) {
+			tabbed_logging_activated = 1;
 		}
 	}
 
@@ -76,15 +80,17 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 */
 	private MoveHolder miniMax(int parentMove, Board current, int depth,
 			int player) {
-		logger.println("current depth is: " + depth);
+		logger.println("Current depth is: " + depth, tabbed_logging_activated
+				* depth);
 		List<Integer> moves = current.getPossibleMoves();
 		/**
 		 * If depth limit reached or If no possible moves, we can procede to
 		 * estimate the current board's value
 		 */
 		if (depth == MAXDEPTH || moves.size() == 0) {
-			logger.println("depth = max, stopping at move " + parentMove);
-			int estimate = estimateBoard(current);
+			logger.println("depth = max, stopping at move " + parentMove,
+					tabbed_logging_activated * depth);
+			int estimate = estimateBoard(current, depth);
 			MoveHolder moveEval = new MoveHolder(parentMove, estimate);
 			return moveEval;
 		} else {
@@ -129,9 +135,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					}
 				}
 				logger.println("best score for depth (max) " + depth + " : "
-						+ bestMove.getValue());
+						+ bestMove.getValue(), tabbed_logging_activated * depth);
 				logger.println("best move  for depth (max) " + depth + " : "
-						+ bestMove.getCol());
+						+ bestMove.getCol(), tabbed_logging_activated * depth);
 				return bestMove;
 			} else { // minimizing score
 
@@ -160,7 +166,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * value before recursing to eventually use the first
 						 * split, NOT the last move in the tree.
 						 */
-						logger.println("best found!");
+						logger.println("best found!", tabbed_logging_activated
+								* depth);
 						bestMove.setValue(minMaxMove.getValue());
 						bestMove.setCol(move);
 
@@ -168,16 +175,17 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						// less than the Best found for the top branch
 						if (alpha_beta_enabled
 								&& bestMove.getValue() < this.max_value_found) {
-							logger.println("AB PRUNNED");
+							logger.println("AB PRUNNED",
+									tabbed_logging_activated * depth);
 							break;
 						}
 					}
 
 				}
 				logger.println("best score for depth (min) " + depth + " : "
-						+ bestMove.getValue());
+						+ bestMove.getValue(), tabbed_logging_activated * depth);
 				logger.println("best move  for depth (min) " + depth + " : "
-						+ bestMove.getCol());
+						+ bestMove.getCol(), tabbed_logging_activated * depth);
 				return bestMove;
 			}
 		}
@@ -193,10 +201,11 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 *            The board to estimate
 	 * @return
 	 */
-	private int estimateBoard(Board current) {
+	private int estimateBoard(Board current, int depth) {
 		Random random = new Random();
 		int randomNumber = (random.nextInt(20));
-		logger.println("at leaf. score is: " + randomNumber);
+		logger.println("at leaf. score is: " + randomNumber,
+				tabbed_logging_activated * depth);
 
 		return randomNumber;
 	}
