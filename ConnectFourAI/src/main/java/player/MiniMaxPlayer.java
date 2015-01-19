@@ -1,6 +1,7 @@
 package player;
 
 import java.util.List;
+import java.util.Random;
 import java.io.IOException;
 
 import common.Board;
@@ -9,7 +10,8 @@ import common.MoveHolder;
 public class MiniMaxPlayer extends AbstractPlayer{
 
 	/** The maximum depth we will allow for mini max*/
-	int MAXDEPTH = 2;
+	int MAXDEPTH = 4;
+	Random random = new Random();
 	
 	public MiniMaxPlayer(String[] args) {
 		super(args);
@@ -52,15 +54,11 @@ public class MiniMaxPlayer extends AbstractPlayer{
 	 */
 	private MoveHolder miniMax(int parentMove, Board current, int depth, int player){
 		logger.println("current depth is: " + depth);
-		logger.println("current board is: ");
-		logger.printBoard(current);
 		List<Integer> moves = current.getPossibleMoves();
-		logger.println("possible moves are: ");
-		logger.printList(moves);
 		/** If depth limit reached or If no possible moves, 
 		 * we can procede to estimate the current board's value */
 		if (depth == MAXDEPTH || moves.size() == 0){
-			logger.println("depth = max, stopping");
+			logger.println("depth = max, stopping at move " + parentMove);
 			int estimate = estimateBoard(current);
 			MoveHolder moveEval = new MoveHolder(parentMove,estimate);
 			return moveEval;
@@ -68,8 +66,8 @@ public class MiniMaxPlayer extends AbstractPlayer{
 		else{
 			if (player == this.playerNumber){ // maximizing score
 				
-				int bestValue = 0; // init to - infinity
-				MoveHolder bestMove = new MoveHolder();
+				int bestValue = -11; // init to - infinity
+				MoveHolder bestMove = new MoveHolder(parentMove,bestValue);
 				for (int move : moves){
 					/** copy the current board in order to split and
 					 * add a new board state to the tree. */
@@ -94,12 +92,14 @@ public class MiniMaxPlayer extends AbstractPlayer{
 						bestMove.setCol(move);
 					}
 				}
+				logger.println("best score for depth (max) " + depth + " : " + bestMove.getValue());
+				logger.println("best move  for depth (max) " + depth + " : " + bestMove.getCol());
 				return bestMove;
 			}
 			else { // minimizing score
 				
-				int bestValue = 0; // init to + infinity
-				MoveHolder bestMove = new MoveHolder();
+				int bestValue = 11; // init to + infinity
+				MoveHolder bestMove = new MoveHolder(parentMove,bestValue);
 				for (int move : moves){
 					/** copy the current board in order to split and
 					 * add a new board state to the tree. */
@@ -111,6 +111,7 @@ public class MiniMaxPlayer extends AbstractPlayer{
 					int newDepth = depth + 1;
 					MoveHolder minMaxMove = miniMax(move,newBoard,
 											newDepth,this.playerNumber);
+					
 					if (minMaxMove.getValue() < bestMove.getValue()){
 						/** 
 						 * set the best move value to the better move
@@ -119,10 +120,13 @@ public class MiniMaxPlayer extends AbstractPlayer{
 						 * eventually use the first split, NOT the 
 						 * last move in the tree.
 						 */
+						logger.println("best found!");
 						bestMove.setValue(minMaxMove.getValue());
 						bestMove.setCol(move);
 					}
 				}
+				logger.println("best score for depth (min) " + depth + " : " + bestMove.getValue());
+				logger.println("best move  for depth (min) " + depth + " : " + bestMove.getCol());
 				return bestMove;
 			}
 		}
@@ -137,7 +141,11 @@ public class MiniMaxPlayer extends AbstractPlayer{
 	 * @return
 	 */
 	private int estimateBoard(Board current){
-		return 0;
+		Random random=new Random();
+		int randomNumber=(random.nextInt(20));
+		logger.println("at leaf. score is: " + randomNumber);
+
+		return randomNumber;
 	}
 
 }

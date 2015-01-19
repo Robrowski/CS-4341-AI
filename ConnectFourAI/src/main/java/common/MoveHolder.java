@@ -8,8 +8,8 @@ public class MoveHolder {
 	public MoveHolder(){
 	}
 	
-	public MoveHolder(int player, int col) {
-		this.player = player;
+	public MoveHolder(int col, int estimate) {
+		this.val = estimate;
 		this.col = col;
 	}
 
