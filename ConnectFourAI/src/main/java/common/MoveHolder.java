@@ -1,13 +1,18 @@
 package common;
 
 public class MoveHolder {
-	public int player = 0;
-	public int col = 0;
-	public int val = 0;
+	private int player = 0;
+	private int col = 0;
+	private int val = 0;
+	private Move m = Move.DROP;
 
 	public MoveHolder(){
 	}
 	
+	public MoveHolder(int col) {
+		this.col = col;
+	}
+
 	public MoveHolder(int col, int estimate) {
 		this.val = estimate;
 		this.col = col;
@@ -53,6 +58,21 @@ public class MoveHolder {
 	 */
 	public void setValue(int moveValue) {
 		this.val = moveValue;
+	}
+
+	public Move getMove() {
+		return m;
+	}
+
+	/**
+	 * Returns 'this' for ease of use
+	 * 
+	 * @param m
+	 * @return
+	 */
+	public MoveHolder setMove(Move m) {
+		this.m = m;
+		return this;
 	}
 	
 	

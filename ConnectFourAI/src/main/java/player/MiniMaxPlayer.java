@@ -49,17 +49,17 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	}
 
 	@Override
-	protected int decideNextMove() {
+	protected MoveHolder decideNextMove() {
 		Board copy = new Board(this.gameBoard);
 
 		leaves_visited = 0;
 		branches_made = 0;
-		MoveHolder next = miniMax(-1, copy, 0, this.playerNumber,
+		MoveHolder next = miniMax(null, copy, 0, this.playerNumber,
 				Integer.MIN_VALUE);
 		logger.println("next move is: " + next.getCol());
 		logger.println("Leaves: " + leaves_visited + "   Branches: "
 				+ branches_made);
-		return next.getCol();
+		return next;
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 * Consider possibility of using a stack for board and pop changes when
 	 * going back up recursion tree.
 	 * 
-	 * @param parentMove
+	 * @param move2
 	 *            The previous move made at a parent state
 	 * @param current
 	 *            The current board state we are looking at
@@ -86,11 +86,13 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 * 
 	 * @return The decided best move
 	 */
-	private MoveHolder miniMax(int parentMove, Board current, int depth,
+	private MoveHolder miniMax(MoveHolder parent_move, Board current,
+			int depth,
 			int player, int bestValue) {
 		// logger.println("Current depth is: " + depth, tabbed_logging_activated
 		// * depth);
-		List<Integer> moves = current.getPossibleMoves();
+		List<MoveHolder> moves = current.getPossibleMoves(player);
+
 		// TODO basic move ordering by ordering the Moves from center to edge.
 		// EX. We think the center might have better moves, so we check center
 		// moves first.
@@ -107,23 +109,22 @@ public class MiniMaxPlayer extends AbstractPlayer {
 			// tabbed_logging_activated * depth);
 			this.leaves_visited += 1;
 			int estimate = estimateBoard(current, depth);
-			MoveHolder moveEval = new MoveHolder(parentMove, estimate);
-			return moveEval;
+			parent_move.setValue(estimate);
+			return parent_move;
 		} else {
 			int newDepth = depth + 1; // Depth of the proposed moves
 			this.branches_made += 1; // recording number of branches made
 
 			if (player == this.playerNumber) { // maximizing score
 
-				MoveHolder bestMove = new MoveHolder(parentMove,
-						Integer.MIN_VALUE);
-				for (int move : moves) {
+				MoveHolder bestMove = new MoveHolder(-1, Integer.MIN_VALUE);
+				for (MoveHolder move : moves) {
 					/**
 					 * copy the current board in order to split and add a new
 					 * board state to the tree.
 					 */
 					Board newBoard = new Board(current);
-					newBoard.addPiece(move, player);
+					newBoard.applyMove(move, player);
 
 					/**
 					 * Run miniMax on the next layer of the tree, which is to
@@ -139,8 +140,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * value before recursing to eventually use the first
 						 * split, NOT the last move in the tree.
 						 */
-						bestMove.setValue(minMaxMove.getValue());
-						bestMove.setCol(move);
+						logger.println("best found!", tabbed_logging_activated
+								* depth);
+						bestMove = minMaxMove;
 
 						// AB pruning - break out when the current max is
 						// less than the Best found for the branch above because
@@ -158,19 +160,19 @@ public class MiniMaxPlayer extends AbstractPlayer {
 				logger.println("best score for depth (max) " + depth + " : "
 						+ bestMove.getValue(), tabbed_logging_activated * depth);
 				logger.println("best move  for depth (max) " + depth + " : "
-						+ bestMove.getCol(), tabbed_logging_activated * depth);
+						+ bestMove.getCol() + " " + bestMove.getMove(),
+						tabbed_logging_activated * depth);
 				return bestMove;
 			} else { // minimizing score
 
-				MoveHolder bestMove = new MoveHolder(parentMove,
-						Integer.MAX_VALUE);
-				for (int move : moves) {
+				MoveHolder bestMove = new MoveHolder(-1, Integer.MAX_VALUE);
+				for (MoveHolder move : moves) {
 					/**
 					 * copy the current board in order to split and add a new
 					 * board state to the tree.
 					 */
 					Board newBoard = new Board(current);
-					newBoard.addPiece(move, player);
+					newBoard.applyMove(move, player);
 
 					/**
 					 * Run miniMax on the next layer of the tree, which is to
@@ -188,8 +190,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 */
 						logger.println("best found!", tabbed_logging_activated
 								* depth);
-						bestMove.setValue(minMaxMove.getValue());
-						bestMove.setCol(move);
+						bestMove = minMaxMove;
 
 						// AB pruning - break out when the current min is
 						// less than the Best found for the branch above because

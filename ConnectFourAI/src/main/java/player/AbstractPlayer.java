@@ -8,6 +8,8 @@ import java.util.List;
 
 import common.Board;
 import common.FileLogger;
+import common.Move;
+import common.MoveHolder;
 import common.timing.CountDownTimer;
 
 /**
@@ -109,12 +111,12 @@ abstract class AbstractPlayer {
 	 * @param playerNumber
 	 *            the player number/ID
 	 */
-	private void recordMove(int column, int playerNumber) {
-		gameBoard.addPiece(column, playerNumber);
+	private void recordMove(MoveHolder move, int playerNumber) {
+		gameBoard.applyMove(move, playerNumber);
 
-		logger.println("\nMove made: " + column + " " + playerNumber);
-		logger.println("column " + column + " has "
-				+ gameBoard.countPiecesInCol(column) + " pieces");
+		logger.println("\nMove made: " + move.getCol() + " " + playerNumber);
+		logger.println("column " + move.getCol() + " has "
+				+ gameBoard.countPiecesInCol(move.getCol()) + " pieces");
 		logger.printBoard(gameBoard);
 	}
 
@@ -156,15 +158,13 @@ abstract class AbstractPlayer {
 	/**
 	 * Sends a move to the referee
 	 * 
-	 * TODO Support the "popping out" move
-	 * 
 	 * @param column
 	 *            the column number to play in
 	 */
-	private void sendMove(int column) {
-		System.out.println(Integer.toString(column) + " 1");
+	private void sendMove(MoveHolder move) {
+		System.out.println(Integer.toString(move.getCol()) + " 1");
 		System.out.flush();
-		recordMove(column, playerNumber);
+		recordMove(move, playerNumber);
 	}
 
 	/**
@@ -182,7 +182,12 @@ abstract class AbstractPlayer {
 			game_over = true;
 			return;
 		}
-		recordMove(Integer.parseInt(opponents_move[0]), opponentNum);
+		MoveHolder move = new MoveHolder(Integer.parseInt(opponents_move[0]));
+		if (opponents_move[1].equals("0")) {
+			move.setMove(Move.POP);
+		}
+		
+		recordMove(move, opponentNum);
 	}
 
 	/**
@@ -200,5 +205,5 @@ abstract class AbstractPlayer {
 	 * 
 	 * @return the column number to place a piece
 	 */
-	abstract protected int decideNextMove();
+	abstract protected MoveHolder decideNextMove();
 }

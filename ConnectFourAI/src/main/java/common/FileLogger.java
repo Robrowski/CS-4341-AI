@@ -103,8 +103,8 @@ public class FileLogger {
 			return;
 
 		int[][] gameBoard = board.getBoard();
-		for (int[] row : gameBoard) {
-			println(Arrays.toString(row));
+		for (int r = board.height - 1; r >= 0; r--) {
+			println(Arrays.toString(gameBoard[r]));
 		}
 	}
 	
@@ -115,6 +115,7 @@ public class FileLogger {
 	 * @param board
 	 */
 	public void printBoard(Board board,int depth) {
+		println("Depth = " + depth);
 		if (!active)
 			return;
 				

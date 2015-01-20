@@ -3,6 +3,8 @@ package player;
 import java.io.IOException;
 import java.util.Random;
 
+import common.MoveHolder;
+
 /**
  * This Connect-N AI picks a random column for each of its moves.
  * 
@@ -34,7 +36,7 @@ public class RandomPlayer extends AbstractPlayer {
 	}
 
 	@Override
-	protected int decideNextMove() {
+	protected MoveHolder decideNextMove() {
 		// Fancy wait statement
 		try {
 			Thread.sleep(1000);
@@ -46,6 +48,6 @@ public class RandomPlayer extends AbstractPlayer {
 
 		// TODO Check that 'randomNum' is a valid move
 
-		return randomNum;
+		return new MoveHolder(randomNum);
 	}
 }
