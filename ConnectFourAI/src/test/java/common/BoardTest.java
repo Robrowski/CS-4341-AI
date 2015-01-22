@@ -11,7 +11,7 @@ public class BoardTest {
 	Board board;
 	final int height = 6;
 	final int width = 7;
-	final int EMPTY = 9;
+	final int EMPTY = Board.EMPTY;
 	final int P1 = 1;
 	final int P2 = 2;
 
@@ -166,11 +166,109 @@ public class BoardTest {
 	// --- Pops, late game, etc
 
 	@Test
-	public void test_applyMove_detectWin() {
+	public void test_applyMove_detectVerticalWin() {
+		add_helper(1, P2);
+		add_helper(2, P2);
 		add_helper(0, P1);
 		add_helper(0, P1);
 		assertEquals(Board.WIN, add_helper(0, P1));
+	}
 
+	@Test
+	public void test_applyMove_detectHorizontalWin() {
+		add_helper(0, P1);
+		add_helper(0, P2);
+		add_helper(1, P1);
+		add_helper(1, P2);
+		assertEquals(Board.WIN, add_helper(2, P1));
+	}
+
+	@Test
+	public void test_applyMove_detectHorizontalWin2() {
+		add_helper(width - 1, P1);
+		add_helper(width - 2, P1);
+		assertEquals(Board.WIN, add_helper(width - 3, P1));
+	}
+
+	@Test
+	public void test_applyMove_detectRDiagonalWin() {
+		add_helper(0, P1); // 0,0
+		add_helper(1, P2); // 0,1
+		add_helper(1, P1); // 1,1
+		add_helper(2, P2); // 0,2
+		add_helper(2, P2); // 1,2
+		assertEquals(Board.WIN, add_helper(2, P1)); // 2,2
+	}
+
+	@Test
+	public void test_applyMove_detectRDiagonalWin2() {
+		add_helper(0, P2);
+		add_helper(0, P1); // 1,0
+
+		add_helper(1, P1);
+		add_helper(1, P2); // 1,1
+		add_helper(1, P1); // 2,1
+
+		add_helper(2, P1);
+		add_helper(2, P2); // 1,2
+		add_helper(2, P1); // 2,2
+		assertEquals(Board.WIN, add_helper(2, P1)); // 3,2
+	}
+
+	@Test
+	public void test_applyMove_detectLDiagonalWin() {
+		add_helper(5, P1); // 0,5
+
+		add_helper(4, P2); // 0,4
+		add_helper(4, P1); // 1,4
+
+		add_helper(3, P2); // 0,3
+		add_helper(3, P2); // 1,3
+		assertEquals(Board.WIN, add_helper(3, P1)); // 2,3
+	}
+
+	@Test
+	public void test_applyMove_detectPopWin() {
+		add_helper(5, P2);
+		add_helper(5, P2);
+
+		add_helper(4, P1);
+		add_helper(4, P2);
+
+		add_helper(3, P2);
+		add_helper(3, P1);
+		add_helper(3, P2);
+
+		assertEquals(Board.WIN, board.applyMove(new MoveHolder(3).setMove(
+				Move.POP).setPlayer(2)));
+	}
+
+	@Test
+	public void test_applyMove_detectPopWinLOSS() {
+		add_helper(5, P1);
+		add_helper(5, P2);
+
+		add_helper(4, P1);
+		add_helper(4, P2);
+
+		add_helper(3, P2);
+		add_helper(3, P1);
+		add_helper(3, P2);
+
+		assertEquals(Board.LOSS, board.applyMove(new MoveHolder(3).setMove(
+				Move.POP).setPlayer(2)));
+	}
+
+	@Test
+	public void test_applyMove_detectPopLoss() {
+		add_helper(5, P1);
+
+		add_helper(4, P2);
+		add_helper(4, P1);
+
+		add_helper(3, P1);
+		assertEquals(Board.LOSS, board.applyMove(new MoveHolder(4).setMove(
+				Move.POP).setPlayer(2)));
 	}
 
 	/**
@@ -180,7 +278,7 @@ public class BoardTest {
 	 * @param player
 	 */
 	private int add_helper(int col, int player) {
-		int result = board.applyMove(new MoveHolder(col), player);
+		int result = board.applyMove(new MoveHolder(col).setPlayer(player));
 
 		// Confirm that there is a piece in that column matching the player
 		assertEquals("The piece was not placed properly...", player,

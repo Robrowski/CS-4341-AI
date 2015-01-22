@@ -10,6 +10,7 @@ public class Board {
 	final static int SUCCESS = 0;
 	final static int WIN = 1;
 	final static int LOSS = -1;
+	final static int EMPTY = 9;
 
 	private int[][] board;
 	int height;
@@ -22,8 +23,8 @@ public class Board {
 	private FileLogger logger = FileLogger.getInstance();
 
 	/**
-	 * Board class constructor. Initializes a 2D array board with values of 9,
-	 * as to match the behavior the referee uses when printing.
+	 * Board class constructor. Initializes a 2D array board with values of
+	 * EMPTY, as to match the behavior the referee uses when printing.
 	 * 
 	 * @param width
 	 *            The width of the board.
@@ -37,7 +38,7 @@ public class Board {
 		this.board = new int[height][width];
 
 		for (int[] row : board) {
-			Arrays.fill(row, 9);
+			Arrays.fill(row, EMPTY);
 		}
 	}
 
@@ -68,13 +69,25 @@ public class Board {
 	 *            The player placing the piece
 	 * @return boolean representing success to place the piece
 	 */
-	private boolean addPiece(int col, int player) {
-		int rowToPlace = countPiecesInCol(col);
+	private boolean addPiece(MoveHolder move) {
+		int rowToPlace = countPiecesInCol(move.getCol());
 		if (rowToPlace != height) {
-			board[rowToPlace][col] = player;
+			board[rowToPlace][move.getCol()] = move.getPlayer();
+			move.setRow(rowToPlace);
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Applies a move stored in a MoveHolder
+	 * 
+	 * @param move
+	 * @return0 implies success, 1 implies victory for player, -1 implies
+	 *          victory for opponent, -2 implies failure to place
+	 */
+	public int applyMove(MoveHolder move) {
+		return applyMove(move, move.getPlayer());
 	}
 
 	/**
@@ -86,25 +99,197 @@ public class Board {
 	 *         victory for opponent, -2 implies failure to place
 	 */
 	public int applyMove(MoveHolder move, int player) {
-		boolean successful = true;
-		int game_state = 0;
+		move.setPlayer(player);
 		switch (move.getMove()) {
 		case DROP:
-			successful = addPiece(move.getCol(), player);
-			// Detect victory+
-			// set the game state accordingly
+			// Try to add the piece
+			if (!addPiece(move))
+				return FAILURE_TO_PLACE;
+
+			// Check for victories
+			if (detect_win(move) == 1)
+				return WIN;
 			break;
 		case POP:
+			// Try to pop the piece and adjust the column
+			if (!popPiece(move.getCol(), player))
+				return FAILURE_TO_PLACE;
 
-			successful = popPiece(move.getCol(), player);
-			// Detect end game
+			// Check each piece for a victory
+			boolean isWin = false;
+			for (int r = 0; r < height && board[r][move.getCol()] != EMPTY; r++) {
+				MoveHolder fake_move = new MoveHolder(move.getCol());
+				fake_move.setPlayer(getPiece(r, move.getCol()));
+				fake_move.setRow(r);
 
-			// set the game_state accordingly
+
+				int result = detect_win(fake_move);
+				if (result == WIN && player != fake_move.getPlayer())
+					return LOSS; // Always report a loss when the opponent wins.
+									// We hate ties
+				else if (result == WIN)
+					isWin = true; // Don't exit early because we could lose
+			}
+			if (isWin)
+				return WIN;
 			break;
 		}
-		if (!successful)
-			return FAILURE_TO_PLACE;
-		return game_state;
+
+		// Update scores because a piece was successfully placed or popped
+		update_scores(move);
+
+		return SUCCESS;
+	}
+
+	/**
+	 * Given a move, update any internal scores that may be of interest
+	 * 
+	 * @param move
+	 *            with row, column, owner and POP/DROP information
+	 */
+	private void update_scores(MoveHolder move) {
+		// TODO Override this in your extensions
+
+	}
+
+	/**
+	 * Detects a win or loss from a given move (assumed to be a DROP)
+	 * 
+	 * @param move
+	 * @return
+	 */
+	private int detect_win(MoveHolder move) {
+		// count pieces in each direction
+		int vert = countVertical(move);
+		int hori = countHorizontal(move);
+		int ldiag = countLDiagonal(move);
+		int rdiag = countRDiagonal(move);
+
+		// TODO could evaluate HOW MANY wins here
+
+		return ((vert >= numToWin) || (hori >= numToWin)
+				|| (ldiag >= numToWin) || (rdiag >= numToWin)) ? WIN : SUCCESS;
+	}
+
+	/**
+	 * counts how many pieces there are in a row right diagonally from a given
+	 * move
+	 * 
+	 * Right diagonal means sloping up
+	 * 
+	 * @param move
+	 * @return
+	 */
+	private int countRDiagonal(MoveHolder move) {
+		int num_pieces = 1; // the piece placed
+		int r = move.getRow();
+		int c = move.getCol();
+
+		// Count left
+		for (int i = -1; ; i--) {
+			if (r + i < 0 || c + i < 0)// off the board
+				break;
+			if (board[r + i][c + i] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		// Count Right
+		for (int i = 1; ; i++) {
+			if (r + i == height || c + i == width)// off the board
+				break;
+			if (board[r + i][c + i] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		return num_pieces;
+	}
+
+	/**
+	 * counts how many pieces there are in a row left diagonally from a given
+	 * move
+	 * 
+	 * Left diagonal means sloping down
+	 * 
+	 * @param move
+	 * @return
+	 */
+	private int countLDiagonal(MoveHolder move) {
+		int num_pieces = 1; // the piece placed
+		int r = move.getRow();
+		int c = move.getCol();
+
+		// Count left
+		for (int i = 1;; i++) {
+			if (r + i == height || c - i < 0)// off the board
+				break;
+			if (board[r + i][c - i] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		// Count Right
+		for (int i = 1;; i++) {
+			if (r - i < 0 || c + i == width)// off the board
+				break;
+			if (board[r - i][c + i] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		return num_pieces;
+	}
+
+	/**
+	 * counts how many pieces there are in a row horizontally from a given move
+	 * 
+	 * @param move
+	 * @return
+	 */
+	private int countHorizontal(MoveHolder move) {
+		int num_pieces = 1; // the piece placed
+
+		// Count left
+		for (int c = move.getCol() - 1; c >= 0; c--) {
+			if (board[move.getRow()][c] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		// Count right
+		for (int c = move.getCol() + 1; c < width; c++) {
+			if (board[move.getRow()][c] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		return num_pieces;
+	}
+
+	/**
+	 * counts how many pieces there are in a row vertically from a given move
+	 * 
+	 * @param move
+	 * @return
+	 */
+	private int countVertical(MoveHolder move) {
+		int num_pieces = 1; // the piece placed
+
+		for (int r = move.getRow() - 1; r >= 0; r--) {
+			if (board[r][move.getCol()] == move.getPlayer())
+				num_pieces++;
+			else
+				break;
+		}
+
+		return num_pieces;
 	}
 
 	/**
@@ -129,7 +314,7 @@ public class Board {
 		for (int r = 0; r < height - 1; r++) {
 			board[r][col] = board[r + 1][col];
 		}
-		board[height - 1][col] = 9; // top is empty
+		board[height - 1][col] = EMPTY; // top is empty
 
 		// Record the usage
 		if (player == 1) {
@@ -164,7 +349,7 @@ public class Board {
 	public int countPiecesInCol(int col) {
 		// Optimized assuming most columns will be almost empty
 		for (int row = 0; row < height; row++) {
-			if (board[row][col] == 9) {
+			if (board[row][col] == EMPTY) {
 				return row;
 			}
 		}
@@ -183,8 +368,8 @@ public class Board {
 		// Possible drop moves
 		int top_row = height - 1;
 		for (int col = 0; col < width; col++) {
-			if (board[top_row][col] == 9) {
-				moves.add(new MoveHolder(col));
+			if (board[top_row][col] == EMPTY) {
+				moves.add(new MoveHolder(col).setPlayer(player));
 			}
 		}
 
@@ -211,18 +396,18 @@ public class Board {
 	}
 
 	/**
-	 * Gets the piece that is at the top of a column. Returns 9 if no piece is
-	 * in that column
+	 * Gets the piece that is at the top of a column. Returns EMPTY if no piece
+	 * is in that column
 	 * 
 	 * @param col
 	 * @return
 	 */
 	public int getTopPiece(int col) {
 		for (int r = height - 1; r >= 0; r--) {
-			if (board[r][col] != 9)
+			if (board[r][col] != EMPTY)
 				return board[r][col];
 		}
-		return 9;
+		return EMPTY;
 	}
 
 }

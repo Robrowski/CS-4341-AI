@@ -4,6 +4,7 @@ public class MoveHolder {
 	private int player = 0;
 	private int col = 0;
 	private int val = 0;
+	private int row = -1;
 	private Move m = Move.DROP;
 
 	public MoveHolder(){
@@ -28,8 +29,9 @@ public class MoveHolder {
 	/**
 	 * @param player the player to set
 	 */
-	public void setPlayer(int player) {
+	public MoveHolder setPlayer(int player) {
 		this.player = player;
+		return this;
 	}
 
 	/**
@@ -74,7 +76,24 @@ public class MoveHolder {
 		this.m = m;
 		return this;
 	}
-	
-	
+
+	/**
+	 * The row that the piece ended up in
+	 * 
+	 * @return
+	 */
+	public int getRow() {
+		return row;
+	}
+
+	/**
+	 * The row that the piece ended up in. Intended to only be set inside the
+	 * Board class
+	 * 
+	 * @return
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
 
 }
