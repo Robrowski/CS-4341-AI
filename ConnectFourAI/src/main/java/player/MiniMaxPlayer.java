@@ -126,23 +126,24 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					Board newBoard = new Board(current);
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
+					if (move_result == Board.LOSS) {
+						logger.println("Not taking a pop loss",
+								tabbed_logging_activated * newDepth);
+						continue; // Continue through the loop
+					}
 					if (move_result == Board.WIN) {
 						logger.println("WIN FOUND", tabbed_logging_activated
-								* depth);
-						minMaxMove = move.setValue(Integer.MAX_VALUE - depth
+								* newDepth);
+						bestMove = move.setValue(Integer.MAX_VALUE - depth
 								* 100); // GREAT!!
+						break;
 					} else {
 						/**
 						 * Run miniMax on the next layer of the tree, which is
 						 * to maximize the move of the opponent.
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
-								this.playerNumber, bestMove.getValue());
-					}
-					if (move_result == Board.LOSS) {
-						logger.println("Not taking a loss",
-								tabbed_logging_activated * depth);
-						continue; // Continue through the loop
+								this.opponentNum, bestMove.getValue());
 					}
 
 					if (minMaxMove.getValue() > bestMove.getValue()) {
@@ -184,11 +185,17 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					Board newBoard = new Board(current);
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
+					if (move_result == Board.LOSS) {
+						logger.println("Not taking a pop loss",
+								tabbed_logging_activated * newDepth);
+						continue; // Continue through the loop
+					}
 					if (move_result == Board.WIN) {
 						logger.println("WIN FOUND", tabbed_logging_activated
-								* depth);
-						minMaxMove = move.setValue(Integer.MIN_VALUE + depth
+								* newDepth);
+						bestMove = move.setValue(Integer.MIN_VALUE + depth
 								* 100); // GREAT!!
+						break;
 					} else {
 						/**
 						 * Run miniMax on the next layer of the tree, which is
@@ -197,11 +204,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						minMaxMove = miniMax(move, newBoard, newDepth,
 								this.playerNumber, bestMove.getValue());
 					}
-					if (move_result == Board.LOSS) {
-						logger.println("Not taking a loss",
-								tabbed_logging_activated * depth);
-						continue; // Continue through the loop
-					}
+
 
 					if (minMaxMove.getValue() < bestMove.getValue()) {
 						/**
