@@ -80,7 +80,7 @@ abstract class AbstractPlayer {
 			ctd.init(playerName, timeLimit, argsList);
 
 			// Step 3. Initialize game board, game state, etc.
-			gameBoard = new Board(width, height);
+			gameBoard = new Board(width, height, numToWin);
 
 			// Step 4. If going second, wait for opponent to make a move
 			if (playerNumber != firstTurn) {
