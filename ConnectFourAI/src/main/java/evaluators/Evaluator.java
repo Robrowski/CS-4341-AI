@@ -18,4 +18,8 @@ public class Evaluator {
 		}
 		return total_score;
 	}
+	
+	public Feature[] getFeatures(){
+		return features;
+	}
 }
