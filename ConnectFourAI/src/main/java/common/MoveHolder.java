@@ -58,8 +58,9 @@ public class MoveHolder {
 	/**
 	 * @param moveValue the moveValue to set
 	 */
-	public void setValue(int moveValue) {
+	public MoveHolder setValue(int moveValue) {
 		this.val = moveValue;
+		return this;
 	}
 
 	public Move getMove() {

@@ -179,6 +179,17 @@ abstract class AbstractPlayer {
 		if (opponents_move.length == 1) {
 			// TODO translate game-over codes
 			logger.println("Game over!");
+			switch (opponents_move[0]) {
+			case "-1":
+				logger.println("I WON");
+				break;
+			case "-2":
+				logger.println("I LOST");
+				break;
+			case "-3":
+				logger.println("I TIED");
+				break;
+			}
 			game_over = true;
 			return;
 		}

@@ -124,14 +124,26 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					 * board state to the tree.
 					 */
 					Board newBoard = new Board(current);
-					newBoard.applyMove(move, player);
-
-					/**
-					 * Run miniMax on the next layer of the tree, which is to
-					 * maximize the move of the opponent.
-					 */
-					MoveHolder minMaxMove = miniMax(move, newBoard, newDepth,
-							this.opponentNum, bestMove.getValue());
+					MoveHolder minMaxMove;
+					int move_result = newBoard.applyMove(move, player);
+					if (move_result == Board.WIN) {
+						logger.println("WIN FOUND", tabbed_logging_activated
+								* depth);
+						minMaxMove = move.setValue(Integer.MAX_VALUE - depth
+								* 100); // GREAT!!
+					} else {
+						/**
+						 * Run miniMax on the next layer of the tree, which is
+						 * to maximize the move of the opponent.
+						 */
+						minMaxMove = miniMax(move, newBoard, newDepth,
+								this.playerNumber, bestMove.getValue());
+					}
+					if (move_result == Board.LOSS) {
+						logger.println("Not taking a loss",
+								tabbed_logging_activated * depth);
+						continue; // Continue through the loop
+					}
 
 					if (minMaxMove.getValue() > bestMove.getValue()) {
 						/**
@@ -140,8 +152,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * value before recursing to eventually use the first
 						 * split, NOT the last move in the tree.
 						 */
-						logger.println("best found!", tabbed_logging_activated
-								* depth);
+						// logger.println("best found!",
+						// tabbed_logging_activated
+						// * depth);
 						bestMove = minMaxMove;
 
 						// AB pruning - break out when the current max is
@@ -172,14 +185,26 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					 * board state to the tree.
 					 */
 					Board newBoard = new Board(current);
-					newBoard.applyMove(move, player);
-
-					/**
-					 * Run miniMax on the next layer of the tree, which is to
-					 * maximize the move of the opponent.
-					 */
-					MoveHolder minMaxMove = miniMax(move, newBoard, newDepth,
-							this.playerNumber, bestMove.getValue());
+					MoveHolder minMaxMove;
+					int move_result = newBoard.applyMove(move, player);
+					if (move_result == Board.WIN) {
+						logger.println("WIN FOUND", tabbed_logging_activated
+								* depth);
+						minMaxMove = move.setValue(Integer.MIN_VALUE + depth
+								* 100); // GREAT!!
+					} else {
+						/**
+						 * Run miniMax on the next layer of the tree, which is
+						 * to maximize the move of the opponent.
+						 */
+						minMaxMove = miniMax(move, newBoard, newDepth,
+								this.playerNumber, bestMove.getValue());
+					}
+					if (move_result == Board.LOSS) {
+						logger.println("Not taking a loss",
+								tabbed_logging_activated * depth);
+						continue; // Continue through the loop
+					}
 
 					if (minMaxMove.getValue() < bestMove.getValue()) {
 						/**
@@ -188,8 +213,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * value before recursing to eventually use the first
 						 * split, NOT the last move in the tree.
 						 */
-						logger.println("best found!", tabbed_logging_activated
-								* depth);
+						// logger.println("best found!",
+						// tabbed_logging_activated
+						// * depth);
 						bestMove = minMaxMove;
 
 						// AB pruning - break out when the current min is

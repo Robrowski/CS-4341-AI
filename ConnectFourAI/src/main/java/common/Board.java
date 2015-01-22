@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Board {
 
-	final static int FAILURE_TO_PLACE = -2;
-	final static int SUCCESS = 0;
-	final static int WIN = 1;
-	final static int LOSS = -1;
+	public final static int FAILURE_TO_PLACE = -2;
+	public final static int SUCCESS = 0;
+	public final static int WIN = 1;
+	public final static int LOSS = -1;
 	final static int EMPTY = 9;
 
 	private int[][] board;
