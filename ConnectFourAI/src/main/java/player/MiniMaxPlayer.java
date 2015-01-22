@@ -152,9 +152,6 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * value before recursing to eventually use the first
 						 * split, NOT the last move in the tree.
 						 */
-						// logger.println("best found!",
-						// tabbed_logging_activated
-						// * depth);
 						bestMove = minMaxMove;
 
 						// AB pruning - break out when the current max is
@@ -213,9 +210,6 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * value before recursing to eventually use the first
 						 * split, NOT the last move in the tree.
 						 */
-						// logger.println("best found!",
-						// tabbed_logging_activated
-						// * depth);
 						bestMove = minMaxMove;
 
 						// AB pruning - break out when the current min is

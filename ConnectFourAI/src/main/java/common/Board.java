@@ -356,6 +356,20 @@ public class Board {
 		return height;
 	}
 
+	/** For each width, these are the columns ordered from most to least important */
+	protected int[][] move_order = new int[][] {
+			  { 0 },
+			  { 1, 0 },
+			  { 1, 2, 0 },
+			  { 2, 1, 3, 0 },
+			  { 2, 3, 1, 0, 4 },
+			  { 3, 2, 4, 1, 5, 0},
+			  { 3, 4, 2, 5, 1, 6, 0 },
+			  { 4, 3, 5, 2, 6, 1, 7, 0 },
+			  { 4, 5, 3, 6, 2, 7, 1, 8, 0 },
+		      { 5, 4, 6, 3, 7, 2, 8, 1, 9, 0 }
+			};
+	
 	/**
 	 * Method for producing all the columns that are valid possible moves at the
 	 * current board state.
@@ -367,7 +381,7 @@ public class Board {
 
 		// Possible drop moves
 		int top_row = height - 1;
-		for (int col = 0; col < width; col++) {
+		for (int col : move_order[width - 1]) {
 			if (board[top_row][col] == EMPTY) {
 				moves.add(new MoveHolder(col).setPlayer(player));
 			}
@@ -375,8 +389,7 @@ public class Board {
 
 		// Possible pop moves
 		if (((player == 1) && !p1_used_pop) || ((player == 2) && !p2_used_pop)) {
-			// if (player == 2) {
-			for (int col = 0; col < width; col++) {
+			for (int col : move_order[width - 1]) {
 				if (board[0][col] == player) {
 					moves.add(new MoveHolder(col).setMove(Move.POP));
 				}
