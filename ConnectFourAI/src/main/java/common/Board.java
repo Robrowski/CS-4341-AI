@@ -12,9 +12,7 @@ public class Board {
 	public final static int LOSS = -1;
 	final static int EMPTY = 9;
 
-	private int[][] board;
-	private int[][] playerScoreBoard;
-	private int[][] opponentScoreBoard;
+	protected int[][] board;
 	int height;
 	int width;
 	int numToWin;
@@ -38,9 +36,8 @@ public class Board {
 		this.width = width;
 		this.numToWin = numToWin;
 		this.board = makeEmptyBoard();
-		this.playerScoreBoard = makeEmptyBoard();
-		this.opponentScoreBoard = makeEmptyBoard();
 		
+
 //		for (int[] row : board) {
 //			Arrays.fill(row, EMPTY);
 //		}
@@ -56,8 +53,6 @@ public class Board {
 		this.width = toCopy.width;
 		this.numToWin = toCopy.numToWin;
 		this.board = makeBoardCopy(toCopy.board);
-		this.playerScoreBoard = makeBoardCopy(toCopy.playerScoreBoard);
-		this.opponentScoreBoard = makeBoardCopy(toCopy.opponentScoreBoard);
 		this.p1_used_pop = toCopy.p1_used_pop;
 		this.p2_used_pop = toCopy.p2_used_pop;
 
@@ -66,7 +61,7 @@ public class Board {
 
 	}
 	
-	private int[][] makeBoardCopy(int[][] toCopy){
+	protected int[][] makeBoardCopy(int[][] toCopy) {
 		int[][] newBoard = new int[height][width];
 		for (int i = 0; i < height; i++)
 			newBoard[i] = Arrays.copyOf(toCopy[i], width);
@@ -74,7 +69,7 @@ public class Board {
 		return newBoard;
 	}
 	
-	private int[][] makeEmptyBoard(){
+	protected int[][] makeEmptyBoard() {
 		int[][] empty = new int[this.height][this.width];
 		
 		for (int[] row : empty) {
@@ -160,180 +155,9 @@ public class Board {
 		}
 
 		// Update scores because a piece was successfully placed or popped
-		update_scores(move);
+		updateScoreBoard(move);
 
 		return SUCCESS;
-	}
-	
-	public void initScoreBoards(){
-		int[][] scoreBoard = reCalculatePlayerScoreBoard(-1);
-		this.playerScoreBoard = makeBoardCopy(scoreBoard);
-		this.opponentScoreBoard = makeBoardCopy(scoreBoard);
-		
-		
-	}
-	
-	private int[][] reCalculatePlayerScoreBoard(int player) {
-		int[][] newScoreBoard = makeEmptyBoard();
-		MoveHolder currentSpace = new MoveHolder();
-		currentSpace.setPlayer(player);
-		if (numToWin == 1){
-			for (int[] row : newScoreBoard)
-				Arrays.fill(row,1);
-			return newScoreBoard;
-		}
-		for (int i = 0; i < this.height; i++){
-			currentSpace.setRow(i);
-			for (int j = 0; j < this.width; j++){
-				currentSpace.setCol(j);
-				int hScore = scoreHorizontal(currentSpace);
-				int vScore = scoreVertical(currentSpace);
-				int ldScore = scoreLDiagonal(currentSpace);
-				int rdScore = scoreRDiagonal(currentSpace);
-				System.out.println("row " + i);
-				System.out.println("col " + j);
-				System.out.println("horizontal " + hScore);
-				System.out.println("vertical " + vScore);
-				System.out.println("ldiag " + ldScore);
-				System.out.println("rdiag " + rdScore);
-				int totalScore = hScore + vScore + ldScore + rdScore;
-				newScoreBoard[i][j] = totalScore;
-				
-			}
-		}
-		return newScoreBoard;
-	}
-	
-	private int scoreHorizontal(MoveHolder space){
-		
-		int num_spaces = 1; //the piece placed
-		int stopLeft = space.getCol() - this.numToWin + 1;
-		int stopRight = space.getCol() + this.numToWin - 1;
-
-		// Count left
-		for (int c = space.getCol() - 1; c >= stopLeft; c--) {
-			if (c < 0)// off the board
-				break;
-			if (board[space.getRow()][c] == EMPTY ||
-				board[space.getRow()][c] == space.getPlayer())
-				num_spaces++;
-			else 
-				break;
-		}
-
-		// Count right
-		for (int c = space.getCol() + 1; c <= stopRight; c++) {
-			if (c >= this.width) // off the board
-				break;
-			if (board[space.getRow()][c] == EMPTY ||
-				board[space.getRow()][c] == space.getPlayer())
-				num_spaces++;
-			else 
-				break;
-		}
-		
-		return Math.max(0, num_spaces + 1 - this.numToWin);
-	}
-	
-	private int scoreVertical(MoveHolder space){
-		int num_spaces = 1; // the piece placed
-		int stopDown = space.getRow() - this.numToWin + 1;
-		int stopUp = space.getRow() + this.numToWin - 1;
-
-		//count up
-		for (int r = space.getRow() + 1; r <= stopUp; r++){
-			if (r >= this.height) // off the board
-				break;
-			if (board[r][space.getCol()] == EMPTY ||
-				board[r][space.getCol()] == space.getPlayer())
-				num_spaces++;
-			else
-				break;
-//			System.out.println("vert added counting up");
-		}
-		
-		//count down
-		for (int r = space.getRow() - 1; r >= stopDown; r--) {
-			if (r < 0) // off the board
-				break;
-			if (board[r][space.getCol()] == EMPTY ||
-				board[r][space.getCol()] == space.getPlayer())
-				num_spaces++;
-			else
-				break;
-//			System.out.println("vert added counting down");
-		}
-
-		return Math.max(0, num_spaces + 1 - this.numToWin);
-	}
-	
-	public int scoreRDiagonal(MoveHolder space){
-		int num_spaces = 1; // the piece placed
-		int r = space.getRow();
-		int c = space.getCol();
-		int stopLDown = r - this.numToWin + 1;
-		int stopL = c - this.numToWin + 1;
-		int stopRUp = r + this.numToWin - 1;
-		int stopR = c + this.numToWin - 1;
-		
-		// Count down left
-		for (int i = -1; r + i >= stopLDown && c + i >= stopL; i--) {
-			if (r + i < 0 || c + i < 0)// off the board
-				break;
-			if (board[r + i][c + i] == EMPTY ||
-				board[r + i][c + i] == space.getPlayer())
-				num_spaces++;
-			else
-				break;
-		}
-
-		// Count up Right
-		for (int i = 1; r+i <= stopRUp && c+i <= stopR ; i++) {
-			if (r + i >= height || c + i >= width)// off the board
-				break;
-			if (board[r + i][c + i] == EMPTY ||
-				board[r + i][c + i] == space.getPlayer())
-				num_spaces++;
-			else
-				break;
-		}
-
-		return Math.max(0, num_spaces + 1 - this.numToWin);
-	}
-	
-	public int scoreLDiagonal(MoveHolder space){
-		int num_spaces = 1; // the piece placed
-		int r = space.getRow();
-		int c = space.getCol();
-		
-		int stopLUp = r + this.numToWin - 1;
-		int stopL = c - this.numToWin + 1;
-		int stopRDown = r - this.numToWin + 1;
-		int stopR = c + this.numToWin - 1;
-
-		// Count left
-		for (int i = 1; r+i <= stopLUp && c-i >= stopL; i++) {
-			if (r + i == height || c - i < 0)// off the board
-				break;
-			if (board[r + i][c - i] == EMPTY ||
-				board[r + i][c - i] == space.getPlayer())
-				num_spaces++;
-			else
-				break;
-		}
-
-		// Count Right
-		for (int i = 1; r - i >= stopRDown && c + i <= stopR; i++) {
-			if (r - i < 0 || c + i == width)// off the board
-				break;
-			if (board[r - i][c + i] == EMPTY ||
-				board[r - i][c + i] == space.getPlayer())
-				num_spaces++;
-			else
-				break;
-		}
-
-		return Math.max(0, num_spaces + 1 - this.numToWin);
 	}
 	
 
@@ -343,7 +167,7 @@ public class Board {
 	 * @param move
 	 *            with row, column, owner and POP/DROP information
 	 */
-	private void update_scores(MoveHolder move) {
+	protected void updateScoreBoard(MoveHolder move) {
 		// TODO Override this in your extensions
 
 	}
@@ -604,13 +428,6 @@ public class Board {
 		return board;
 	}
 	
-	public int[][] getPlayerScoreBoard() {
-		return this.playerScoreBoard;
-	}
-	
-	public int[][] getOpponentScoreBoard() {
-		return this.opponentScoreBoard;
-	}
 
 	/**
 	 * Gets the piece that is at the top of a column. Returns EMPTY if no piece
