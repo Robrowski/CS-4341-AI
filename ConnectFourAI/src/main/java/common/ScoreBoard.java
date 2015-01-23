@@ -47,18 +47,16 @@ public class ScoreBoard extends Board{
 			currentSpace.setRow(i);
 			for (int j = 0; j < this.width; j++) {
 				currentSpace.setCol(j);
-				int hScore = scoreHorizontal(currentSpace);
-				int vScore = scoreVertical(currentSpace);
-				int ldScore = scoreLDiagonal(currentSpace);
-				int rdScore = scoreRDiagonal(currentSpace);
-				// System.out.println("row " + i);
-				// System.out.println("col " + j);
-				// System.out.println("horizontal " + hScore);
-				// System.out.println("vertical " + vScore);
-				// System.out.println("ldiag " + ldScore);
-				// System.out.println("rdiag " + rdScore);
-				int totalScore = hScore + vScore + ldScore + rdScore;
-				newScoreBoard[i][j] = totalScore;
+				if (board[i][j] == player || board[i][j] == EMPTY) {
+					int hScore = scoreHorizontal(currentSpace);
+					int vScore = scoreVertical(currentSpace);
+					int ldScore = scoreLDiagonal(currentSpace);
+					int rdScore = scoreRDiagonal(currentSpace);
+					int totalScore = hScore + vScore + ldScore + rdScore;
+					newScoreBoard[i][j] = totalScore;
+				} else {
+					newScoreBoard[i][j] = 0;
+				}
 
 			}
 		}
@@ -110,7 +108,6 @@ public class ScoreBoard extends Board{
 				num_spaces++;
 			else
 				break;
-			// System.out.println("vert added counting up");
 		}
 
 		// count down
@@ -122,7 +119,6 @@ public class ScoreBoard extends Board{
 				num_spaces++;
 			else
 				break;
-			// System.out.println("vert added counting down");
 		}
 
 		return Math.max(0, num_spaces + 1 - this.numToWin);
@@ -172,7 +168,7 @@ public class ScoreBoard extends Board{
 		int stopRDown = r - this.numToWin + 1;
 		int stopR = c + this.numToWin - 1;
 
-		// Count left
+		// Count up left
 		for (int i = 1; r + i <= stopLUp && c - i >= stopL; i++) {
 			if (r + i == height || c - i < 0)// off the board
 				break;
@@ -183,7 +179,7 @@ public class ScoreBoard extends Board{
 				break;
 		}
 
-		// Count Right
+		// Count down Right
 		for (int i = 1; r - i >= stopRDown && c + i <= stopR; i++) {
 			if (r - i < 0 || c + i == width)// off the board
 				break;
@@ -205,4 +201,17 @@ public class ScoreBoard extends Board{
 		return this.opponentScoreBoard;
 	}
 
+	/**
+	 * A convenience function used only for testing.
+	 * Allows us to set a board artificially and see if
+	 * the scoreBoards were appropriately updated for each player
+	 * 
+	 * @param newBoard
+	 * @return
+	 */
+	public void setBoard(int[][] newBoard) {
+		this.board = makeBoardCopy(newBoard);
+		this.playerScoreBoard = reCalculatePlayerScoreBoard(1);
+		this.opponentScoreBoard = reCalculatePlayerScoreBoard(2);
+	}
 }
