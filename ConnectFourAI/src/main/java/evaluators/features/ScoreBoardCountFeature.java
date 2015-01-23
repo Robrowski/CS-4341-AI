@@ -1,15 +1,17 @@
 package evaluators.features;
 
-import common.Board;
+import common.ScoreBoard;
 
-public class WinLikelihoodFeature implements Feature {
+public class ScoreBoardCountFeature implements Feature {
 
-	public WinLikelihoodFeature() {
+	public ScoreBoardCountFeature() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 	@Override
-	public int score(Board state) {
+	public int score(ScoreBoard state) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

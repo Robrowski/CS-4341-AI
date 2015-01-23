@@ -1,7 +1,7 @@
 package evaluators;
 
 import evaluators.features.Feature;
-import evaluators.features.WinLikelihoodFeature;
+import evaluators.features.ScoreBoardCountFeature;
 
 
 
@@ -22,7 +22,7 @@ public class EvaluatorFactory {
 		for (int i = 0; i < numFeatures; i++){
 			switch (featureStrings[i]){
 				case "WinLikelihood":
-					desiredFeatures[i] = new WinLikelihoodFeature();
+					desiredFeatures[i] = new ScoreBoardCountFeature();
 					break;
 				default:
 					throw new RuntimeException("Unrecognized Feature given");

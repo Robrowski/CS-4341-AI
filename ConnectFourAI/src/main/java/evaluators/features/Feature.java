@@ -1,8 +1,8 @@
 package evaluators.features;
 
-import common.Board;
+import common.ScoreBoard;
 
 public interface Feature {
 
-	public int score(Board state);
+	public int score(ScoreBoard state);
 }
