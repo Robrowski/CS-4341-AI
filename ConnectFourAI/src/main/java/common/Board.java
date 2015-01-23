@@ -13,8 +13,8 @@ public class Board {
 	final static int EMPTY = 9;
 
 	protected int[][] board;
-	int height;
-	int width;
+	public int height;
+	public int width;
 	int numToWin;
 
 	private boolean p1_used_pop = false;

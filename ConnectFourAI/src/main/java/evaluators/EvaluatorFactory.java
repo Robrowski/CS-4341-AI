@@ -11,7 +11,7 @@ public class EvaluatorFactory {
 		
 	}
 	
-	public Evaluator makeEvaluator(String[] featureStrings){
+	public Evaluator makeEvaluator(String[] featureStrings, int player) {
 		int numFeatures = featureStrings.length;
 		Feature[] desiredFeatures = new Feature[featureStrings.length];
 		
@@ -21,15 +21,15 @@ public class EvaluatorFactory {
 		
 		for (int i = 0; i < numFeatures; i++){
 			switch (featureStrings[i]){
-				case "WinLikelihood":
-					desiredFeatures[i] = new ScoreBoardCountFeature();
+			case "scoreBoardCount":
+				desiredFeatures[i] = new ScoreBoardCountFeature(player);
 					break;
 				default:
 					throw new RuntimeException("Unrecognized Feature given");
 			}
 		}
 		
-		return new Evaluator(desiredFeatures);
+		return new Evaluator(desiredFeatures, player);
 	}
 
 }

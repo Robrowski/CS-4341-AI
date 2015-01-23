@@ -8,9 +8,11 @@ import evaluators.features.Feature;
 public class Evaluator {
 	
 	private Feature[] features;
+	public int player;
 
-	public Evaluator(Feature[] features) {
+	public Evaluator(Feature[] features, int player) {
 		this.features = features;
+		this.player = player;
 	}
 
 	public int estimateGameState(Board state){
