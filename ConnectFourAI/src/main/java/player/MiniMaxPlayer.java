@@ -98,7 +98,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		List<MoveHolder> moves = current.getPossibleMoves(player);
 
 		/**
-		 * If depth limit reached or If no possible moves, we can procede to
+		 * If depth limit reached or If no possible moves, we can proceed to
 		 * estimate the current board's value
 		 */
 		if (depth == MAXDEPTH || moves.size() == 0) {

@@ -10,6 +10,7 @@ import common.Board;
 import common.FileLogger;
 import common.Move;
 import common.MoveHolder;
+import common.board.BoardFactory;
 import common.timing.CountDownTimer;
 
 /**
@@ -52,7 +53,7 @@ abstract class AbstractPlayer {
 	 */
 	public AbstractPlayer(String[] args) {
 		// Parse the arguments
-		List<String> argsList = Arrays.asList(args);
+		argsList = Arrays.asList(args);
 
 		// First argument is expected to be a player name
 		if (args.length >= 1) {
@@ -80,7 +81,9 @@ abstract class AbstractPlayer {
 			ctd.init(playerName, timeLimit, argsList);
 
 			// Step 3. Initialize game board, game state, etc.
-			gameBoard = new Board(width, height, numToWin);
+			gameBoard = BoardFactory.makeBoard(width, height, numToWin,
+					argsList);
+			// gameBoard = new Board(width, height, numToWin);
 
 			// Step 4. If going second, wait for opponent to make a move
 			if (playerNumber != firstTurn) {
