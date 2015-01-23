@@ -44,8 +44,9 @@ public class MoveHolder {
 	/**
 	 * @param moveCol the moveCol to set
 	 */
-	public void setCol(int moveCol) {
+	public MoveHolder setCol(int moveCol) {
 		this.col = moveCol;
+		return this;
 	}
 
 	/**

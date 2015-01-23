@@ -156,7 +156,18 @@ public class FileLogger {
 
 	}
 
+	/**
+	 * Print a move value, column and type
+	 * 
+	 * @param m
+	 * @param depth
+	 */
+	public void printMove(MoveHolder m, int depth) {
+		println(m.getValue() + " " + m.getCol() + " " + m.getMove(), depth);
+	}
+
 	/* The following functions are utilities specific to the minimax algorithm */
 	// TODO asynchronously generate a tree...
 	// TODO generate a tree image..
+
 }

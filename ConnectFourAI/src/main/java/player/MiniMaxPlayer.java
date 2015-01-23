@@ -11,6 +11,7 @@ import common.MoveHolder;
 public class MiniMaxPlayer extends AbstractPlayer {
 
 	private boolean alpha_beta_enabled = false;
+	private boolean gamma_enabled = false;
 	private int tabbed_logging_activated = 0;
 	/** The maximum depth we will allow for mini max */
 	private int MAXDEPTH = 4;
@@ -28,6 +29,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		}
 		if (argsList.contains("--tabbed-logging")) {
 			tabbed_logging_activated = 1;
+		}
+		if (argsList.contains("--gamma-pruning")) {
+			gamma_enabled = true;
 		}
 		// Read for a max depth and the next number after it
 		if (argsList.contains("MAXDEPTH=")) {
@@ -93,13 +97,6 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		// * depth);
 		List<MoveHolder> moves = current.getPossibleMoves(player);
 
-		// TODO basic move ordering by ordering the Moves from center to edge.
-		// EX. We think the center might have better moves, so we check center
-		// moves first.
-
-		// TODO Popping out might be best to consider first because it will get
-		// sneaky wins that other students' AI's won't get.
-
 		/**
 		 * If depth limit reached or If no possible moves, we can procede to
 		 * estimate the current board's value
@@ -110,6 +107,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 			this.leaves_visited += 1;
 			int estimate = estimateBoard(current, depth);
 			parent_move.setValue(estimate);
+			logger.printMove(parent_move, tabbed_logging_activated * depth);
 			return parent_move;
 		} else {
 			int newDepth = depth + 1; // Depth of the proposed moves
@@ -127,15 +125,16 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
 					if (move_result == Board.LOSS) {
-						logger.println("Not taking a pop loss",
-								tabbed_logging_activated * newDepth);
+						// logger.println("Not taking a pop loss",
+						// tabbed_logging_activated * newDepth);
 						continue; // Continue through the loop
 					}
-					if (move_result == Board.WIN) {
-						logger.println("WIN FOUND", tabbed_logging_activated
-								* newDepth);
-						bestMove = move.setValue(Integer.MAX_VALUE - depth
+					if (gamma_enabled && move_result == Board.WIN) {
+						bestMove = move.setValue(Integer.MAX_VALUE - newDepth
 								* 100); // GREAT!!
+						logger.printMove(bestMove, tabbed_logging_activated
+								* newDepth);
+
 						break;
 					} else {
 						/**
@@ -144,6 +143,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
 								this.opponentNum, bestMove.getValue());
+						minMaxMove.setCol(move.getCol());
 					}
 
 					if (minMaxMove.getValue() > bestMove.getValue()) {
@@ -161,18 +161,13 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						if (alpha_beta_enabled
 								&& bestMove.getValue() > bestValue
 								&& depth != 0) {
-							logger.println("AB PRUNNED. Min already chosen: "
-									+ bestValue,
-									tabbed_logging_activated * depth);
 							break;
 						}
 					}
 				}
-				logger.println("best score for depth (max) " + depth + " : "
-						+ bestMove.getValue(), tabbed_logging_activated * depth);
-				logger.println("best move  for depth (max) " + depth + " : "
-						+ bestMove.getCol() + " " + bestMove.getMove(),
+				logger.printMove(bestMove,
 						tabbed_logging_activated * depth);
+
 				return bestMove;
 			} else { // minimizing score
 
@@ -186,15 +181,13 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
 					if (move_result == Board.LOSS) {
-						logger.println("Not taking a pop loss",
-								tabbed_logging_activated * newDepth);
 						continue; // Continue through the loop
 					}
-					if (move_result == Board.WIN) {
-						logger.println("WIN FOUND", tabbed_logging_activated
-								* newDepth);
-						bestMove = move.setValue(Integer.MIN_VALUE + depth
+					if (gamma_enabled && move_result == Board.WIN) {
+						bestMove = move.setValue(Integer.MIN_VALUE + newDepth
 								* 100); // GREAT!!
+						logger.printMove(bestMove, tabbed_logging_activated
+								* newDepth);
 						break;
 					} else {
 						/**
@@ -203,6 +196,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
 								this.playerNumber, bestMove.getValue());
+						minMaxMove.setCol(move.getCol());
 					}
 
 
@@ -220,18 +214,13 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						// it won't be picked as max anyways
 						if (alpha_beta_enabled
 								&& bestMove.getValue() < bestValue) {
-							logger.println("AB PRUNNED. Max already chosen: "
-									+ bestValue,
-									tabbed_logging_activated * depth);
 							break;
 						}
 					}
 
 				}
-				logger.println("best score for depth (min) " + depth + " : "
-						+ bestMove.getValue(), tabbed_logging_activated * depth);
-				logger.println("best move  for depth (min) " + depth + " : "
-						+ bestMove.getCol(), tabbed_logging_activated * depth);
+				logger.printMove(bestMove.setCol(parent_move.getCol()),
+						tabbed_logging_activated * depth);
 				return bestMove;
 			}
 		}
@@ -250,8 +239,6 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	private int estimateBoard(Board current, int depth) {
 		Random random = new Random();
 		int randomNumber = (random.nextInt(20));
-		logger.println("at leaf. score is: " + randomNumber,
-				tabbed_logging_activated * depth);
 
 		return randomNumber;
 	}
