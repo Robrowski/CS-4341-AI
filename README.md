@@ -65,8 +65,16 @@ MiniMax Arguments
 | Arg Number  | Name  | Description  |
 |---|---|---|
 | ? | --alpha-beta | Enables alpha beta pruning |
+| ? | --gamma-pruning | Enables pruning based on win/loss detection |
 | ? | --tabbed-logging | Enables tabbed logging to make the log look like a tree |
 | ? | MAXDEPTH= | Set the max depth for MiniMax. A number must follow a space after this arg |
+
+
+Board Arguments
+| Arg Number  | Name  | Description  |
+|---|---|---|
+| ? | --score-board |  Use a "score board" thats scores the board as the game progresses |
+
 
 
 ### Jar File Locations
