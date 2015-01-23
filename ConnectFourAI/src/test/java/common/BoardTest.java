@@ -270,7 +270,7 @@ public class BoardTest {
 		assertEquals(Board.LOSS, board.applyMove(new MoveHolder(4).setMove(
 				Move.POP).setPlayer(2)));
 	}
-
+	
 	/**
 	 * Applies an addition move to the board
 	 * 

@@ -2,6 +2,7 @@ package common;
 
 import java.util.Arrays;
 
+
 public class ScoreBoard extends Board{
 	
 	private int[][] playerScoreBoard;
@@ -11,6 +12,7 @@ public class ScoreBoard extends Board{
 		super(width, height, numToWin);
 		this.playerScoreBoard = makeEmptyBoard();
 		this.opponentScoreBoard = makeEmptyBoard();
+		initScoreBoards();
 		
 	}
 	
@@ -26,15 +28,13 @@ public class ScoreBoard extends Board{
 	}
 
 
-	public void initScoreBoards() {
+	private void initScoreBoards() {
 		int[][] scoreBoard = reCalculatePlayerScoreBoard(-1);
 		this.playerScoreBoard = makeBoardCopy(scoreBoard);
 		this.opponentScoreBoard = makeBoardCopy(scoreBoard);
-		
-		
 	}
 
-	protected int[][] reCalculatePlayerScoreBoard(int player) {
+	private int[][] reCalculatePlayerScoreBoard(int player) {
 		int[][] newScoreBoard = makeEmptyBoard();
 		MoveHolder currentSpace = new MoveHolder();
 		currentSpace.setPlayer(player);
@@ -51,12 +51,12 @@ public class ScoreBoard extends Board{
 				int vScore = scoreVertical(currentSpace);
 				int ldScore = scoreLDiagonal(currentSpace);
 				int rdScore = scoreRDiagonal(currentSpace);
-				System.out.println("row " + i);
-				System.out.println("col " + j);
-				System.out.println("horizontal " + hScore);
-				System.out.println("vertical " + vScore);
-				System.out.println("ldiag " + ldScore);
-				System.out.println("rdiag " + rdScore);
+				// System.out.println("row " + i);
+				// System.out.println("col " + j);
+				// System.out.println("horizontal " + hScore);
+				// System.out.println("vertical " + vScore);
+				// System.out.println("ldiag " + ldScore);
+				// System.out.println("rdiag " + rdScore);
 				int totalScore = hScore + vScore + ldScore + rdScore;
 				newScoreBoard[i][j] = totalScore;
 
@@ -128,7 +128,7 @@ public class ScoreBoard extends Board{
 		return Math.max(0, num_spaces + 1 - this.numToWin);
 	}
 
-	public int scoreRDiagonal(MoveHolder space) {
+	private int scoreRDiagonal(MoveHolder space) {
 		int num_spaces = 1; // the piece placed
 		int r = space.getRow();
 		int c = space.getCol();
@@ -162,7 +162,7 @@ public class ScoreBoard extends Board{
 		return Math.max(0, num_spaces + 1 - this.numToWin);
 	}
 
-	public int scoreLDiagonal(MoveHolder space) {
+	private int scoreLDiagonal(MoveHolder space) {
 		int num_spaces = 1; // the piece placed
 		int r = space.getRow();
 		int c = space.getCol();
