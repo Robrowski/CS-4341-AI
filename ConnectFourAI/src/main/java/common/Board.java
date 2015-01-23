@@ -10,7 +10,7 @@ public class Board {
 	public final static int SUCCESS = 0;
 	public final static int WIN = 1;
 	public final static int LOSS = -1;
-	final static int EMPTY = 9;
+	public final static int EMPTY = 9;
 
 	protected int[][] board;
 	public int height;

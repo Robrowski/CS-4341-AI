@@ -8,6 +8,8 @@ import java.util.Arrays;
 import org.junit.Test;
 
 public class ScoreBoardTest {
+	final int P1 = 1;
+	final int P2 = 2;
 
 	@Test
 	public void test_initScore_2x2_connect1_fail() {
@@ -16,7 +18,7 @@ public class ScoreBoardTest {
 		// Sanity check that Arrays.deepEquals is working correctly
 		int[][] expectedScore = { { 1, 1 }, { 0, 1 } };
 
-		assertFalse(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertFalse(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -28,7 +30,7 @@ public class ScoreBoardTest {
 		System.out.println("2x2 connect1");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -44,7 +46,7 @@ public class ScoreBoardTest {
 		System.out.println("3x3 connect2");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 	
 	@Test
@@ -60,7 +62,7 @@ public class ScoreBoardTest {
 		System.out.println("4x4 connect3");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 	
 	@Test
@@ -72,7 +74,7 @@ public class ScoreBoardTest {
 		System.out.println("3x3 connect2");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -84,7 +86,7 @@ public class ScoreBoardTest {
 		System.out.println("7x1 connect4");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -96,7 +98,7 @@ public class ScoreBoardTest {
 		System.out.println("7x1 connect3");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -109,7 +111,7 @@ public class ScoreBoardTest {
 		System.out.println("1x7 connect4");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -122,7 +124,7 @@ public class ScoreBoardTest {
 		System.out.println("1x7 connect4");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -137,7 +139,7 @@ public class ScoreBoardTest {
 		System.out.println("7x2 connect2");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -156,7 +158,7 @@ public class ScoreBoardTest {
 		System.out.println("7x6 connect4");
 		printBoard(board, "player");
 
-		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedScore, board.getPlayerScoreBoard(P1)));
 	}
 
 	@Test
@@ -183,9 +185,10 @@ public class ScoreBoardTest {
 
 		System.out.println("3x3 connect 2, opponent moves");
 		printBoard(board, "player");
-		assertTrue(boardEquals(expectedPlayerScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedPlayerScore,
+				board.getPlayerScoreBoard(P1)));
 		assertTrue(boardEquals(expectedOpponentScore,
-				board.getOpponentScoreBoard()));
+				board.getPlayerScoreBoard(P2)));
 
 	}
 
@@ -213,9 +216,10 @@ public class ScoreBoardTest {
 
 		System.out.println("3x3 connect 2, player moves");
 		printBoard(board, "opp");
-		assertTrue(boardEquals(expectedPlayerScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedPlayerScore,
+				board.getPlayerScoreBoard(P1)));
 		assertTrue(boardEquals(expectedOpponentScore,
-				board.getOpponentScoreBoard()));
+				board.getPlayerScoreBoard(P2)));
 		
 	}
 	
@@ -243,9 +247,10 @@ public class ScoreBoardTest {
 
 		System.out.println("3x3 connect 2, player moves");
 		printBoard(board, "opp");
-		assertTrue(boardEquals(expectedPlayerScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedPlayerScore,
+				board.getPlayerScoreBoard(P1)));
 		assertTrue(boardEquals(expectedOpponentScore,
-				board.getOpponentScoreBoard()));
+				board.getPlayerScoreBoard(P2)));
 		
 	}
 	
@@ -274,9 +279,10 @@ public class ScoreBoardTest {
 
 		System.out.println("3x3 connect 2, player moves");
 		printBoard(board, "opp");
-		assertTrue(boardEquals(expectedPlayerScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedPlayerScore,
+				board.getPlayerScoreBoard(P1)));
 		assertTrue(boardEquals(expectedOpponentScore,
-				board.getOpponentScoreBoard()));
+				board.getPlayerScoreBoard(P2)));
 		
 	}
 	
@@ -302,7 +308,8 @@ public class ScoreBoardTest {
 
 		System.out.println("4x4 connect 3, player moves");
 		printBoard(board, "player");
-		assertTrue(boardEquals(expectedPlayerScore, board.getPlayerScoreBoard()));
+		assertTrue(boardEquals(expectedPlayerScore,
+				board.getPlayerScoreBoard(P1)));
 
 	}
 
@@ -311,8 +318,8 @@ public class ScoreBoardTest {
 	}
 
 	public void printBoard(ScoreBoard board, String player) {
-		int[][] b = (player.equals("player") ? board.getPlayerScoreBoard()
-				: board.getOpponentScoreBoard());
+		int[][] b = (player.equals("player") ? board.getPlayerScoreBoard(P1)
+				: board.getPlayerScoreBoard(P2));
 
 		for (int i = board.height - 1; i >= 0; i--) {
 			for (int item : b[i]) {

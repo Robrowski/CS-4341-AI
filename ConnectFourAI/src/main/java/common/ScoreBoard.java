@@ -5,33 +5,38 @@ import java.util.Arrays;
 
 public class ScoreBoard extends Board{
 	
-	private int[][] playerScoreBoard;
-	private int[][] opponentScoreBoard;
+	private int[][] player_one_score_board;
+	private int[][] player_two_score_board;
 
 	public ScoreBoard(int width, int height, int numToWin) {
 		super(width, height, numToWin);
-		this.playerScoreBoard = makeEmptyBoard();
-		this.opponentScoreBoard = makeEmptyBoard();
+		this.player_one_score_board = makeEmptyBoard();
+		this.player_two_score_board = makeEmptyBoard();
 		initScoreBoards();
 		
 	}
 	
 	public ScoreBoard(ScoreBoard toCopy) {
 		super(toCopy);
-		this.playerScoreBoard = makeBoardCopy(toCopy.playerScoreBoard);
-		this.opponentScoreBoard = makeBoardCopy(toCopy.opponentScoreBoard);
+		this.player_one_score_board = makeBoardCopy(toCopy.player_one_score_board);
+		this.player_two_score_board = makeBoardCopy(toCopy.player_two_score_board);
 	}
 	
+	int[] row_order = { 1, 0, -1, 0 };
+	int[] col_order = { 0, 1, 0, -1 };
+
 	@Override
-	protected void updateScoreBoard(MoveHolder move) {
+	public void updateScoreBoard(MoveHolder move) {
+		// int[][] to_update = (move.getPlayer() == ) ? playerScoreBoard :
+		// opponentScoreBoard;
 
 	}
 
 
 	private void initScoreBoards() {
 		int[][] scoreBoard = reCalculatePlayerScoreBoard(-1);
-		this.playerScoreBoard = makeBoardCopy(scoreBoard);
-		this.opponentScoreBoard = makeBoardCopy(scoreBoard);
+		this.player_one_score_board = makeBoardCopy(scoreBoard);
+		this.player_two_score_board = makeBoardCopy(scoreBoard);
 	}
 
 	private int[][] reCalculatePlayerScoreBoard(int player) {
@@ -193,12 +198,8 @@ public class ScoreBoard extends Board{
 		return Math.max(0, num_spaces + 1 - this.numToWin);
 	}
 	
-	public int[][] getPlayerScoreBoard() {
-		return this.playerScoreBoard;
-	}
-
-	public int[][] getOpponentScoreBoard() {
-		return this.opponentScoreBoard;
+	public int[][] getPlayerScoreBoard(int player) {
+		return (player == 1) ? player_one_score_board : player_two_score_board;
 	}
 
 	/**
@@ -211,7 +212,7 @@ public class ScoreBoard extends Board{
 	 */
 	public void setBoard(int[][] newBoard) {
 		this.board = makeBoardCopy(newBoard);
-		this.playerScoreBoard = reCalculatePlayerScoreBoard(1);
-		this.opponentScoreBoard = reCalculatePlayerScoreBoard(2);
+		this.player_one_score_board = reCalculatePlayerScoreBoard(1);
+		this.player_two_score_board = reCalculatePlayerScoreBoard(2);
 	}
 }

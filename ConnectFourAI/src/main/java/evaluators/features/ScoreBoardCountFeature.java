@@ -4,10 +4,11 @@ import common.ScoreBoard;
 
 public class ScoreBoardCountFeature implements Feature {
 
-	private int player;
+	private int player, opponent;
 
 	public ScoreBoardCountFeature(int player) {
 		this.player = player;
+		this.opponent = (player == 1) ? 2 : 1;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -16,8 +17,8 @@ public class ScoreBoardCountFeature implements Feature {
 	@Override
 	public int score(ScoreBoard state) {
 		int[][] b = state.getBoard();
-		int[][] playerBoard = state.getPlayerScoreBoard();
-		int[][] oppBoard = state.getOpponentScoreBoard();
+		int[][] playerBoard = state.getPlayerScoreBoard(player);
+		int[][] oppBoard = state.getPlayerScoreBoard(opponent);
 
 		int playerScore = 0;
 		int oppScore = 0;
