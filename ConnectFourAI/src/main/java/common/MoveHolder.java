@@ -94,8 +94,9 @@ public class MoveHolder {
 	 * 
 	 * @return
 	 */
-	public void setRow(int row) {
+	public MoveHolder setRow(int row) {
 		this.row = row;
+		return this;
 	}
 
 }

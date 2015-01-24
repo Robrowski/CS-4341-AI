@@ -41,10 +41,6 @@ public class Board {
 		this.numToWin = numToWin;
 		this.board = makeEmptyBoard();
 		
-
-//		for (int[] row : board) {
-//			Arrays.fill(row, EMPTY);
-//		}
 	}
 
 	/**
@@ -59,10 +55,6 @@ public class Board {
 		this.board = makeBoardCopy(toCopy.board);
 		this.p1_used_pop = toCopy.p1_used_pop;
 		this.p2_used_pop = toCopy.p2_used_pop;
-
-//		for (int i = 0; i < height; i++)
-//			board[i] = Arrays.copyOf(toCopy.board[i], width);
-
 	}
 	
 	protected int[][] makeBoardCopy(int[][] toCopy) {
@@ -100,6 +92,17 @@ public class Board {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Tells you if a position is in bounds or not
+	 * 
+	 * @param r
+	 * @param c
+	 * @return
+	 */
+	protected boolean inBounds(int r, int c) {
+		return r >= 0 && r < height && c >= 0 && c < width;
 	}
 
 	/**

@@ -24,14 +24,92 @@ public class ScoreBoard extends Board{
 		this.player_two_score_board = makeBoardCopy(toCopy.player_two_score_board);
 	}
 	
-	int[] row_order = { 1, 0, -1, 0 };
-	int[] col_order = { 0, 1, 0, -1 };
-
 	@Override
 	public void updateScoreBoard(MoveHolder move) {
-		// int[][] to_update = (move.getPlayer() == ) ? playerScoreBoard :
-		// opponentScoreBoard;
+		int[][] to_update = (move.getPlayer() == 2) ? player_one_score_board
+				: player_two_score_board;
 
+		int r = move.getRow();
+		int c = move.getCol();
+		int N = numToWin - 1;
+
+		// 1. Decrease the newly occupied space to zero
+		to_update[r][c] = 0;
+
+		// cheapUpdateScoreBoard(move, to_update);
+
+		for (int x = 0; x < numToWin; x++) {
+			// System.out.println()
+
+		}
+
+
+		// Update in each direction
+		for (int i = 0; i < numToWin; i++) {
+			// Vertical
+			if (inBounds(r + i, c) && inBounds(r + i - 1 * N, c))
+				update(board, move, to_update, N, r + i, c, -1, 0);
+
+			// Diagonals and horizontal use the same column
+			int ccd = c + i;
+			if (ccd < width && ccd - 1 * N >= 0) { // either ends are in bounds
+				// Horizontal
+				if (inBounds(r, ccd) && inBounds(r, ccd - 1 * N))
+					update(board, move, to_update, N, r, ccd, 0, -1);
+
+				// Right diagonal, check Row
+				// direction = -1 because right diagonal looks downleft =
+				// backwards
+				if (r + i - 1 * N >= 0 && r + i < height)
+					update(board, move, to_update, N, r + i, ccd, -1, -1);
+
+				// Left diagonal, check row
+				if (r - i + N < height && r - i >= 0)
+					update(board, move, to_update, N, r - i, ccd, 1, -1);
+			}
+		}
+	}
+
+	/**
+	 * A recursive algorithm that looks backwards to see if a win could have
+	 * been made with the pieces found. Returns 1 if a win could have been made
+	 * and subtracts from the score at the given location.
+	 * 
+	 * @param board
+	 *            Reference to the board
+	 * @param m
+	 *            The move to update by
+	 * @param to_update
+	 *            Reference to the appropriate score board
+	 * @param remN
+	 *            remaining needed to make a "win"
+	 * @param r
+	 *            the row to start at
+	 * @param c
+	 *            the column to start at
+	 * @param ydir
+	 *            the vertical direction to look back in
+	 * @param xdir
+	 *            the horizontal direction to look back in
+	 * @return
+	 */
+	static private int update(int[][] board, MoveHolder m, int[][] to_update,
+			int remN, int r, int c, int ydir, int xdir) {
+		// No updating is needed if the ___ has old opponent piece already
+		if (board[r][c] == m.getPlayer()
+				&& (m.getRow() != r || m.getCol() != c))
+			return 0;
+		// Terminal case!
+		if (remN == 0) {
+			to_update[r][c] = Math.max(0, to_update[r][c] - 1);
+			return 1;
+		}
+
+		// Call update on the next square, update accordingly and return
+		int ret = update(board, m, to_update, remN - 1, r + ydir, c + xdir,
+				ydir, xdir);
+		to_update[r][c] = Math.max(0, to_update[r][c] - ret);
+		return ret;
 	}
 
 
