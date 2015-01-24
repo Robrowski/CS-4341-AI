@@ -5,9 +5,6 @@ package common.board;
 
 import java.util.List;
 
-import common.Board;
-import common.ScoreBoard;
-
 /**
  * Factory implementation for making Boards
  */

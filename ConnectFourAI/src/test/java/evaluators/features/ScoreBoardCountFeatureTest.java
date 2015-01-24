@@ -5,8 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import common.ScoreBoard;
-
+import common.board.ScoreBoard;
 import evaluators.Evaluator;
 import evaluators.EvaluatorFactory;
 

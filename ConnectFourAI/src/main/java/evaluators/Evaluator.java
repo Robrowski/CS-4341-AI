@@ -1,8 +1,7 @@
 package evaluators;
 
-import common.Board;
-import common.ScoreBoard;
-
+import common.board.Board;
+import common.board.ScoreBoard;
 import evaluators.features.Feature;
 
 public class Evaluator {

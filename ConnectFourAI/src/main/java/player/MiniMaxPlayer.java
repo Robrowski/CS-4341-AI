@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import common.Board;
 import common.MoveHolder;
+import common.board.Board;
 
 public class MiniMaxPlayer extends AbstractPlayer {
 

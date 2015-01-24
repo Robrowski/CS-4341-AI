@@ -10,6 +10,8 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 
+import common.board.Board;
+
 public class FileLogger {
 
 	private static FileLogger instance = new FileLogger();

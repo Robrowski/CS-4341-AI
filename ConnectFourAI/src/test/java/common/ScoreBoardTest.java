@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
+import common.board.ScoreBoard;
+
 public class ScoreBoardTest {
 	final int P1 = 1;
 	final int P2 = 2;

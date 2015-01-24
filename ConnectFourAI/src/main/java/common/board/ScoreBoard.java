@@ -1,6 +1,8 @@
-package common;
+package common.board;
 
 import java.util.Arrays;
+
+import common.MoveHolder;
 
 
 public class ScoreBoard extends Board{

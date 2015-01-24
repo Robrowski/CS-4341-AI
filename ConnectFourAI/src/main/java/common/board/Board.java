@@ -1,8 +1,12 @@
-package common;
+package common.board;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import common.FileLogger;
+import common.Move;
+import common.MoveHolder;
 
 public class Board {
 

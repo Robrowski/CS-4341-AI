@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-import common.Board;
 import common.FileLogger;
 import common.Move;
 import common.MoveHolder;
+import common.board.Board;
 import common.board.BoardFactory;
 import common.timing.CountDownTimer;
 

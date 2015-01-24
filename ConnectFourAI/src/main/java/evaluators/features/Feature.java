@@ -1,6 +1,6 @@
 package evaluators.features;
 
-import common.ScoreBoard;
+import common.board.ScoreBoard;
 
 public interface Feature {
 
