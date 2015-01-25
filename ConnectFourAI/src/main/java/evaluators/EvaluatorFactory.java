@@ -26,7 +26,9 @@ public class EvaluatorFactory {
 		
 		// Regular ScoreBoard evaluator
 		if (argsList.contains("--score-board-feature")) {
-			features.add(new ScoreBoardCountFeature(player));
+			features.add(new ScoreBoardCountFeature(player, false));
+		} else if (argsList.contains("--influence-score-board-feature")) {
+			features.add(new ScoreBoardCountFeature(player, true));
 		}
 		
 		// Add more arguments to add more features or use customized versions of
