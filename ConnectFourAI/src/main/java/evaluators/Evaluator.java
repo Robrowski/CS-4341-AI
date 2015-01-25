@@ -2,6 +2,7 @@ package evaluators;
 
 import common.board.Board;
 import common.board.ScoreBoard;
+
 import evaluators.features.Feature;
 
 public class Evaluator {
@@ -14,7 +15,7 @@ public class Evaluator {
 		this.player = player;
 	}
 
-	public int estimateGameState(Board state){
+	public int estimateGameState(Board state) {
 		int total_score = 0;
 		for(Feature feature : features){
 			total_score += feature.score((ScoreBoard) state);

@@ -73,6 +73,7 @@ task miniMaxPlayerJar(type: Jar) {
 	from(sourceSets.main.output) {
 		include "player/**"
 		include "common/**"
+		include "evaluators/**"
 	}
 	
 	manifest.attributes['Class-Path'] = "."
@@ -86,6 +87,7 @@ task randomPlayerJar(type: Jar) {
 	from(sourceSets.main.output) {
 		include "player/**"
 		include "common/**"
+		include "evaluators/**"
 	}
 	
 	manifest.attributes['Class-Path'] = "."

@@ -60,7 +60,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		branches_made = 0;
 		MoveHolder next = miniMax(null, copy, 0, this.playerNumber,
 				Integer.MIN_VALUE);
-		logger.println("next move is: " + next.getCol());
+		logger.println("next move is: " + next.getCol() + "value: "
+				+ next.getValue());
 		logger.println("Leaves: " + leaves_visited + "   Branches: "
 				+ branches_made);
 		return next;
@@ -240,8 +241,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		Random random = new Random();
 		int randomNumber = (random.nextInt(20));
 
+		int estimate = eval.estimateGameState(current);
 
-		return randomNumber;
+		return estimate;
 	}
 
 }
