@@ -53,7 +53,7 @@ public class CountDownTimer {
 
 		// Clock timer optimization - keeps clock from going too fast
 		period = (int) (timeLimit); // Use 99.8% of the time given always
-		MIN_MILLIS_TO_BACK_OUT = period * 2; // allow 2 periods to back out
+		MIN_MILLIS_TO_BACK_OUT = period * 2 + 10; // allow 2 periods to back out
 		name = playerName + "-timer";
 		t = new Timer(name);
 
