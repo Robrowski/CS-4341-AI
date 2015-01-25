@@ -1,5 +1,10 @@
 /**
+ * Matt Costi - mscosti  
+ * Rob Dabrowski - rpdabrowski
  * 
+ * CS 4341 C 2015
+ * Prof. Niel Heffernan
+ * WPI 
  */
 package common.board;
 

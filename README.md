@@ -71,10 +71,17 @@ MiniMax Arguments
 | ? | --collect-stats | Turns off typical logging and logs only player specific stats - Minimax logs branching, etc |
 
 Board Arguments
+
 | Arg Number  | Name  | Description  |
 |---|---|---|
 | ? | --score-board |  Use a "score board" thats scores the board as the game progresses |
+
+Evaluator Arguments
+
+| Arg Number  | Name  | Description  |
+|---|---|---|
 | ? | --score-board-feature | Regular score board evaluator |
+
 
 
 ### Jar File Locations

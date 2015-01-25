@@ -1,3 +1,12 @@
+'''
+ * Matt Costi - mscosti  
+ * Rob Dabrowski - rpdabrowski
+ * 
+ * CS 4341 C 2015
+ * Prof. Niel Heffernan
+ * WPI 
+'''
+
 import sys, time, uuid
 import os
 import string

@@ -1,3 +1,11 @@
+/**
+ * Matt Costi - mscosti  
+ * Rob Dabrowski - rpdabrowski
+ * 
+ * CS 4341 C 2015
+ * Prof. Niel Heffernan
+ * WPI 
+ */
 package player;
 
 import java.io.BufferedReader;
