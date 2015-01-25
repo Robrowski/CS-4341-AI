@@ -67,8 +67,8 @@ MiniMax Arguments
 | ? | --alpha-beta | Enables alpha beta pruning |
 | ? | --gamma-pruning | Enables pruning based on win/loss detection |
 | ? | --tabbed-logging | Enables tabbed logging to make the log look like a tree |
-| ? | MAXDEPTH= | Set the max depth for MiniMax. A number must follow a space after this arg |
-
+| ? | MAXDEPTH= | Set the max depth for MiniMax. A number must follow a space after this arg. Repeats ID-DFS until max depth |
+| ? | --collect-stats | Turns off typical logging and logs only player specific stats - Minimax logs branching, etc |
 
 Board Arguments
 | Arg Number  | Name  | Description  |

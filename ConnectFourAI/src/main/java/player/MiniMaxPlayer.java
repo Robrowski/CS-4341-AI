@@ -60,7 +60,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	protected MoveHolder decideNextMove() {
 		if (stats_mode) { // print csv-tab header
 			FileLogger.activate();
-			logger.println("depth	branches	leaves	time	abPrunes	gammaPrunes moveUpgraded");
+			logger.println("depth	branches	leaves	time	abPrunes	gammaPrunes	moveUpgraded	col	value");
 			FileLogger.deactivate();
 		}
 
@@ -81,8 +81,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						Integer.MIN_VALUE, d);
 
 				boolean newer_is_better = newMove.getValue() > best.getValue();
-				if (newer_is_better)
-					best = newMove;
+				best = newMove; // always take new move
 
 				if (stats_mode) { // print csv-tab data
 					FileLogger.activate();
@@ -92,7 +91,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 							+ CountDownTimer.elapsed_milli + "	" 
 							+ ab_prunes	+ "	" 
 							+ gamma_prunes + "	" 
-							+ newer_is_better);
+							+ newer_is_better + "	"
+							+ newMove.getCol()  + "	"
+							+ newMove.getValue());
 					FileLogger.deactivate();
 				}
 			}
@@ -289,8 +290,6 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 * @return
 	 */
 	private int estimateBoard(Board current, int depth) {
-		Random random = new Random();
-		int randomNumber = (random.nextInt(20));
 
 		int estimate = eval.estimateGameState(current);
 
