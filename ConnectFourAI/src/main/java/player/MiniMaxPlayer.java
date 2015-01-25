@@ -56,6 +56,10 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					.get(argsList.indexOf("MAXDEPTH=") + 1);
 			try {
 				MAXDEPTH = Integer.parseInt(max_depth_arg);
+				if (MAXDEPTH < 3) {
+					logger.println("Sorry, 3 is the minimum max depth allowed");
+					MAXDEPTH = 3;
+				}
 				logger.println("Max depth set to " + MAXDEPTH);
 			} catch (NumberFormatException mne) {
 				logger.println("Couldn't read the argument for MAXDEPTH= ... arg = "

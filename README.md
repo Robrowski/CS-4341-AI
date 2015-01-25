@@ -2,6 +2,15 @@
 1. Connect-N
 
 
+## Building the source code
+
+1. By commandline, go into the ConnectFourAI folder
+1. Use the command 'gradlew.bat allJars'
+
+You will now see our compile jars in build\libs
+
+
+
 ## Setting Up With Eclipse
 Have the following: 
 
@@ -81,7 +90,7 @@ Evaluator Arguments
 | Arg Number  | Name  | Description  |
 |---|---|---|
 | ? | --score-board-feature | Regular score board evaluator |
-
+| ? | --influence-score-board-feature | Tuned version of score board feature |
 
 
 ### Jar File Locations
