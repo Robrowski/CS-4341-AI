@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import common.FileLogger;
 import common.MoveHolder;
 import common.board.Board;
+import common.timing.CountDownTimer;
 
 public class MiniMaxPlayer extends AbstractPlayer {
 
@@ -18,7 +20,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	Random random = new Random();
 
 	/* The following are statistics on each move */
-	private int leaves_visited, branches_made;
+	private int leaves_visited, branches_made, ab_prunes, gamma_prunes;
 
 	public MiniMaxPlayer(String[] args) {
 		super(args);
@@ -33,6 +35,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		if (argsList.contains("--gamma-pruning")) {
 			gamma_enabled = true;
 		}
+
 		// Read for a max depth and the next number after it
 		if (argsList.contains("MAXDEPTH=")) {
 			String max_depth_arg = argsList
@@ -54,13 +57,32 @@ public class MiniMaxPlayer extends AbstractPlayer {
 
 	@Override
 	protected MoveHolder decideNextMove() {
+		if (stats_mode) { // print csv-tab header
+			FileLogger.activate();
+			logger.println("depth	branches	leaves	time	abPrunes	gammaPrunes");
+			FileLogger.deactivate();
+		}
+
 		Board copy = this.gameBoard.copy();
 
 		leaves_visited = 0;
 		branches_made = 0;
+		ab_prunes = 0;
+		gamma_prunes = 0;
 		MoveHolder next = miniMax(null, copy, 0, this.playerNumber,
 				Integer.MIN_VALUE);
-		logger.println("next move is: " + next.getCol() + "value: "
+		
+		if (stats_mode) { // print csv-tab data
+			FileLogger.activate();
+			logger.println(MAXDEPTH + "	" + branches_made + "	"
+					+ leaves_visited + "	" + CountDownTimer.elapsed_milli + "	"
+					+ ab_prunes + "	" + gamma_prunes);
+			
+			FileLogger.deactivate();
+		}
+
+		// Generic prints
+		logger.println("next move is: " + next.getCol() + " value: "
 				+ next.getValue());
 		logger.println("Leaves: " + leaves_visited + "   Branches: "
 				+ branches_made);
@@ -135,7 +157,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 								* 100); // GREAT!!
 						logger.printMove(bestMove, tabbed_logging_activated
 								* newDepth);
-
+						gamma_prunes++;
 						break;
 					} else {
 						/**
@@ -162,6 +184,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						if (alpha_beta_enabled
 								&& bestMove.getValue() > bestValue
 								&& depth != 0) {
+							ab_prunes++;
 							break;
 						}
 					}
@@ -189,6 +212,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 								* 100); // GREAT!!
 						logger.printMove(bestMove, tabbed_logging_activated
 								* newDepth);
+						gamma_prunes++;
 						break;
 					} else {
 						/**
@@ -215,6 +239,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						// it won't be picked as max anyways
 						if (alpha_beta_enabled
 								&& bestMove.getValue() < bestValue) {
+							ab_prunes++;
 							break;
 						}
 					}

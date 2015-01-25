@@ -51,6 +51,7 @@ abstract class AbstractPlayer {
 
 	Evaluator eval;
 	String[] features = { "scoreBoardCount" };
+	protected boolean stats_mode = false;
 
 	/**
 	 * Constructor and argument parser for core Player settings
@@ -67,9 +68,15 @@ abstract class AbstractPlayer {
 		} else {
 			playerName = "DefaultPlayerName";
 		}
+
 		logger = FileLogger.getInstance();
 		logger.init(playerName, argsList);
 		logger.println("AbstractPlayer initialized. ");
+
+		if (argsList.contains("--collect-stats")) {
+			FileLogger.deactivate();
+			stats_mode = true;
+		}
 	}
 
 	/**
@@ -172,7 +179,8 @@ abstract class AbstractPlayer {
 	 *            the column number to play in
 	 */
 	private void sendMove(MoveHolder move) {
-		System.out.println(Integer.toString(move.getCol()) + " 1");
+		System.out.println(Integer.toString(move.getCol()) + " "
+				+ Move.toString(move.getMove()));
 		System.out.flush();
 		recordMove(move, playerNumber);
 	}
@@ -187,19 +195,9 @@ abstract class AbstractPlayer {
 
 		// If there is only one string received, the game has ended
 		if (opponents_move.length == 1) {
-			// TODO translate game-over codes
-			logger.println("Game over!");
-			switch (opponents_move[0]) {
-			case "-1":
-				logger.println("I WON");
-				break;
-			case "-2":
-				logger.println("I LOST");
-				break;
-			case "-3":
-				logger.println("I TIED");
-				break;
-			}
+			if (stats_mode)
+				FileLogger.activate();
+			logger.println("Game over!" + opponents_move[0]);
 			game_over = true;
 			return;
 		}
