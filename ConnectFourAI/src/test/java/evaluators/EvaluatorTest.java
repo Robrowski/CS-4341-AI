@@ -28,16 +28,16 @@ public class EvaluatorTest {
 	
 	@Test
 	public void test_make_invalid_feature_eval() {
-		thrown.expectMessage("Unrecognized");
+		thrown.expectMessage("No Features Given");
 		String[] unrecognizedFeature = {"Unrecognized"};
-		Evaluator newEval = factory.makeEvaluator(unrecognizedFeature, 1);
+		Evaluator newEval = factory.makeEvaluator(unrecognizedFeature, 0);
 	}
 	
 	@Test
 	public void test_make_1_valid_feature_eval() {
-		String[] oneFeature = {"WinLikelihood"};
+		String[] oneFeature = { "--score-board-feature" };
 		Evaluator newEval = factory.makeEvaluator(oneFeature, 1);
-		assertEquals(newEval.getFeatures().length,1);
+		assertEquals(newEval.getFeatures().size(), 1);
 	}
 	
 }

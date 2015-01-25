@@ -13,9 +13,6 @@ import common.board.Board;
 import common.board.BoardFactory;
 import common.timing.CountDownTimer;
 
-import evaluators.Evaluator;
-import evaluators.EvaluatorFactory;
-
 /**
  * The AbstractPlayer is intended to be the AI player framework for the game of
  * Connect-N. This framework handles all move logic, basic logging,
@@ -49,8 +46,6 @@ abstract class AbstractPlayer {
 	/** A copy of the arguments input into the program */
 	private List<String> argsList;
 
-	Evaluator eval;
-	String[] features = { "scoreBoardCount" };
 	protected boolean stats_mode = false;
 
 	/**
@@ -96,8 +91,6 @@ abstract class AbstractPlayer {
 			// Step 3. Initialize game board, game state, etc.
 			gameBoard = BoardFactory.makeBoard(width, height, numToWin,
 					argsList);
-
-			eval = EvaluatorFactory.makeEvaluator(features, playerNumber);
 
 			// Step 4. If going second, wait for opponent to make a move
 			if (playerNumber != firstTurn) {

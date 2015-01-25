@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.board.ScoreBoard;
+
 import evaluators.Evaluator;
 import evaluators.EvaluatorFactory;
 
@@ -16,7 +17,7 @@ public class ScoreBoardCountFeatureTest {
 	@Before
 	public void setUp() throws Exception {
 		EvaluatorFactory factory = new EvaluatorFactory();
-		String[] scoreBoardCount = { "scoreBoardCount" };
+		String[] scoreBoardCount = { "--score-board-feature" };
 		scoreBoardCountEval = factory.makeEvaluator(scoreBoardCount, 1);
 	}
 

@@ -74,7 +74,7 @@ Board Arguments
 | Arg Number  | Name  | Description  |
 |---|---|---|
 | ? | --score-board |  Use a "score board" thats scores the board as the game progresses |
-
+| ? | --score-board-feature | Regular score board evaluator |
 
 
 ### Jar File Locations

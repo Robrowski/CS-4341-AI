@@ -11,6 +11,9 @@ import common.MoveHolder;
 import common.board.Board;
 import common.timing.CountDownTimer;
 
+import evaluators.Evaluator;
+import evaluators.EvaluatorFactory;
+
 public class MiniMaxPlayer extends AbstractPlayer {
 
 	private boolean alpha_beta_enabled = false;
@@ -19,6 +22,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	/** The maximum depth we will allow for mini max */
 	private int MAXDEPTH = 4;
 	Random random = new Random();
+
+	private Evaluator eval;
 
 	/* The following are statistics on each move */
 	private int leaves_visited, branches_made, ab_prunes, gamma_prunes;
@@ -49,6 +54,9 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						+ max_depth_arg);
 			}
 		}
+
+		eval = EvaluatorFactory.makeEvaluator(argsList, playerNumber);
+
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -290,10 +298,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 * @return
 	 */
 	private int estimateBoard(Board current, int depth) {
-
-		int estimate = eval.estimateGameState(current);
-
-		return estimate;
+		return eval.estimateGameState(current);
 	}
 
 }

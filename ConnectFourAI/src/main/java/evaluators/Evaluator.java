@@ -1,5 +1,7 @@
 package evaluators;
 
+import java.util.List;
+
 import common.board.Board;
 import common.board.ScoreBoard;
 
@@ -7,10 +9,10 @@ import evaluators.features.Feature;
 
 public class Evaluator {
 	
-	private Feature[] features;
+	private List<Feature> features;
 	public int player;
 
-	public Evaluator(Feature[] features, int player) {
+	public Evaluator(List<Feature> features, int player) {
 		this.features = features;
 		this.player = player;
 	}
@@ -23,7 +25,7 @@ public class Evaluator {
 		return total_score;
 	}
 	
-	public Feature[] getFeatures(){
+	public List<Feature> getFeatures() {
 		return features;
 	}
 }

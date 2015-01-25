@@ -1,5 +1,9 @@
 package evaluators;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import common.FileLogger;
 
 import evaluators.features.Feature;
@@ -16,28 +20,27 @@ public class EvaluatorFactory {
 		
 	}
 	
-	public static Evaluator makeEvaluator(String[] featureStrings, int player) {
-		int numFeatures = featureStrings.length;
-		Feature[] desiredFeatures = new Feature[featureStrings.length];
+
+	public static Evaluator makeEvaluator(List<String> argsList, int player) {
+		List<Feature> features = new LinkedList<Feature>();
 		
-		// logger = FileLogger.getInstance();
-		// logger.println("num Features" + numFeatures);
-		if (numFeatures == 0){
+		// Regular ScoreBoard evaluator
+		if (argsList.contains("--score-board-feature")) {
+			features.add(new ScoreBoardCountFeature(player));
+		}
+		
+		// Add more arguments to add more features or use customized versions of
+		// existing features features
+
+		if (features.size() == 0) {
 			throw new RuntimeException("No Features Given");
 		}
 
-		
-		for (int i = 0; i < numFeatures; i++){
-			switch (featureStrings[i]){
-			case "scoreBoardCount":
-				desiredFeatures[i] = new ScoreBoardCountFeature(player);
-					break;
-				default:
-					throw new RuntimeException("Unrecognized Feature given");
-			}
-		}
-		
-		return new Evaluator(desiredFeatures, player);
+		return new Evaluator(features, player);
+	}
+
+	public Evaluator makeEvaluator(String[] scoreBoardCount, int player) {
+		return makeEvaluator(Arrays.asList(scoreBoardCount), player);
 	}
 
 }
