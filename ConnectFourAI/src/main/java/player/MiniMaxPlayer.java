@@ -116,8 +116,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	private MoveHolder miniMax(MoveHolder parent_move, Board current,
 			int depth,
 			int player, int bestValue) {
-		// logger.println("Current depth is: " + depth, tabbed_logging_activated
-		// * depth);
+
 		List<MoveHolder> moves = current.getPossibleMoves(player);
 
 		/**
@@ -125,8 +124,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		 * estimate the current board's value
 		 */
 		if (depth == MAXDEPTH || moves.size() == 0) {
-			// logger.println("depth = max, stopping at move " + parentMove,
-			// tabbed_logging_activated * depth);
+
 			this.leaves_visited += 1;
 			int estimate = estimateBoard(current, depth);
 			parent_move.setValue(estimate);
@@ -148,17 +146,17 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
 					if (move_result == Board.LOSS) {
-						// logger.println("Not taking a pop loss",
-						// tabbed_logging_activated * newDepth);
 						continue; // Continue through the loop
 					}
 					if (gamma_enabled && move_result == Board.WIN) {
 						bestMove = move.setValue(Integer.MAX_VALUE - newDepth
-								* 100); // GREAT!!
+								* 1000 + eval.estimateGameState(current)); // GREAT!!
 						logger.printMove(bestMove, tabbed_logging_activated
 								* newDepth);
 						gamma_prunes++;
-						break;
+						if (depth != 0)
+							break;
+						minMaxMove = bestMove;
 					} else {
 						/**
 						 * Run miniMax on the next layer of the tree, which is
@@ -166,8 +164,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
 								this.opponentNum, bestMove.getValue());
-						minMaxMove.setCol(move.getCol());
 					}
+					minMaxMove = move.setValue(minMaxMove.getValue());
 
 					if (minMaxMove.getValue() > bestMove.getValue()) {
 						/**
@@ -189,9 +187,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						}
 					}
 				}
-				logger.printMove(bestMove,
-						tabbed_logging_activated * depth);
-
+				logger.printMove(bestMove, tabbed_logging_activated * depth);
 				return bestMove;
 			} else { // minimizing score
 
@@ -209,7 +205,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					}
 					if (gamma_enabled && move_result == Board.WIN) {
 						bestMove = move.setValue(Integer.MIN_VALUE + newDepth
-								* 100); // GREAT!!
+								* 1000 + eval.estimateGameState(current)); // GREAT!!
 						logger.printMove(bestMove, tabbed_logging_activated
 								* newDepth);
 						gamma_prunes++;
@@ -221,9 +217,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
 								this.playerNumber, bestMove.getValue());
-						minMaxMove.setCol(move.getCol());
 					}
-
+					minMaxMove = move.setValue(minMaxMove.getValue());
 
 					if (minMaxMove.getValue() < bestMove.getValue()) {
 						/**
@@ -245,8 +240,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					}
 
 				}
-				logger.printMove(bestMove.setCol(parent_move.getCol()),
-						tabbed_logging_activated * depth);
+				logger.printMove(bestMove, tabbed_logging_activated * depth);
+
 				return bestMove;
 			}
 		}
