@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import common.FileLogger;
+import common.Move;
 import common.MoveHolder;
 
 public class Board {
@@ -380,14 +381,13 @@ public class Board {
 		}
 
 		// Possible pop moves
-		// if (((player == 1) && !p1_used_pop) || ((player == 2) &&
-		// !p2_used_pop)) {
-		// for (int col : move_order[width - 1]) {
-		// if (board[0][col] == player) {
-		// moves.add(new MoveHolder(col).setMove(Move.POP));
-		// }
-		// }
-		// }
+		if (((player == 1) && !p1_used_pop) || ((player == 2) && !p2_used_pop)) {
+			for (int col : move_order[width - 1]) {
+				if (board[0][col] == player) {
+					moves.add(new MoveHolder(col).setMove(Move.POP));
+				}
+			}
+		}
 
 		return moves;
 	}

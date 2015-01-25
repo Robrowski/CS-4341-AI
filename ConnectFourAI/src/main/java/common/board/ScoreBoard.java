@@ -2,6 +2,7 @@ package common.board;
 
 import java.util.Arrays;
 
+import common.Move;
 import common.MoveHolder;
 
 
@@ -38,20 +39,19 @@ public class ScoreBoard extends Board{
 		int[][] to_update = (move.getPlayer() == 2) ? player_one_score_board
 				: player_two_score_board;
 
+		// Totally different procedure for updating after Pops..
+		if (move.getMove().equals(Move.POP)) {
+			this.player_two_score_board = reCalculatePlayerScoreBoard(2);
+			this.player_one_score_board = reCalculatePlayerScoreBoard(1);
+			return;
+		}
+		
 		int r = move.getRow();
 		int c = move.getCol();
 		int N = numToWin - 1;
 
 		// 1. Decrease the newly occupied space to zero
 		to_update[r][c] = 0;
-
-		// cheapUpdateScoreBoard(move, to_update);
-
-		for (int x = 0; x < numToWin; x++) {
-			// System.out.println()
-
-		}
-
 
 		// Update in each direction
 		for (int i = 0; i < numToWin; i++) {
@@ -123,9 +123,10 @@ public class ScoreBoard extends Board{
 
 
 	private void initScoreBoards() {
-		int[][] scoreBoard = reCalculatePlayerScoreBoard(-1);
-		this.player_one_score_board = makeBoardCopy(scoreBoard, height, width);
-		this.player_two_score_board = makeBoardCopy(scoreBoard, height, width);
+		// don't copy twice.. derrr
+		this.player_two_score_board = reCalculatePlayerScoreBoard(-1);
+		this.player_one_score_board = makeBoardCopy(player_two_score_board,
+				height, width);
 	}
 
 	private int[][] reCalculatePlayerScoreBoard(int player) {
@@ -307,7 +308,7 @@ public class ScoreBoard extends Board{
 
 	@Override
 	public Board copy() {
-		return new ScoreBoard(super.copy(), player_one_score_board,
+		return new ScoreBoard(this, player_one_score_board,
 				player_two_score_board);
 	}
 
