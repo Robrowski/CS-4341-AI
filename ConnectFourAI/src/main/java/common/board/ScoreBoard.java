@@ -18,12 +18,21 @@ public class ScoreBoard extends Board{
 		
 	}
 	
-	public ScoreBoard(ScoreBoard toCopy) {
-		super(toCopy);
-		this.player_one_score_board = makeBoardCopy(toCopy.player_one_score_board);
-		this.player_two_score_board = makeBoardCopy(toCopy.player_two_score_board);
+	/**
+	 * Constructor used for deep copying
+	 * 
+	 * @param copy
+	 */
+	protected ScoreBoard(Board copy, int[][] player_one_score_board,
+			int[][] player_two_score_board) {
+		super(copy.width, copy.height, copy.numToWin, copy.board,
+				copy.p1_used_pop, copy.p2_used_pop);
+		this.player_one_score_board = makeBoardCopy(player_one_score_board,
+				height, width);
+		this.player_two_score_board = makeBoardCopy(player_two_score_board,
+				height, width);
 	}
-	
+
 	@Override
 	public void updateScoreBoard(MoveHolder move) {
 		int[][] to_update = (move.getPlayer() == 2) ? player_one_score_board
@@ -115,8 +124,8 @@ public class ScoreBoard extends Board{
 
 	private void initScoreBoards() {
 		int[][] scoreBoard = reCalculatePlayerScoreBoard(-1);
-		this.player_one_score_board = makeBoardCopy(scoreBoard);
-		this.player_two_score_board = makeBoardCopy(scoreBoard);
+		this.player_one_score_board = makeBoardCopy(scoreBoard, height, width);
+		this.player_two_score_board = makeBoardCopy(scoreBoard, height, width);
 	}
 
 	private int[][] reCalculatePlayerScoreBoard(int player) {
@@ -291,8 +300,15 @@ public class ScoreBoard extends Board{
 	 * @return
 	 */
 	public void setBoard(int[][] newBoard) {
-		this.board = makeBoardCopy(newBoard);
+		this.board = makeBoardCopy(newBoard, height, width);
 		this.player_one_score_board = reCalculatePlayerScoreBoard(1);
 		this.player_two_score_board = reCalculatePlayerScoreBoard(2);
 	}
+
+	@Override
+	public Board copy() {
+		return new ScoreBoard(super.copy(), player_one_score_board,
+				player_two_score_board);
+	}
+
 }

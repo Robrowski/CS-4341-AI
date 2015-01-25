@@ -125,7 +125,7 @@ public class BoardTest {
 		add_helper(0, P2);
 		add_helper(4, P1);
 
-		Board copy = new Board(this.board);
+		Board copy = board.copy();
 
 		// The boards should have the same pieces in the same places
 		assertEquals(board.getPiece(0, 0), copy.getPiece(0, 0));
@@ -137,7 +137,7 @@ public class BoardTest {
 	public void test_DeppCopyConstructor_BeforeAdding() {
 		// Copy, add pieces and then check
 		// Add pieces then copy and check
-		Board copy = new Board(this.board);
+		Board copy = board.copy();
 
 		add_helper(0, P1);
 		add_helper(0, P2);

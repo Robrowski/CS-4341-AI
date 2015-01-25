@@ -54,7 +54,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 
 	@Override
 	protected MoveHolder decideNextMove() {
-		Board copy = new Board(this.gameBoard);
+		Board copy = this.gameBoard.copy();
 
 		leaves_visited = 0;
 		branches_made = 0;
@@ -121,7 +121,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					 * copy the current board in order to split and add a new
 					 * board state to the tree.
 					 */
-					Board newBoard = new Board(current);
+					Board newBoard = current.copy();
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
 					if (move_result == Board.LOSS) {
@@ -177,7 +177,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 					 * copy the current board in order to split and add a new
 					 * board state to the tree.
 					 */
-					Board newBoard = new Board(current);
+					Board newBoard = current.copy();
 					MoveHolder minMaxMove;
 					int move_result = newBoard.applyMove(move, player);
 					if (move_result == Board.LOSS) {
@@ -239,6 +239,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	private int estimateBoard(Board current, int depth) {
 		Random random = new Random();
 		int randomNumber = (random.nextInt(20));
+
 
 		return randomNumber;
 	}

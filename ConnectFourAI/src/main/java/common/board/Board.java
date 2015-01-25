@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import common.FileLogger;
-import common.Move;
 import common.MoveHolder;
 
 public class Board {
@@ -21,8 +20,8 @@ public class Board {
 	public int width;
 	int numToWin;
 
-	private boolean p1_used_pop = false;
-	private boolean p2_used_pop = false;
+	protected boolean p1_used_pop = false;
+	protected boolean p2_used_pop = false;
 
 	private FileLogger logger = FileLogger.getInstance();
 
@@ -44,20 +43,35 @@ public class Board {
 	}
 
 	/**
-	 * Board class constructor for making a deep copy of another board
+	 * Constructor used when copying
+	 * 
+	 * @param width
+	 * @param height
+	 * @param numToWin
+	 * @param board
+	 * @param p1_used_pop
+	 * @param p2_used_pop
+	 */
+	protected Board(int width, int height, int numToWin, int[][] board,
+			boolean p1_used_pop, boolean p2_used_pop) {
+
+		this.height = height;
+		this.width = width;
+		this.numToWin = numToWin;
+		this.board = makeBoardCopy(board, height, width);
+		this.p1_used_pop = p1_used_pop;
+		this.p2_used_pop = p2_used_pop;
+	}
+
+	/**
+	 * Copy a given board.
 	 * 
 	 * @param toCopy
+	 * @param height
+	 * @param width
+	 * @return
 	 */
-	public Board(Board toCopy) {
-		this.height = toCopy.height;
-		this.width = toCopy.width;
-		this.numToWin = toCopy.numToWin;
-		this.board = makeBoardCopy(toCopy.board);
-		this.p1_used_pop = toCopy.p1_used_pop;
-		this.p2_used_pop = toCopy.p2_used_pop;
-	}
-	
-	protected int[][] makeBoardCopy(int[][] toCopy) {
+	static protected int[][] makeBoardCopy(int[][] toCopy, int height, int width) {
 		int[][] newBoard = new int[height][width];
 		for (int i = 0; i < height; i++)
 			newBoard[i] = Arrays.copyOf(toCopy[i], width);
@@ -84,8 +98,8 @@ public class Board {
 	 *            The player placing the piece
 	 * @return boolean representing success to place the piece
 	 */
-	private boolean addPiece(MoveHolder move) {
-		int rowToPlace = countPiecesInCol(move.getCol());
+	static private boolean addPiece(MoveHolder move, int height, int[][] board) {
+		int rowToPlace = countPiecesInCol(move.getCol(), board, height);
 		if (rowToPlace != height) {
 			board[rowToPlace][move.getCol()] = move.getPlayer();
 			move.setRow(rowToPlace);
@@ -129,7 +143,7 @@ public class Board {
 		switch (move.getMove()) {
 		case DROP:
 			// Try to add the piece
-			if (!addPiece(move))
+			if (!addPiece(move, height, board))
 				return FAILURE_TO_PLACE;
 
 			// Check for victories
@@ -187,10 +201,10 @@ public class Board {
 	 */
 	private int detect_win(MoveHolder move) {
 		// count pieces in each direction
-		int vert = countVertical(move);
-		int hori = countHorizontal(move);
-		int ldiag = countLDiagonal(move);
-		int rdiag = countRDiagonal(move);
+		int vert = countVertical(move, board);
+		int hori = countInDirection(move, board, height, width, 0);
+		int ldiag = countInDirection(move, board, height, width, 1);
+		int rdiag = countInDirection(move, board, height, width, -1);
 
 		// TODO could evaluate HOW MANY wins here
 
@@ -199,24 +213,33 @@ public class Board {
 	}
 
 	/**
-	 * counts how many pieces there are in a row right diagonally from a given
-	 * move
+	 * Counts how many pieces there are in a row from the given move. Use the
+	 * dir parameter to dictate up right, down right or horizontal
 	 * 
-	 * Right diagonal means sloping up
 	 * 
 	 * @param move
+	 *            The move
+	 * @param board
+	 *            The board being played on
+	 * @param height
+	 * @param width
+	 * @param dir
+	 *            Direction +1 for up right, 0 for horizontal, -1 for down right
 	 * @return
 	 */
-	private int countRDiagonal(MoveHolder move) {
+	static private int countInDirection(MoveHolder move, int[][] board,
+			int height, int width, int dir) {
+
 		int num_pieces = 1; // the piece placed
 		int r = move.getRow();
 		int c = move.getCol();
-
+		int p = move.getPlayer();
 		// Count left
 		for (int i = -1; ; i--) {
-			if (r + i < 0 || c + i < 0)// off the board
+			// Check if its off the board
+			if (r + dir * i < 0 || r + dir * i == height || c + i < 0)
 				break;
-			if (board[r + i][c + i] == move.getPlayer())
+			if (board[r + dir * i][c + i] == p)
 				num_pieces++;
 			else
 				break;
@@ -224,81 +247,19 @@ public class Board {
 
 		// Count Right
 		for (int i = 1; ; i++) {
-			if (r + i == height || c + i == width)// off the board
+			// Check if its off the board
+			if (r + dir * i == height || r + dir * i < 0 || c + i == width)
 				break;
-			if (board[r + i][c + i] == move.getPlayer())
+			if (board[r + dir * i][c + i] == p)
 				num_pieces++;
 			else
 				break;
 		}
+
 
 		return num_pieces;
 	}
 
-	/**
-	 * counts how many pieces there are in a row left diagonally from a given
-	 * move
-	 * 
-	 * Left diagonal means sloping down
-	 * 
-	 * @param move
-	 * @return
-	 */
-	private int countLDiagonal(MoveHolder move) {
-		int num_pieces = 1; // the piece placed
-		int r = move.getRow();
-		int c = move.getCol();
-
-		// Count left
-		for (int i = 1;; i++) {
-			if (r + i == height || c - i < 0)// off the board
-				break;
-			if (board[r + i][c - i] == move.getPlayer())
-				num_pieces++;
-			else
-				break;
-		}
-
-		// Count Right
-		for (int i = 1;; i++) {
-			if (r - i < 0 || c + i == width)// off the board
-				break;
-			if (board[r - i][c + i] == move.getPlayer())
-				num_pieces++;
-			else
-				break;
-		}
-
-		return num_pieces;
-	}
-
-	/**
-	 * counts how many pieces there are in a row horizontally from a given move
-	 * 
-	 * @param move
-	 * @return
-	 */
-	private int countHorizontal(MoveHolder move) {
-		int num_pieces = 1; // the piece placed
-
-		// Count left
-		for (int c = move.getCol() - 1; c >= 0; c--) {
-			if (board[move.getRow()][c] == move.getPlayer())
-				num_pieces++;
-			else
-				break;
-		}
-
-		// Count right
-		for (int c = move.getCol() + 1; c < width; c++) {
-			if (board[move.getRow()][c] == move.getPlayer())
-				num_pieces++;
-			else
-				break;
-		}
-
-		return num_pieces;
-	}
 
 	/**
 	 * counts how many pieces there are in a row vertically from a given move
@@ -306,7 +267,7 @@ public class Board {
 	 * @param move
 	 * @return
 	 */
-	private int countVertical(MoveHolder move) {
+	static private int countVertical(MoveHolder move, int[][] board) {
 		int num_pieces = 1; // the piece placed
 
 		for (int r = move.getRow() - 1; r >= 0; r--) {
@@ -374,6 +335,10 @@ public class Board {
 	 * @return int The number of pieces in a column
 	 */
 	public int countPiecesInCol(int col) {
+		return countPiecesInCol(col, board, height);
+	}
+
+	static private int countPiecesInCol(int col, int[][] board, int height) {
 		// Optimized assuming most columns will be almost empty
 		for (int row = 0; row < height; row++) {
 			if (board[row][col] == EMPTY) {
@@ -415,13 +380,14 @@ public class Board {
 		}
 
 		// Possible pop moves
-		if (((player == 1) && !p1_used_pop) || ((player == 2) && !p2_used_pop)) {
-			for (int col : move_order[width - 1]) {
-				if (board[0][col] == player) {
-					moves.add(new MoveHolder(col).setMove(Move.POP));
-				}
-			}
-		}
+		// if (((player == 1) && !p1_used_pop) || ((player == 2) &&
+		// !p2_used_pop)) {
+		// for (int col : move_order[width - 1]) {
+		// if (board[0][col] == player) {
+		// moves.add(new MoveHolder(col).setMove(Move.POP));
+		// }
+		// }
+		// }
 
 		return moves;
 	}
@@ -449,6 +415,16 @@ public class Board {
 				return board[r][col];
 		}
 		return EMPTY;
+	}
+
+	/**
+	 * Generate a deep copy of this
+	 * 
+	 * @return
+	 */
+	public Board copy() {
+		return new Board(width, height, numToWin, board, p1_used_pop,
+				p2_used_pop);
 	}
 
 }

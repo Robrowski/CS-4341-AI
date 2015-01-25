@@ -83,7 +83,6 @@ abstract class AbstractPlayer {
 			// Step 3. Initialize game board, game state, etc.
 			gameBoard = BoardFactory.makeBoard(width, height, numToWin,
 					argsList);
-			// gameBoard = new Board(width, height, numToWin);
 
 			// Step 4. If going second, wait for opponent to make a move
 			if (playerNumber != firstTurn) {
