@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeoutException;
 
 import common.FileLogger;
 import common.MoveHolder;
@@ -18,6 +19,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	/** The maximum depth we will allow for mini max */
 	private int MAXDEPTH = 4;
 	Random random = new Random();
+	int MIN_MILLIS_TO_BACK_OUT = 100;
 
 	/* The following are statistics on each move */
 	private int leaves_visited, branches_made, ab_prunes, gamma_prunes;
@@ -59,34 +61,54 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	protected MoveHolder decideNextMove() {
 		if (stats_mode) { // print csv-tab header
 			FileLogger.activate();
-			logger.println("depth	branches	leaves	time	abPrunes	gammaPrunes");
+			logger.println("depth	branches	leaves	time	abPrunes	gammaPrunes moveUpgraded");
 			FileLogger.deactivate();
 		}
 
-		Board copy = this.gameBoard.copy();
+		// Timer has already been started!!
 
-		leaves_visited = 0;
-		branches_made = 0;
-		ab_prunes = 0;
-		gamma_prunes = 0;
-		MoveHolder next = miniMax(null, copy, 0, this.playerNumber,
-				Integer.MIN_VALUE);
-		
-		if (stats_mode) { // print csv-tab data
-			FileLogger.activate();
-			logger.println(MAXDEPTH + "	" + branches_made + "	"
-					+ leaves_visited + "	" + CountDownTimer.elapsed_milli + "	"
-					+ ab_prunes + "	" + gamma_prunes);
-			
-			FileLogger.deactivate();
+		// ID-DFS
+		MoveHolder best = new MoveHolder(-1, Integer.MIN_VALUE);
+		try {
+			for (int d = 3; d <= MAXDEPTH; d++) {
+				Board copy = this.gameBoard.copy();
+				logger.println("Max depth: " + d);
+				leaves_visited = 0;
+				branches_made = 0;
+				ab_prunes = 0;
+				gamma_prunes = 0;
+				MoveHolder newMove;
+				newMove = miniMax(null, copy, 0, this.playerNumber,
+						Integer.MIN_VALUE, d);
+
+				boolean newer_is_better = newMove.getValue() > best.getValue();
+				if (newer_is_better)
+					best = newMove;
+
+				if (stats_mode) { // print csv-tab data
+					FileLogger.activate();
+					logger.println(d + "	" 
+							+ branches_made + "	"
+							+ leaves_visited + "	"
+							+ CountDownTimer.elapsed_milli + "	" 
+							+ ab_prunes	+ "	" 
+							+ gamma_prunes + "	" 
+							+ newer_is_better);
+					FileLogger.deactivate();
+				}
+			}
+		} catch (TimeoutException e) {
+			// Time ran out, so we go with the previous best
+			logger.println(e.getMessage());
 		}
 
 		// Generic prints
-		logger.println("next move is: " + next.getCol() + " value: "
-				+ next.getValue());
+		logger.println("next move is: " + best.getCol() + " value: "
+				+ best.getValue());
 		logger.println("Leaves: " + leaves_visited + "   Branches: "
 				+ branches_made);
-		return next;
+
+		return best;
 	}
 
 	/**
@@ -112,10 +134,19 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	 *            maximizing, if opponent we are minimizing.
 	 * 
 	 * @return The decided best move
+	 * @throws TimeoutException
 	 */
 	private MoveHolder miniMax(MoveHolder parent_move, Board current,
-			int depth,
-			int player, int bestValue) {
+			int depth, int player, int bestValue, int max_depth)
+			throws TimeoutException {
+
+		// Check time remaining first
+		// TODO How close can we get with this number?
+		if (CountDownTimer.remaining_milli < MIN_MILLIS_TO_BACK_OUT) {
+			logger.println("Elapsed: " + CountDownTimer.elapsed_milli);
+			throw new TimeoutException("Time ran out! ms remaining:"
+					+ CountDownTimer.remaining_milli);
+		}
 
 		List<MoveHolder> moves = current.getPossibleMoves(player);
 
@@ -123,7 +154,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 		 * If depth limit reached or If no possible moves, we can proceed to
 		 * estimate the current board's value
 		 */
-		if (depth == MAXDEPTH || moves.size() == 0) {
+		if (depth == max_depth || moves.size() == 0) {
 
 			this.leaves_visited += 1;
 			int estimate = estimateBoard(current, depth);
@@ -163,7 +194,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * to maximize the move of the opponent.
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
-								this.opponentNum, bestMove.getValue());
+								this.opponentNum, bestMove.getValue(),
+								max_depth);
 					}
 					minMaxMove = move.setValue(minMaxMove.getValue());
 
@@ -216,7 +248,8 @@ public class MiniMaxPlayer extends AbstractPlayer {
 						 * to maximize the move of the opponent.
 						 */
 						minMaxMove = miniMax(move, newBoard, newDepth,
-								this.playerNumber, bestMove.getValue());
+								this.playerNumber, bestMove.getValue(),
+								max_depth);
 					}
 					minMaxMove = move.setValue(minMaxMove.getValue());
 

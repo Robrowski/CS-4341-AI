@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import common.FileLogger;
+
 /**
  * A singleton implementation of a countdown timer for AI players to know how
  * much time they have left.
@@ -25,7 +27,7 @@ public class CountDownTimer {
 	private static int timeLimit_seconds, timeLimit_milli, period;
 	private static CountDownTimer instance = new CountDownTimer();
 	private static String name;
-
+	public static int MIN_MILLIS_TO_BACK_OUT;
 	/** The timer used to handle time */
 	private Timer t;
 
@@ -48,14 +50,39 @@ public class CountDownTimer {
 	public void init(String playerName, int timeLimit, List<String> args) {
 		timeLimit_seconds = timeLimit;
 		timeLimit_milli = timeLimit * 1000;
-		period = 100; // milliseconds
+
+		// Clock timer optimization - keeps clock from going too fast
+		if (timeLimit > 20)
+			period = 1000;
+		else if (timeLimit > 10)
+			period = 250;
+		else if (timeLimit > 5)
+			period = 200;
+		else if (timeLimit > 2)
+			period = 100;
+		else if (timeLimit > 1)
+			period = 50;
+		else
+			period = 5;
+
+		MIN_MILLIS_TO_BACK_OUT = period * 2;
 		name = playerName + "-timer";
 		t = new Timer(name);
 
-		// // Check for parameters
-		// if (args.contains("--unimplemented-timer-argument")){
-		//
-		// }
+		// Read for a max depth and the next number after it
+		if (args.contains("CLOCKPERIOD=")) {
+			String clock_period_arg = args
+					.get(args.indexOf("CLOCKPERIOD=") + 1);
+			try {
+				period = Integer.parseInt(clock_period_arg);
+
+			} catch (NumberFormatException mne) {
+				FileLogger.getInstance().println(
+						"Couldn't read the argument for CLOCKPERIOD= ... arg = "
+								+ clock_period_arg);
+			}
+		}
+		FileLogger.getInstance().println("Clock period set to " + period);
 
 	}
 
@@ -63,6 +90,8 @@ public class CountDownTimer {
 	public void start() {
 		elapsed_milli = 0;
 		elapsed_seconds = 0;
+		remaining_milli = timeLimit_milli;
+		remaining_seconds = timeLimit_seconds;
 		t.scheduleAtFixedRate(new CountDownTimerTask(), 0, period);
 	}
 
