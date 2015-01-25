@@ -24,4 +24,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'ConnectFourAI'
+rootProject.name = 'rpdabrowski_mscosti_ConnectFourAI_project1'

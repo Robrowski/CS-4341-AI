@@ -75,9 +75,9 @@ eclipse{
 //	archiveName = class_name + ".jar"
 //}
 
-/** Task that makes the MiniMaxPlayer jar */
+/** Task that makes the rpdabrowski_mscosti_MiniMaxPlayer jar */
 task miniMaxPlayerJar(type: Jar) {
-	String class_name = "MiniMaxPlayer"
+	String class_name = "rpdabrowski_mscosti_MiniMaxPlayer"
 	from(sourceSets.main.output) {
 		include "player/**"
 		include "common/**"
@@ -104,18 +104,6 @@ task randomPlayerJar(type: Jar) {
 }
 
 
-/** Task that makes the SamplePlayer jar */
-task SamplePlayerJar(type: Jar) {
-	String class_name = "SamplePlayer"
-	from(sourceSets.main.output) {
-		include "player/**"
-		include "common/**"
-	}
-	
-	manifest.attributes['Class-Path'] = "."
-	manifest.attributes['Main-Class'] = "player." + class_name
-	archiveName = class_name + ".jar"
-}
 
 /** 
  * Add new tasks above this line!! 

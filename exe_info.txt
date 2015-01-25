@@ -1,0 +1,6 @@
+The jar file is in this directory. For the best performance of the AI, we recommend these settings and having this be what you pass into the referee. Make sure you change FILEPATH to be the actual file path
+
+
+"java -jar FILEPATH\MiniMaxPlayer.jar MiniMaxCostiDabrowski --MAXDEPTH= 13 --alpha-beta --gamma-pruning --score-board  --influence-score-board-feature --no-logs"
+
+

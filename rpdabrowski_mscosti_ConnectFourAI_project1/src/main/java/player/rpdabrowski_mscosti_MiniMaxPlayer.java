@@ -22,7 +22,7 @@ import common.timing.CountDownTimer;
 import evaluators.Evaluator;
 import evaluators.EvaluatorFactory;
 
-public class MiniMaxPlayer extends AbstractPlayer {
+public class rpdabrowski_mscosti_MiniMaxPlayer extends AbstractPlayer {
 
 	private boolean alpha_beta_enabled = false;
 	private boolean gamma_enabled = false;
@@ -36,7 +36,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	/* The following are statistics on each move */
 	private int leaves_visited, branches_made, ab_prunes, gamma_prunes;
 
-	public MiniMaxPlayer(String[] args) {
+	public rpdabrowski_mscosti_MiniMaxPlayer(String[] args) {
 		super(args);
 
 		List<String> argsList = Arrays.asList(args);
@@ -72,7 +72,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	}
 
 	public static void main(String[] args) throws IOException {
-		MiniMaxPlayer mmp = new MiniMaxPlayer(args);
+		rpdabrowski_mscosti_MiniMaxPlayer mmp = new rpdabrowski_mscosti_MiniMaxPlayer(args);
 		mmp.run();
 	}
 
