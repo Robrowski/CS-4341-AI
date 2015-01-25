@@ -19,7 +19,6 @@ public class MiniMaxPlayer extends AbstractPlayer {
 	/** The maximum depth we will allow for mini max */
 	private int MAXDEPTH = 4;
 	Random random = new Random();
-	int MIN_MILLIS_TO_BACK_OUT = 100;
 
 	/* The following are statistics on each move */
 	private int leaves_visited, branches_made, ab_prunes, gamma_prunes;
@@ -141,8 +140,7 @@ public class MiniMaxPlayer extends AbstractPlayer {
 			throws TimeoutException {
 
 		// Check time remaining first
-		// TODO How close can we get with this number?
-		if (CountDownTimer.remaining_milli < MIN_MILLIS_TO_BACK_OUT) {
+		if (CountDownTimer.remaining_milli < CountDownTimer.MIN_MILLIS_TO_BACK_OUT) {
 			logger.println("Elapsed: " + CountDownTimer.elapsed_milli);
 			throw new TimeoutException("Time ran out! ms remaining:"
 					+ CountDownTimer.remaining_milli);

@@ -52,20 +52,8 @@ public class CountDownTimer {
 		timeLimit_milli = timeLimit * 1000;
 
 		// Clock timer optimization - keeps clock from going too fast
-		if (timeLimit > 20)
-			period = 1000;
-		else if (timeLimit > 10)
-			period = 250;
-		else if (timeLimit > 5)
-			period = 200;
-		else if (timeLimit > 2)
-			period = 100;
-		else if (timeLimit > 1)
-			period = 50;
-		else
-			period = 5;
-
-		MIN_MILLIS_TO_BACK_OUT = period * 2;
+		period = (int) (timeLimit); // Use 99.8% of the time given always
+		MIN_MILLIS_TO_BACK_OUT = period * 2; // allow 2 periods to back out
 		name = playerName + "-timer";
 		t = new Timer(name);
 
