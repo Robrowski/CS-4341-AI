@@ -26,7 +26,6 @@ public class ScoreBoardCountFeature implements Feature {
 		for (int i = 0; i < state.height; i++) {
 			for (int j = 0; j < state.width; j++) {
 				if (b[i][j] == player) {
-					System.out.println(playerBoard[i][j]);
 					playerScore += playerBoard[i][j];
 				}
 				else if (b[i][j] != 9) {
