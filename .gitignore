@@ -233,6 +233,7 @@ pip-log.txt
 # Java class files
 *.class
 
+
 # Generated files
 bin/
 gen/
@@ -281,8 +282,8 @@ workspace.xml
 .idea/*
 
 # Eclipse project files
-.classpath
-.project
+ConnectFourAI/.classpath
+ConnectFourAI/.project
 .settings
 
 #Gradle
