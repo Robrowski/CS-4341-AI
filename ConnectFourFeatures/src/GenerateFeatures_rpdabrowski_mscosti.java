@@ -9,7 +9,7 @@ import common.board.ScoreBoard;
 
 import evaluators.features.Feature;
 
-public class Main {
+public class GenerateFeatures_rpdabrowski_mscosti {
 	final static String delims = ",";
 
 	public static void main(String[] args) {
