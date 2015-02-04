@@ -27,7 +27,6 @@ public class Board {
 	public int width;
 	int numToWin;
 
-
 	/**
 	 * Board class constructor. Initializes a 2D array board with values of
 	 * EMPTY, as to match the behavior the referee uses when printing.
@@ -42,7 +41,7 @@ public class Board {
 		this.width = width;
 		this.numToWin = numToWin;
 		this.board = makeEmptyBoard();
-		
+
 	}
 
 	/**
@@ -76,6 +75,21 @@ public class Board {
 	}
 
 	/**
+	 * Loads a board using the given dataset
+	 * 
+	 * @param data_set_board
+	 */
+	public void upload(String[] data_set_board) {
+		for (int i = 0; i < width * height; i++) {
+			int v = Integer.parseInt(data_set_board[i]);
+
+			if (v == 0)
+				v = Board.EMPTY;
+			board[i % height][i / height] = v;
+		}
+	}
+
+	/**
 	 * Copy a given board.
 	 * 
 	 * @param toCopy
@@ -87,20 +101,19 @@ public class Board {
 		int[][] newBoard = new int[height][width];
 		for (int i = 0; i < height; i++)
 			newBoard[i] = Arrays.copyOf(toCopy[i], width);
-	
+
 		return newBoard;
 	}
-	
+
 	protected int[][] makeEmptyBoard() {
 		int[][] empty = new int[this.height][this.width];
-		
+
 		for (int[] row : empty) {
 			Arrays.fill(row, EMPTY);
 		}
-		
+
 		return empty;
 	}
-
 
 	/**
 	 * Tells you if a position is in bounds or not
@@ -112,8 +125,6 @@ public class Board {
 	protected boolean inBounds(int r, int c) {
 		return r >= 0 && r < height && c >= 0 && c < width;
 	}
-
-
 
 	/**
 	 * Returns the player number of the piece at the given location
@@ -149,20 +160,15 @@ public class Board {
 		return height;
 	}
 
-	/** For each width, these are the columns ordered from most to least important */
-	protected int[][] move_order = new int[][] {
-			  { 0 },
-			  { 1, 0 },
-			  { 1, 2, 0 },
-			  { 2, 1, 3, 0 },
-			  { 2, 3, 1, 0, 4 },
-			  { 3, 2, 4, 1, 5, 0},
-			  { 3, 4, 2, 5, 1, 6, 0 },
-			  { 4, 3, 5, 2, 6, 1, 7, 0 },
-			  { 4, 5, 3, 6, 2, 7, 1, 8, 0 },
-		      { 5, 4, 6, 3, 7, 2, 8, 1, 9, 0 }
-			};
-	
+	/**
+	 * For each width, these are the columns ordered from most to least
+	 * important
+	 */
+	protected int[][] move_order = new int[][] { { 0 }, { 1, 0 }, { 1, 2, 0 },
+			{ 2, 1, 3, 0 }, { 2, 3, 1, 0, 4 }, { 3, 2, 4, 1, 5, 0 },
+			{ 3, 4, 2, 5, 1, 6, 0 }, { 4, 3, 5, 2, 6, 1, 7, 0 },
+			{ 4, 5, 3, 6, 2, 7, 1, 8, 0 }, { 5, 4, 6, 3, 7, 2, 8, 1, 9, 0 } };
+
 	/**
 	 * Method for producing all the columns that are valid possible moves at the
 	 * current board state.
@@ -191,7 +197,6 @@ public class Board {
 	public int[][] getBoard() {
 		return board;
 	}
-	
 
 	/**
 	 * Gets the piece that is at the top of a column. Returns EMPTY if no piece

@@ -12,5 +12,5 @@ import common.board.ScoreBoard;
 
 public interface Feature {
 
-	public int score(ScoreBoard state);
+	public String score(ScoreBoard state);
 }

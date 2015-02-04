@@ -21,11 +21,9 @@ public class ScoreBoardCountFeature implements Feature {
 		this.influence = enableInfluence;
 		// TODO Auto-generated constructor stub
 	}
-	
-	
 
 	@Override
-	public int score(ScoreBoard state) {
+	public String score(ScoreBoard state) {
 		int[][] b = state.getBoard();
 		int[][] playerBoard = state.getPlayerScoreBoard(player);
 		int[][] oppBoard = state.getPlayerScoreBoard(opponent);
@@ -40,11 +38,9 @@ public class ScoreBoardCountFeature implements Feature {
 			for (int j = 0; j < state.width; j++) {
 				if (b[i][j] == player) {
 					playerPieceScore += playerBoard[i][j];
-				}
-				else if (b[i][j] != 9) {
+				} else if (b[i][j] != 9) {
 					oppPieceScore += oppBoard[i][j];
-				}
-				else if (b[i][j] == 9) {
+				} else if (b[i][j] == 9) {
 					playerInfluence += playerBoard[i][j];
 					oppInfluence += oppBoard[i][j];
 				}
@@ -58,7 +54,7 @@ public class ScoreBoardCountFeature implements Feature {
 		} else {
 			estimate = playerPieceScore - oppPieceScore;
 		}
-		return estimate;
+		return Integer.toString(estimate);
 	}
 
 }

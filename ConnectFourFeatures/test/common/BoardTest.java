@@ -57,20 +57,19 @@ public class BoardTest {
 	}
 
 	@Test
-	public void test_deep_copy(){
-		int[] four_piece_board = { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0 };
+	public void test_deep_copy() {
+		int[] four_piece_board = { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0 };
 		board.upload(four_piece_board);
-		
+
 		Board c = board.copy();
 		assertEquals(P1, c.getPiece(0, 0));
 		assertEquals(P2, c.getPiece(1, 0));
 		assertEquals(P1, c.getPiece(0, 2));
 		assertEquals(P2, c.getPiece(1, 2));
 	}
-	
-	
+
 	@Test
 	public void test_getTopPiece_empty() {
 		for (int c = 0; c < width; c++) {
@@ -84,90 +83,65 @@ public class BoardTest {
 		assertEquals(width, board.getPossibleMoves(P2).size());
 	}
 
-
 	@Test
 	public void test_applyMove_detectVerticalWin() {
-		
-		int[] a_board = { 
-				1, 1, 1, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0,	0, 0, 0 };
+
+		int[] a_board = { 1, 1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0 };
 		board.upload(a_board);
-		assertEquals(Board.WIN, board.detect_win( new MoveHolder(0).setRow(2).setPlayer(P1)));
+		assertEquals(Board.WIN,
+				board.detect_win(new MoveHolder(0).setRow(2).setPlayer(P1)));
 	}
 
 	@Test
 	public void test_applyMove_detectHorizontalWin() {
-		int[] a_board = { 
-				1, 1, 0, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0,	0, 0, 0 };
+		int[] a_board = { 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,
+				2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0 };
 		board.upload(a_board);
-		assertEquals(Board.WIN, board.detect_win( new MoveHolder(3).setRow(0).setPlayer(P2)));
+		assertEquals(Board.WIN,
+				board.detect_win(new MoveHolder(3).setRow(0).setPlayer(P2)));
 	}
 
 	@Test
 	public void test_applyMove_detectHorizontalWin2() {
-		int[] a_board = { 
-				1, 1, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				2, 0, 0, 0, 0, 0,
-				2, 0, 0, 0,	0, 0, 0 };
+		int[] a_board = { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
+				0, 0, 0, 0 };
 		board.upload(a_board);
-		assertEquals(Board.WIN, board.detect_win( new MoveHolder(4).setRow(0).setPlayer(P2)));
+		assertEquals(Board.WIN,
+				board.detect_win(new MoveHolder(4).setRow(0).setPlayer(P2)));
 	}
 
 	@Test
 	public void test_applyMove_detectRDiagonalWin() {
-		int[] a_board = { 
-				1, 1, 0, 0, 0, 0,
-				2, 1, 0, 0, 0, 0,
-				2, 2, 1, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0,	0, 0, 0 };
+		int[] a_board = { 1, 1, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 2, 2, 1, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0 };
 		board.upload(a_board);
-		assertEquals(Board.WIN, board.detect_win( new MoveHolder(2).setRow(2).setPlayer(P1)));	
+		assertEquals(Board.WIN,
+				board.detect_win(new MoveHolder(2).setRow(2).setPlayer(P1)));
 	}
 
 	@Test
 	public void test_applyMove_detectRDiagonalWin2() {
-		int[] a_board = { 
-				1, 1, 0, 0, 0, 0,
-				2, 2, 1, 0, 0, 0,
-				2, 1, 2, 1, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0,	0, 0, 0 };
+		int[] a_board = { 1, 1, 0, 0, 0, 0, 2, 2, 1, 0, 0, 0, 2, 1, 2, 1, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0 };
 		board.upload(a_board);
-		assertEquals(Board.WIN, board.detect_win( new MoveHolder(2).setRow(3).setPlayer(P1)));	
+		assertEquals(Board.WIN,
+				board.detect_win(new MoveHolder(2).setRow(3).setPlayer(P1)));
 	}
 
 	@Test
 	public void test_applyMove_detectLDiagonalWin() {
-		int[] a_board = { 
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				2, 2, 1, 1, 0, 0,
-				1, 2, 1, 0, 0, 0,
-				1, 1, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0,	0, 0, 0 };
+		int[] a_board = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1, 1, 0, 0,
+				1, 2, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0 };
 		board.upload(a_board);
-		assertEquals(Board.WIN, board.detect_win( new MoveHolder(2).setRow(3).setPlayer(P1)));	
+		assertEquals(Board.WIN,
+				board.detect_win(new MoveHolder(2).setRow(3).setPlayer(P1)));
 	}
 
 }
