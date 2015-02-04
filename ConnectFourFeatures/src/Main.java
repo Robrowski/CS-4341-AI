@@ -34,12 +34,17 @@ public class Main {
 		// TODO get the features out of the eval
 		List<Feature> features = new LinkedList<Feature>();
 
+		// Printing a header
+		for (Feature f : features) {
+			logger.print(f.getName() + ","); // CSV
+		}
+		logger.println("winner");
+
 		// Iterate through each line of the file
 		try (Scanner scanner = new Scanner(fFilePath)) {
 			System.out.println("Scanning now!");
 			while (scanner.hasNextLine()) {
 				String l = scanner.nextLine();
-
 				ScoreBoard sb = new ScoreBoard(7, 6, 4);
 				String[] parsed = l.split(delims);
 				sb.upload(parsed);
@@ -52,7 +57,6 @@ public class Main {
 				// Put The result at the end
 				logger.println(parsed[parsed.length - 1]);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Poop");

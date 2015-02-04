@@ -13,4 +13,6 @@ import common.board.ScoreBoard;
 public interface Feature {
 
 	public String score(ScoreBoard state);
+
+	public String getName();
 }

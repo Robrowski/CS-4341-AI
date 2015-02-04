@@ -57,4 +57,10 @@ public class ScoreBoardCountFeature implements Feature {
 		return Integer.toString(estimate);
 	}
 
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
