@@ -12,10 +12,8 @@ import java.util.Arrays;
 
 import common.MoveHolder;
 
+public class ScoreBoard extends Board {
 
-
-public class ScoreBoard extends Board{
-	
 	private int[][] player_one_score_board;
 	private int[][] player_two_score_board;
 
@@ -24,9 +22,9 @@ public class ScoreBoard extends Board{
 		this.player_one_score_board = makeEmptyBoard();
 		this.player_two_score_board = makeEmptyBoard();
 		initScoreBoards();
-		
+
 	}
-	
+
 	/**
 	 * Constructor used for deep copying
 	 * 
@@ -40,9 +38,6 @@ public class ScoreBoard extends Board{
 		this.player_two_score_board = makeBoardCopy(player_two_score_board,
 				height, width);
 	}
-
-
-
 
 	private void initScoreBoards() {
 		// don't copy twice.. derrr
@@ -209,21 +204,35 @@ public class ScoreBoard extends Board{
 
 		return Math.max(0, num_spaces + 1 - this.numToWin);
 	}
-	
+
 	public int[][] getPlayerScoreBoard(int player) {
 		return (player == 1) ? player_one_score_board : player_two_score_board;
 	}
 
 	/**
-	 * A convenience function used only for testing.
-	 * Allows us to set a board artificially and see if
-	 * the scoreBoards were appropriately updated for each player
+	 * A convenience function used only for testing. Allows us to set a board
+	 * artificially and see if the scoreBoards were appropriately updated for
+	 * each player
 	 * 
 	 * @param newBoard
 	 * @return
 	 */
 	public void setBoard(int[][] newBoard) {
 		this.board = makeBoardCopy(newBoard, height, width);
+		this.player_one_score_board = reCalculatePlayerScoreBoard(1);
+		this.player_two_score_board = reCalculatePlayerScoreBoard(2);
+	}
+
+	@Override
+	public void upload(int[] data_set_board) {
+		super.upload(data_set_board);
+		this.player_one_score_board = reCalculatePlayerScoreBoard(1);
+		this.player_two_score_board = reCalculatePlayerScoreBoard(2);
+	}
+
+	@Override
+	public void upload(String[] data_set_board) {
+		super.upload(data_set_board);
 		this.player_one_score_board = reCalculatePlayerScoreBoard(1);
 		this.player_two_score_board = reCalculatePlayerScoreBoard(2);
 	}
