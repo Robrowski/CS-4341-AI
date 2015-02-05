@@ -13,7 +13,7 @@ import evaluators.features.Feature;
 public class GenerateFeatures_rpdabrowski_mscosti {
 	/** TODO MORE FEATURES */
 	static final String[] feature_list = { "--score-board-feature",
-			"--influence-score-board-feature", "PieceCount" };
+			"--influence-score-board-feature", "PieceCount", "OneTurnWin" };
 
 	public static void main(String[] args) {
 		if (args.length != 2) {

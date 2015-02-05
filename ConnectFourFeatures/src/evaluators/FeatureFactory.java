@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import common.board.OneTurnWinFeature;
+
 import evaluators.features.Feature;
 import evaluators.features.PieceCountFeature;
 import evaluators.features.ScoreBoardCountFeature;
@@ -41,7 +43,11 @@ public class FeatureFactory {
 		if (all_args.contains("PieceCount")) {
 			features.add(new PieceCountFeature(1));
 			features.add(new PieceCountFeature(2));
+		}
 
+		if (all_args.contains("OneTurnWin")) {
+			features.add(new OneTurnWinFeature(1));
+			features.add(new OneTurnWinFeature(2));
 		}
 
 		// TODO MORE FEATURES
