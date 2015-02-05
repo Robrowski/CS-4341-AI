@@ -48,12 +48,17 @@ public class BoardUploadTest {
 			}
 		}
 		board.getBoard(); // for coverage
+		
+		assertEquals(0, board.p1_pieces);
+		assertEquals(0, board.p2_pieces);
 	}
 
 	@Test
 	public void test_load_one_piece_board() {
 		board.upload(one_piece_board);
 		assertEquals(P1, board.getPiece(0, 0));
+		assertEquals(1, board.p1_pieces);
+		assertEquals(0, board.p2_pieces);
 	}
 
 	@Test
@@ -61,6 +66,8 @@ public class BoardUploadTest {
 		board.upload(two_piece_board);
 		assertEquals(P1, board.getPiece(0, 0));
 		assertEquals(P2, board.getPiece(1, 0));
+		assertEquals(1, board.p1_pieces);
+		assertEquals(1, board.p2_pieces);
 	}
 
 	@Test
@@ -70,5 +77,7 @@ public class BoardUploadTest {
 		assertEquals(P2, board.getPiece(1, 0));
 		assertEquals(P1, board.getPiece(0, 2));
 		assertEquals(P2, board.getPiece(1, 2));
+		assertEquals(2, board.p1_pieces);
+		assertEquals(2, board.p2_pieces);
 	}
 }

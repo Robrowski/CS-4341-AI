@@ -27,6 +27,8 @@ public class Board {
 	public int width;
 	int numToWin;
 
+	public int p1_pieces = 0, p2_pieces = 0;
+
 	/**
 	 * Board class constructor. Initializes a 2D array board with values of
 	 * EMPTY, as to match the behavior the referee uses when printing.
@@ -67,10 +69,11 @@ public class Board {
 	 * @param data_set_board
 	 */
 	public void upload(int[] data_set_board) {
+		p1_pieces = 0;
+		p2_pieces = 0;
+
 		for (int i = 0; i < width * height; i++) {
-			if (data_set_board[i] == 0)
-				data_set_board[i] = Board.EMPTY;
-			board[i % height][i / height] = data_set_board[i];
+			place_upload(data_set_board[i], i);
 		}
 	}
 
@@ -80,13 +83,24 @@ public class Board {
 	 * @param data_set_board
 	 */
 	public void upload(String[] data_set_board) {
+		p1_pieces = 0;
+		p2_pieces = 0;
+
 		for (int i = 0; i < width * height; i++) {
 			int v = Integer.parseInt(data_set_board[i]);
-
-			if (v == 0)
-				v = Board.EMPTY;
-			board[i % height][i / height] = v;
+			place_upload(v, i);
 		}
+	}
+
+	private void place_upload(int player, int i) {
+		if (player == 1)
+			p1_pieces++;
+		else if (player == 2)
+			p2_pieces++;
+
+		if (player == 0)
+			player = EMPTY;
+		board[i % height][i / height] = player;
 	}
 
 	/**

@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import evaluators.features.Feature;
+import evaluators.features.PieceCountFeature;
 import evaluators.features.ScoreBoardCountFeature;
 
 public class FeatureFactory {
@@ -30,13 +31,20 @@ public class FeatureFactory {
 		// player
 		if (all_args.contains("--score-board-feature")) {
 			features.add(new ScoreBoardCountFeature(1, false));
-			features.add(new ScoreBoardCountFeature(2, false));
+			// features.add(new ScoreBoardCountFeature(2, false)); // Redundant
 		}
 		if (all_args.contains("--influence-score-board-feature")) {
 			features.add(new ScoreBoardCountFeature(1, true));
-			features.add(new ScoreBoardCountFeature(2, true));
+			// features.add(new ScoreBoardCountFeature(2, true)); // Redundant
+		}
+
+		if (all_args.contains("PieceCount")) {
+			features.add(new PieceCountFeature(1));
+			features.add(new PieceCountFeature(2));
 
 		}
+
+		// TODO MORE FEATURES
 
 		return features;
 	}
