@@ -1,0 +1,44 @@
+/**
+ * Matt Costi - mscosti  
+ * Rob Dabrowski - rpdabrowski
+ * 
+ * CS 4341 C 2015
+ * Prof. Niel Heffernan
+ * WPI 
+ */
+package evaluators;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import evaluators.features.Feature;
+import evaluators.features.ScoreBoardCountFeature;
+
+public class FeatureFactory {
+
+	public static List<Feature> makeFeatures(String[] feature_list,
+			String[] args) {
+		List<String> all_args = new LinkedList<String>();
+		all_args.addAll(Arrays.asList(feature_list));
+		all_args.addAll(Arrays.asList(args));
+
+		List<Feature> features = new LinkedList<Feature>();
+		// Regular ScoreBoard evaluator
+
+		// TODO - ScoreBoardCountFeature can return return a dif column for each
+		// player
+		if (all_args.contains("--score-board-feature")) {
+			features.add(new ScoreBoardCountFeature(1, false));
+			features.add(new ScoreBoardCountFeature(2, false));
+		}
+		if (all_args.contains("--influence-score-board-feature")) {
+			features.add(new ScoreBoardCountFeature(1, true));
+			features.add(new ScoreBoardCountFeature(2, true));
+
+		}
+
+		return features;
+	}
+
+}

@@ -59,8 +59,7 @@ public class ScoreBoardCountFeature implements Feature {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "score-board-P" + player + "-" + influence;
 	}
 
 }

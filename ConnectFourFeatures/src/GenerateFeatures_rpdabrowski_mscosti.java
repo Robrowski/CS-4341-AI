@@ -7,10 +7,13 @@ import java.util.Scanner;
 import common.FileLogger;
 import common.board.ScoreBoard;
 
+import evaluators.FeatureFactory;
 import evaluators.features.Feature;
 
 public class GenerateFeatures_rpdabrowski_mscosti {
-	final static String delims = ",";
+	/** TODO MORE FEATURES */
+	static final String[] feature_list = { "--score-board-feature",
+			"--influence-score-board-feature" };
 
 	public static void main(String[] args) {
 		if (args.length != 2) {
@@ -25,16 +28,12 @@ public class GenerateFeatures_rpdabrowski_mscosti {
 		FileLogger logger = FileLogger.getInstance();
 		logger.init(args[1], new LinkedList<String>()); // No args needed
 
-		/**
-		 * TODO Make an evaluator? This is the only thing to do in this file
-		 */
-		// EValuator!??
 
-		// Get the list of features
-		// TODO get the features out of the eval
-		List<Feature> features = new LinkedList<Feature>();
+		List<Feature> features = FeatureFactory
+				.makeFeatures(feature_list, args);
 
 		// Printing a header
+		System.out.println("Num features: " + features.size());
 		for (Feature f : features) {
 			logger.print(f.getName() + ","); // CSV
 		}
@@ -64,4 +63,7 @@ public class GenerateFeatures_rpdabrowski_mscosti {
 		System.out.println("Done!");
 		return;
 	}
+
+	final static String delims = ",";
+
 }
