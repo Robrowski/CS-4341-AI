@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import common.board.OneTurnWinFeature;
-
+import evaluators.features.Connect2Feature;
 import evaluators.features.Feature;
+import evaluators.features.OneTurnWinFeature;
 import evaluators.features.PieceCountFeature;
 import evaluators.features.ScoreBoardCountFeature;
 
@@ -48,6 +48,11 @@ public class FeatureFactory {
 		if (all_args.contains("OneTurnWin")) {
 			features.add(new OneTurnWinFeature(1));
 			features.add(new OneTurnWinFeature(2));
+		}
+
+		if (all_args.contains("Connect2")) {
+			features.add(new Connect2Feature(1));
+			features.add(new Connect2Feature(2));
 		}
 
 		// TODO MORE FEATURES

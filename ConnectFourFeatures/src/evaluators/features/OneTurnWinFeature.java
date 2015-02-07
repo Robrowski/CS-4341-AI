@@ -1,8 +1,8 @@
-package common.board;
+package evaluators.features;
 
 import common.MoveHolder;
-
-import evaluators.features.Feature;
+import common.board.Board;
+import common.board.ScoreBoard;
 
 /** IF a player can win in one more turn, return true */
 public class OneTurnWinFeature implements Feature {

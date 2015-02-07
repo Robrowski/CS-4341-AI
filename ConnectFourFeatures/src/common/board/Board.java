@@ -340,4 +340,19 @@ public class Board {
 		return num_pieces;
 	}
 
+	/**
+	 * @return the numToWin
+	 */
+	public int getNumToWin() {
+		return numToWin;
+	}
+
+	/**
+	 * @param numToWin
+	 *            the numToWin to set
+	 */
+	public void setNumToWin(int numToWin) {
+		this.numToWin = numToWin;
+	}
+
 }
