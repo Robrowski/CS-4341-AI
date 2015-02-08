@@ -269,7 +269,6 @@ public class Board {
 		int rdiag = countInDirection(move, board, height, width, -1);
 
 		// TODO could evaluate HOW MANY wins here
-
 		return ((vert >= numToWin) || (hori >= numToWin) || (ldiag >= numToWin) || (rdiag >= numToWin)) ? WIN
 				: SUCCESS;
 	}

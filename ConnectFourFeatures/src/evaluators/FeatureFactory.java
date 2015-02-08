@@ -32,12 +32,17 @@ public class FeatureFactory {
 		// TODO - ScoreBoardCountFeature can return return a dif column for each
 		// player
 		if (all_args.contains("--score-board-feature")) {
-			features.add(new ScoreBoardCountFeature(1, false));
+			features.add(new ScoreBoardCountFeature(1, false, false));
 			// features.add(new ScoreBoardCountFeature(2, false)); // Redundant
 		}
 		if (all_args.contains("--influence-score-board-feature")) {
-			features.add(new ScoreBoardCountFeature(1, true));
+			features.add(new ScoreBoardCountFeature(1, true, false));
 			// features.add(new ScoreBoardCountFeature(2, true)); // Redundant
+		}
+
+		if (all_args.contains("individualScores")) {
+			features.add(new ScoreBoardCountFeature(1, false, true));
+			features.add(new ScoreBoardCountFeature(2, false, true));
 		}
 
 		if (all_args.contains("PieceCount")) {

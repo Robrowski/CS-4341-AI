@@ -13,12 +13,14 @@ import common.board.ScoreBoard;
 public class ScoreBoardCountFeature implements Feature {
 
 	private int player, opponent;
-	private boolean influence;
+	private boolean influence, individual;
 
-	public ScoreBoardCountFeature(int player, boolean enableInfluence) {
+	public ScoreBoardCountFeature(int player, boolean enableInfluence,
+			boolean individual) {
 		this.player = player;
 		this.opponent = (player == 1) ? 2 : 1;
 		this.influence = enableInfluence;
+		this.individual = individual;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -51,6 +53,8 @@ public class ScoreBoardCountFeature implements Feature {
 		if (influence) {
 			estimate = ((100 * playerPieceScore) + (30 * playerInfluence))
 					- ((100 * oppPieceScore) + (30 * oppInfluence));
+		} else if (individual) {
+			estimate = playerPieceScore;
 		} else {
 			estimate = playerPieceScore - oppPieceScore;
 		}
@@ -59,7 +63,13 @@ public class ScoreBoardCountFeature implements Feature {
 
 	@Override
 	public String getName() {
-		return "score-board-P" + player + "-" + influence;
+		if (influence) {
+			return "influence-score-board";
+		} else if (individual) {
+			return "individual-score-board-P" +player;
+		} else {
+			return "score-board";
+		}
 	}
 
 }

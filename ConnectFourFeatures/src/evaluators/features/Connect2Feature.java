@@ -20,18 +20,15 @@ public class Connect2Feature implements Feature {
 		// detect if the given player could win on their next move if
 		// placed there, and keep track of the total connect 2s.
 		state.setNumToWin(3);
-
 		int connect2s = 0;
 		for (int x = 0; x < state.width; x++) {
 			m.setCol(x);
 			for (int y = 0; y < state.height; y++) {
 				m.setCol(y);
-
 				if (state.detect_win(m) == Board.WIN)
 					connect2s++;
 			}
 		}
-
 		return Integer.toString(connect2s);
 	}
 
