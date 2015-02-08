@@ -29,6 +29,7 @@ public class Connect2Feature implements Feature {
 					connect2s++;
 			}
 		}
+		state.setNumToWin(4);
 		return Integer.toString(connect2s);
 	}
 
