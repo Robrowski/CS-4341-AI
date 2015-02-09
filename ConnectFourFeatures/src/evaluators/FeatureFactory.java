@@ -39,6 +39,8 @@ public class FeatureFactory {
 					"influence-score-board")); // Original
 			features.add(new ScoreBoardCountFeature(1, false, 1, 1,
 					"equal-weight-score-board"));
+			features.add(new ScoreBoardCountFeature(1, false, 0, 1,
+					"score-board-empty"));
 			// To try more weights, give a new weight
 			// features.add(new ScoreBoardCountFeature(1, false, OCC_WEIGHT,
 			// EMPTY_WEIGHT, "influence-score-board"));
