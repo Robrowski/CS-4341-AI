@@ -22,7 +22,11 @@ public class OneTurnWinFeature implements Feature {
 		for (int x = 0; x < state.width; x++) {
 			m.setCol(x);
 			for (int y = 0; y < state.height; y++) {
-				m.setCol(y);
+				if (state.getPiece(y, x) != Board.EMPTY) {
+					continue;
+				}
+
+				m.setRow(y);
 
 				if (state.detect_win(m) == Board.WIN)
 					return "1";

@@ -24,12 +24,17 @@ public class Connect2Feature implements Feature {
 		for (int x = 0; x < state.width; x++) {
 			m.setCol(x);
 			for (int y = 0; y < state.height; y++) {
+				if (state.getPiece(y, x) != Board.EMPTY) {
+					continue;
+				}
+
 				m.setCol(y);
 				if (state.detect_win(m) == Board.WIN)
 					connect2s++;
 			}
 		}
 		state.setNumToWin(4);
+
 		return Integer.toString(connect2s);
 	}
 
