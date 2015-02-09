@@ -49,16 +49,16 @@ public class FeatureFactory {
 		
 
 		if (all_args.contains("individual-empty")) {
-			features.add(new ScoreBoardCountFeature(1, false, 0, 1,
+			features.add(new ScoreBoardCountFeature(1, true, 0, 1,
 					"individual-empty"));
-			features.add(new ScoreBoardCountFeature(2, false, 0, 1,
+			features.add(new ScoreBoardCountFeature(2, true, 0, 1,
 					"individual-empty"));
 		}
 
 		if (all_args.contains("individual-occupied")) {
-			features.add(new ScoreBoardCountFeature(1, false, 1, 0,
+			features.add(new ScoreBoardCountFeature(1, true, 1, 0,
 					"individual-occupied"));
-			features.add(new ScoreBoardCountFeature(2, false, 1, 0,
+			features.add(new ScoreBoardCountFeature(2, true, 1, 0,
 					"individual-occupied"));
 		}
 
