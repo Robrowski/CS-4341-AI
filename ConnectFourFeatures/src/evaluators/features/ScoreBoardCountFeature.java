@@ -12,15 +12,20 @@ import common.board.ScoreBoard;
 
 public class ScoreBoardCountFeature implements Feature {
 
-	private int player, opponent;
-	private boolean influence, individual;
 
-	public ScoreBoardCountFeature(int player, boolean enableInfluence,
-			boolean individual) {
+	private int player, opponent, occupied_weight, empty_weight;
+	private boolean individual;
+	private String name;
+
+	public ScoreBoardCountFeature(int player, boolean individual,
+			int occupied_weight, int empty_weight,
+			String name) {
 		this.player = player;
 		this.opponent = (player == 1) ? 2 : 1;
-		this.influence = enableInfluence;
 		this.individual = individual;
+		this.occupied_weight = occupied_weight;
+		this.empty_weight = empty_weight;
+		this.name = name;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -49,27 +54,20 @@ public class ScoreBoardCountFeature implements Feature {
 			}
 		}
 
-		int estimate = 0;
-		if (influence) {
-			estimate = ((100 * playerPieceScore) + (30 * playerInfluence))
-					- ((100 * oppPieceScore) + (30 * oppInfluence));
-		} else if (individual) {
-			estimate = playerPieceScore;
-		} else {
-			estimate = playerPieceScore - oppPieceScore;
+		if (individual) {
+			return Integer.toString((occupied_weight * playerPieceScore)
+					+ (empty_weight * playerInfluence));
 		}
-		return Integer.toString(estimate);
+
+		return Integer
+				.toString(((occupied_weight * playerPieceScore) + (empty_weight * playerInfluence))
+						- ((occupied_weight * oppPieceScore) + (empty_weight * oppInfluence)));
 	}
 
 	@Override
 	public String getName() {
-		if (influence) {
-			return "influence-score-board";
-		} else if (individual) {
-			return "individual-score-board-P" +player;
-		} else {
-			return "score-board";
-		}
+		return name + "-P" + player + "-" + occupied_weight + "-"
+				+ empty_weight;
 	}
 
 }

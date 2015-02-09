@@ -29,20 +29,34 @@ public class FeatureFactory {
 		List<Feature> features = new LinkedList<Feature>();
 		// Regular ScoreBoard evaluator
 
-		// TODO - ScoreBoardCountFeature can return return a dif column for each
 		// player
-		if (all_args.contains("--score-board-feature")) {
-			features.add(new ScoreBoardCountFeature(1, false, false));
-			// features.add(new ScoreBoardCountFeature(2, false)); // Redundant
+		if (all_args.contains("score-board-occupied")) {
+			features.add(new ScoreBoardCountFeature(1, false, 1, 0,
+					"score-board-occupied")); // Original
 		}
-		if (all_args.contains("--influence-score-board-feature")) {
-			features.add(new ScoreBoardCountFeature(1, true, false));
-			// features.add(new ScoreBoardCountFeature(2, true)); // Redundant
+		if (all_args.contains("influence-score-board")) {
+			features.add(new ScoreBoardCountFeature(1, false, 100, 30,
+					"influence-score-board")); // Original
+
+			// To try more weights, give a new weight
+			// features.add(new ScoreBoardCountFeature(1, false, OCC_WEIGHT,
+			// EMPTY_WEIGHT, "influence-score-board"));
 		}
 
-		if (all_args.contains("individualScores")) {
-			features.add(new ScoreBoardCountFeature(1, false, true));
-			features.add(new ScoreBoardCountFeature(2, false, true));
+		
+		
+		if (all_args.contains("individual-empty")) {
+			features.add(new ScoreBoardCountFeature(1, false, 0, 1,
+					"individual-empty"));
+			features.add(new ScoreBoardCountFeature(2, false, 0, 1,
+					"individual-empty"));
+		}
+
+		if (all_args.contains("individual-occupied")) {
+			features.add(new ScoreBoardCountFeature(1, false, 1, 0,
+					"individual-occupied"));
+			features.add(new ScoreBoardCountFeature(2, false, 1, 0,
+					"individual-occupied"));
 		}
 
 		if (all_args.contains("PieceCount")) {
