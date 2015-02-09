@@ -37,14 +37,17 @@ public class FeatureFactory {
 		if (all_args.contains("influence-score-board")) {
 			features.add(new ScoreBoardCountFeature(1, false, 100, 30,
 					"influence-score-board")); // Original
-
+			features.add(new ScoreBoardCountFeature(1, false, 1, 1,
+					"equal-weight-score-board"));
 			// To try more weights, give a new weight
 			// features.add(new ScoreBoardCountFeature(1, false, OCC_WEIGHT,
 			// EMPTY_WEIGHT, "influence-score-board"));
+
 		}
 
 		
 		
+
 		if (all_args.contains("individual-empty")) {
 			features.add(new ScoreBoardCountFeature(1, false, 0, 1,
 					"individual-empty"));
