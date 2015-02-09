@@ -28,7 +28,7 @@ public class Connect2Feature implements Feature {
 					continue;
 				}
 
-				m.setCol(y);
+				m.setRow(y);
 				if (state.detect_win(m) == Board.WIN)
 					connect2s++;
 			}
