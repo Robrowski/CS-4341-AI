@@ -12,8 +12,7 @@ import evaluators.features.Feature;
 
 public class GenerateFeatures_rpdabrowski_mscosti {
 	/** TODO MORE FEATURES */
-	static final String[] feature_list = { "--score-board-feature",
-			"--influence-score-board-feature", "PieceCount", "OneTurnWin",
+	static final String[] feature_list = { "PieceCount", "OneTurnWin",
 			"Connect2", "individual-empty", "individual-occupied",
 			"influence-score-board", "score-board-occupied" };
 
