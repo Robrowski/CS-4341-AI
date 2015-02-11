@@ -45,9 +45,6 @@ public class FeatureFactory {
 
 		}
 
-		
-		
-
 		if (all_args.contains("individual-empty")) {
 			features.add(new ScoreBoardCountFeature(1, true, 0, 1,
 					"individual-empty"));
