@@ -114,9 +114,7 @@ public class FileLogger {
 		println(msg);
 	}
 
-	public void printList(List lst) {
-		println(lst.toString());
-	}
+
 
 	/**
 	 * Writes a given board to the appropriate log file formatted similiar to
