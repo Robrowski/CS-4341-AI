@@ -6,8 +6,8 @@ import common.State;
 
 public class EqualBinary implements Constraint {
 
-	private Item A;
-	private Item B;
+	public Item A;
+	public Item B;
 
 	/**
 	 * Make an equal binary constraint, giving the two items that must be placed

@@ -38,4 +38,12 @@ public class StateTest {
 		assertEquals("a", in.name);
 	}
 
+	@Test
+	public void checkItemXInNoBags() {
+		State newState = new State(bags, items);
+
+		Bag in = newState.inBag(X);
+		assertEquals(null, in);
+	}
+
 }

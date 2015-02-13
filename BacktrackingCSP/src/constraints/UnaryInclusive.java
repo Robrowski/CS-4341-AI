@@ -9,8 +9,8 @@ import common.State;
 
 public class UnaryInclusive implements Constraint {
 
-	private Item item;
-	private ArrayList<Bag> bags;
+	public Item item;
+	public ArrayList<Bag> bags;
 
 	/**
 	 * Make a Unary Inclusive Constraint on an Item, and add the bags that are
