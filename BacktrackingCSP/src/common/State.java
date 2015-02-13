@@ -71,4 +71,24 @@ public class State {
 		return stateTable[bags.get(bag)];
 	}
 
+	/**
+	 * Checks to see if the an item is currently placed inside of any bag, and
+	 * if it is, return the bag it is in. If it hasn't been placed, return Null
+	 * 
+	 * @param item
+	 * @return
+	 */
+	public Bag inBag(Item item) {
+		int itemIndex = items.get(item);
+		for (Bag b : bags.keySet()) {
+			int[] bagState = getBagState(b);
+
+			// if the bag has a weight of over 0, we know the item is in the bag
+			if (bagState[itemIndex] > 0) {
+				return b;
+			}
+		}
+		return null;
+	}
+
 }

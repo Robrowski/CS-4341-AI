@@ -33,7 +33,7 @@ public class ConstraintManager {
 	public boolean placeItemInBag(Item toPlace, Bag inBag) {
 		if (canFit(toPlace,inBag)){
 			for (Constraint c : constraints) {
-				if (!c.isValid(currentState))
+				if (!c.isValid(currentState, inBag, toPlace))
 					return false;
 			}
 			currentState.addItemToBag(toPlace, inBag);
