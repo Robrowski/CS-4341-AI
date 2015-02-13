@@ -1,5 +1,6 @@
 package constraints;
 
+import common.Bag;
 import common.Item;
 import common.State;
 
@@ -21,7 +22,7 @@ public class NotEqualBinary implements Constraint {
 	}
 
 	@Override
-	public boolean isValid(State currentState) {
+	public boolean isValid(State currentState, Bag bag, Item item) {
 		// TODO Auto-generated method stub
 		return false;
 	}

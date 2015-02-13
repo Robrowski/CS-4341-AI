@@ -25,7 +25,7 @@ public class MutuallyExclusiveBinary implements Constraint {
 	}
 
 	@Override
-	public boolean isValid(State currentState) {
+	public boolean isValid(State currentState, Bag bag, Item item) {
 		// TODO Auto-generated method stub
 		return false;
 	}

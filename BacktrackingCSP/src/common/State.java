@@ -1,5 +1,6 @@
 package common;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class State {
@@ -34,6 +35,9 @@ public class State {
 	public State(Bag[] allBags, Item[] allItems) {
 		// Initialize the hashmaps to easily lookup the index a bag
 		// or item is in the constraint space table
+		bags = new HashMap<Bag, Integer>();
+		items = new HashMap<Item, Integer>();
+
 		int index = 0;
 		for (Bag bag : allBags) {
 			this.bags.put(bag, index);
