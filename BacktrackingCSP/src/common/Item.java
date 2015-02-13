@@ -1,8 +1,8 @@
 package common;
 
 public class Item {
-	private String name;
-	private int weight;
+	public String name;
+	public int weight;
 
 	/**
 	 * Create an Item

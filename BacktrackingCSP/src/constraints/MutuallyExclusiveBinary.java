@@ -2,6 +2,7 @@ package constraints;
 
 import common.Bag;
 import common.Item;
+import common.State;
 
 public class MutuallyExclusiveBinary implements Constraint {
 	private Item itemA, itemB;
@@ -21,6 +22,12 @@ public class MutuallyExclusiveBinary implements Constraint {
 		this.itemB = itemB;
 		this.bagA = bagA;
 		this.bagB = bagB;
+	}
+
+	@Override
+	public boolean isValid(State currentState) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

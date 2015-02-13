@@ -1,6 +1,7 @@
 package constraints;
 
 import common.Item;
+import common.State;
 
 public class NotEqualBinary implements Constraint {
 
@@ -17,6 +18,12 @@ public class NotEqualBinary implements Constraint {
 	public NotEqualBinary(Item A, Item B) {
 		this.A = A;
 		this.B = B;
+	}
+
+	@Override
+	public boolean isValid(State currentState) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

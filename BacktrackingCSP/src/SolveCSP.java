@@ -6,7 +6,14 @@ public class SolveCSP {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		/**
+		 * Step 1: Read in the input file and arg for algorithm type.
+		 * Step 2: For every ##### in the file, begin creating specific
+		 * 			constraint, storing each one
+		 * Step 3: Start solving CSP given constraints
+		 * Step 4: ??????
+		 * Step 5: PROFIT
+		 */
 
 	}
 

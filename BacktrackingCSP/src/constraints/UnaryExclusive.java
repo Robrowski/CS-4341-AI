@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import common.Bag;
 import common.Item;
+import common.State;
 
 public class UnaryExclusive implements Constraint {
 
@@ -41,6 +42,12 @@ public class UnaryExclusive implements Constraint {
 	 */
 	public void addBag(Bag newBag) {
 		bags.add(newBag);
+	}
+
+	@Override
+	public boolean isValid(State currentState) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

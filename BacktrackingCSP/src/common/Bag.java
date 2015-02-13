@@ -1,10 +1,10 @@
 package common;
 
 public class Bag {
-	private String name;
-	private int weightCapacity;
-	private int lowerFit;
-	private int upperFit;
+	public String name;
+	public int weightCapacity;
+	public int lowerFit;
+	public int upperFit;
 
 	/**
 	 * Create a bag with only knowing the name and weight capacity
