@@ -9,8 +9,8 @@ import common.State;
 
 public class UnaryExclusive implements Constraint {
 
-	private Item item;
-	private ArrayList<Bag> bags;
+	public Item item;
+	public ArrayList<Bag> bags;
 
 	/**
 	 * make a Unary Exclusive Constraint on an Item, and add the bags that are
