@@ -45,9 +45,15 @@ public class UnaryExclusive implements Constraint {
 	}
 
 	@Override
-	public boolean isValid(State currentState) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isValid(State currentState, Bag bag, Item given) {
+		// if the item given is the same as the item this constraint deals with,
+		// check if the item cant go in the given bag
+		if (given.name.equals(this.item.name)) {
+			if (this.bags.contains(bag)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
