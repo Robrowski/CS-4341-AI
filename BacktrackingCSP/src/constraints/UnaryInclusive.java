@@ -24,6 +24,17 @@ public class UnaryInclusive implements Constraint {
 	}
 
 	/**
+	 * Make a Unary Inclusive Constraint on an Item, and add a single bag
+	 * 
+	 * @param item
+	 */
+	public UnaryInclusive(Item item, Bag oneBag) {
+		this.item = item;
+		bags = new ArrayList<Bag>();
+		bags.add(oneBag);
+	}
+
+	/**
 	 * Make a Unary Inclusive Constraint on an Item, and the bags the item is
 	 * only allowed to be in
 	 * 
@@ -49,11 +60,11 @@ public class UnaryInclusive implements Constraint {
 		// if the item given is the same as the item this constraint deals with,
 		// check if the item can go in the given bag
 		if (given.name.equals(this.item.name)) {
-			if (this.bags.contains(bag)) {
-				return true;
+			if (!this.bags.contains(bag)) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 }

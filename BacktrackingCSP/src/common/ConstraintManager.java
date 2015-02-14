@@ -4,8 +4,8 @@ import constraints.Constraint;
 
 public class ConstraintManager {
 	
-	private Constraint[] constraints;
-	private State currentState;
+	public Constraint[] constraints;
+	public State currentState;
 
 	/**
 	 * Create a constraint manager. A ConstraintManager will be what a CSP
@@ -55,10 +55,12 @@ public class ConstraintManager {
 	 */
 	public boolean canFit(Item toPlace, Bag inBag){
 		int[] baggedItems = currentState.getBagState(inBag);
-		int bagSum = 0;
-		int numItems = 0;
-		for (int weight : baggedItems) {
-			bagSum += weight;
+		int bagSum = toPlace.weight;
+		int numItems = 1;
+		for (int i = 0; i < baggedItems.length; i++) {
+			bagSum += baggedItems[i];
+			if (baggedItems[i] > 0)
+				numItems++;
 		}
 		if (bagSum <= inBag.weightCapacity && numItems <= inBag.upperFit)
 			return true;

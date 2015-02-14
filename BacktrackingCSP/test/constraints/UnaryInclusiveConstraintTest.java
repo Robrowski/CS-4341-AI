@@ -44,4 +44,14 @@ public class UnaryInclusiveConstraintTest {
 		assertFalse(unaryInc.isValid(newState, b, X));
 	}
 
+	@Test
+	public void testItemNotConstrainted() {
+		UnaryInclusive unaryInc = new UnaryInclusive(X, new Bag[] { a });
+		State newState = new State(bags, items);
+
+		assertTrue(unaryInc.isValid(newState, a, Y));
+		assertTrue(unaryInc.isValid(newState, b, Y));
+
+	}
+
 }
