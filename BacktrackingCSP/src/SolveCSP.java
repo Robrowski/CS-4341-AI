@@ -14,6 +14,8 @@ public class SolveCSP {
 	static Stack<State> backStack = new Stack<State>();
 	static Bag[] bags;
 	static Item[] items;
+	static FileLogger placement_logger = new FileLogger("placement_log.txt",
+			new LinkedList<String>());
 
 	public static void main(String[] args) {
 		/** Step 1: Read in the input file and arg for algorithm type. */
@@ -32,8 +34,7 @@ public class SolveCSP {
 
 		// Initialize tools
 		ConstraintManager cm = new ConstraintManager(c);
-		FileLogger placement_logger = new FileLogger("placement_log.txt",
-				new LinkedList<String>());
+
 
 		// Set up data structures
 		totalNumItems = items.length;
@@ -44,6 +45,9 @@ public class SolveCSP {
 		// each new level
 		pushBagsOntoStack(intialState);
 		
+		// Statistics counter
+		int fails = 0, successes = 0;
+
 		while (!backStack.isEmpty()) {
 			State to_try = backStack.pop();
 			
@@ -54,9 +58,10 @@ public class SolveCSP {
 				placement_logger.println("Failed to place "
 						+ to_try.intendedItem + " in " + to_try.intendedBag,
 						numTabs(to_try) + 1);
+				fails++;
 				continue; // Stop checking a failure of a branch
 			}
-			
+			successes++;
 			placement_logger.println("Successfully placed "
 					+ to_try.intendedItem + " in " + to_try.intendedBag,
 					numTabs(to_try));
@@ -66,12 +71,14 @@ public class SolveCSP {
 				placement_logger.println("Solved!", numTabs(to_try));
 				System.out.println("We did it! Gaaayyyy!");
 				to_try.printSolution();
+				reportStats(fails, successes);
 				return;
 			}
 			
 			pushBagsOntoStack(to_try);
 
 		}
+		reportStats(fails, successes);
 		System.out.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
 		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
 				new LinkedList<String>());
@@ -104,9 +111,15 @@ public class SolveCSP {
 			next.intendedBag = b;
 			backStack.push(next);
 		}
-		
 	}
 	
+	private static void reportStats(int fails, int successes) {
+		placement_logger.println("\n~~~~~Statistics~~~~");
+		placement_logger.println("Fails: " + fails);
+		placement_logger.println("Successes: " + successes);
+		placement_logger.println("Consistency Checks: " + (fails + successes));
+
+	}
 	
 	
 	
