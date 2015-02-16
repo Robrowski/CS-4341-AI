@@ -5,7 +5,6 @@ import constraints.Constraint;
 public class ConstraintManager {
 	
 	public Constraint[] constraints;
-	public State currentState;
 
 	/**
 	 * Create a constraint manager. A ConstraintManager will be what a CSP
@@ -16,10 +15,8 @@ public class ConstraintManager {
 	 * @param allItems
 	 * @param constraints
 	 */
-	public ConstraintManager(Bag[] allBags, Item[] allItems,
-			Constraint[] constraints) {
+	public ConstraintManager(Constraint[] constraints) {
 		this.constraints = constraints;
-		this.currentState = new State(allBags, allItems);
 	}
 	
 	/**
@@ -30,13 +27,14 @@ public class ConstraintManager {
 	 * @param inBag
 	 * @return true on success, false on failure.
 	 */
-	public boolean placeItemInBag(Item toPlace, Bag inBag) {
-		if (canFit(toPlace,inBag)){
+	public boolean placeItemInBag(Item toPlace, Bag inBag, State s) {
+		if (canFit(toPlace, inBag, s)) {
 			for (Constraint c : constraints) {
-				if (!c.isValid(currentState, inBag, toPlace))
+				if (!c.isValid(s, inBag, toPlace))
 					return false;
 			}
-			currentState.addItemToBag(toPlace, inBag);
+			s.addItemToBag(toPlace, inBag);
+
 		}
 		else{
 			return false;
@@ -53,8 +51,8 @@ public class ConstraintManager {
 	 * @param inBag
 	 * @return
 	 */
-	public boolean canFit(Item toPlace, Bag inBag){
-		int[] baggedItems = currentState.getBagState(inBag);
+	public boolean canFit(Item toPlace, Bag inBag, State s) {
+		int[] baggedItems = s.getBagState(inBag);
 		int bagSum = toPlace.weight;
 		int numItems = 1;
 		for (int i = 0; i < baggedItems.length; i++) {
