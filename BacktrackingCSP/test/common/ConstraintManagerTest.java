@@ -24,6 +24,8 @@ public class ConstraintManagerTest {
 
 	Bag[] bags;
 	Item[] items;
+
+	State state;
 	Constraint[] constraints;
 
 	@Before
@@ -33,36 +35,34 @@ public class ConstraintManagerTest {
 		Constraint XY_BinaryEqual = new EqualBinary(X, Y);
 		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
 		constraints = new Constraint[] { XY_BinaryEqual, Z_UnaryInclusive_b };
+		State.initialize(bags, items);
+		state = new State(bags, items);
 	}
 
 	@Test
 	public void testInitConstraintManager() {
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
+		ConstraintManager manager = new ConstraintManager(constraints);
 
 		assertEquals(2, manager.constraints.length);
 	}
 
 	@Test
 	public void testCanFit() {
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		assertTrue(manager.canFit(X, a));
+		ConstraintManager manager = new ConstraintManager(constraints);
+		assertTrue(manager.canFit(X, a, state));
 	}
 
 	@Test
 	public void testCannotFit_weight() {
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		assertFalse(manager.canFit(X, d));
+		ConstraintManager manager = new ConstraintManager(constraints);
+		assertFalse(manager.canFit(X, d, state));
 	}
 
 	@Test
 	public void testMultipleItemsCanFit() {
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		manager.currentState.addItemToBag(X, a);
-		boolean result = manager.canFit(Y, a);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.placeItemInBag(X, a, state);
+		boolean result = manager.canFit(Y, a, state);
 
 		assertTrue(result);
 
@@ -70,24 +70,22 @@ public class ConstraintManagerTest {
 
 	@Test
 	public void testMultpleItemsCannotFit_WeightLimit() {
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		manager.currentState.addItemToBag(X, a);
-		manager.currentState.addItemToBag(Y, a);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.placeItemInBag(X, a, state);
+		manager.placeItemInBag(Y, a, state);
 
-		boolean result = manager.canFit(Z, a); // total 12
+		boolean result = manager.canFit(Z, a, state); // total 12
 
 		assertFalse(result);
 	}
-	
+
 	@Test
 	public void testMultipleItemsCannotFit_BagLimit() {
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		manager.currentState.addItemToBag(X, c);
-		manager.currentState.addItemToBag(Y, c);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.placeItemInBag(X, c, state);
+		manager.placeItemInBag(Y, c, state);
 
-		boolean result = manager.canFit(W, c); // upper limit is 2 items
+		boolean result = manager.canFit(W, c, state); // upper limit is 2 items
 
 		assertFalse(result);
 	}
@@ -97,9 +95,8 @@ public class ConstraintManagerTest {
 		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
 		constraints = new Constraint[] { Z_UnaryInclusive_b };
 
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		boolean result = manager.placeItemInBag(Z, b);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		boolean result = manager.placeItemInBag(Z, b, state);
 
 		assertTrue(result);
 
@@ -110,9 +107,8 @@ public class ConstraintManagerTest {
 		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
 		constraints = new Constraint[] { Z_UnaryInclusive_b };
 
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		boolean result = manager.placeItemInBag(Z, a);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		boolean result = manager.placeItemInBag(Z, a, state);
 
 		assertFalse(result);
 
@@ -124,11 +120,10 @@ public class ConstraintManagerTest {
 		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
 		constraints = new Constraint[] { XY_BinaryEqual, Z_UnaryInclusive_b };
 
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		manager.placeItemInBag(Z, b);
-		manager.placeItemInBag(X, a);
-		boolean result = manager.placeItemInBag(Y, a);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.placeItemInBag(Z, b, state);
+		manager.placeItemInBag(X, a, state);
+		boolean result = manager.placeItemInBag(Y, a, state);
 
 		assertTrue(result);
 
@@ -140,11 +135,10 @@ public class ConstraintManagerTest {
 		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
 		constraints = new Constraint[] { XY_BinaryEqual, Z_UnaryInclusive_b };
 
-		ConstraintManager manager = new ConstraintManager(bags, items,
-				constraints);
-		manager.placeItemInBag(Z, b);
-		manager.placeItemInBag(X, a);
-		boolean result = manager.placeItemInBag(Y, b);
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.placeItemInBag(Z, b, state);
+		manager.placeItemInBag(X, a, state);
+		boolean result = manager.placeItemInBag(Y, b, state);
 
 		assertFalse(result);
 

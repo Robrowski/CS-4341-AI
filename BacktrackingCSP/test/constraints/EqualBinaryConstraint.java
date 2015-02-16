@@ -17,6 +17,7 @@ public class EqualBinaryConstraint {
 	Bag b = new Bag("b", 10);
 	Item X = new Item("X", 5);
 	Item Y = new Item("Y", 3);
+	Item Z = new Item("Z", 4);
 
 	Bag[] bags;
 	Item[] items;
@@ -24,7 +25,8 @@ public class EqualBinaryConstraint {
 	@Before
 	public void setUp() throws Exception {
 		bags = new Bag[] { a, b };
-		items = new Item[] { X, Y };
+		items = new Item[] { X, Y, Z };
+		State.initialize(bags, items);
 	}
 
 	@Test
@@ -39,7 +41,6 @@ public class EqualBinaryConstraint {
 	public void testXYEmptyState() {
 		EqualBinary equalBinary = new EqualBinary(X, Y);
 		State emptyState = new State(bags, items);
-
 		assertTrue(equalBinary.isValid(emptyState, a, X));
 	}
 
@@ -47,10 +48,19 @@ public class EqualBinaryConstraint {
 	public void testXY_YinBag_a() {
 		EqualBinary equalBinary = new EqualBinary(X, Y);
 		State newState = new State(bags, items);
-
 		newState.addItemToBag(Y, a);
 		assertTrue(equalBinary.isValid(newState, a, X));
 		assertFalse(equalBinary.isValid(newState, b, X));
+	}
+
+	@Test
+	public void testUnconstrainted() {
+		EqualBinary equalBinary = new EqualBinary(X, Y);
+		State newState = new State(bags, items);
+
+		newState.addItemToBag(Y, a);
+		assertTrue(equalBinary.isValid(newState, b, Z));
+		assertTrue(equalBinary.isValid(newState, a, Z));
 	}
 
 }

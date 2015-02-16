@@ -19,6 +19,7 @@ public class StateTest {
 
 		bags = new Bag[] { a, b };
 		items = new Item[] { X, Y };
+		State.initialize(bags, items);
 
 	}
 
