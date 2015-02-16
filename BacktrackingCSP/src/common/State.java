@@ -106,7 +106,6 @@ public class State {
 	/**
 	 * Get a list of all items that haven't been placed in a bag yet
 	 */
-
 	public ArrayList<Item> getItemsLeft() {
 		return itemsLeft;
 	}

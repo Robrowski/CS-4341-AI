@@ -60,7 +60,7 @@ public class Bag {
 
 	@Override
 	public String toString() {
-		return name + " " + weightCapacity;
+		return "(" + name + " " + weightCapacity + ")";
 	}
 
 }

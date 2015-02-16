@@ -11,7 +11,9 @@ import constraints.Constraint;
 
 public class SolveCSP {
 
-	
+	static Stack<State> backStack = new Stack<State>();
+	static Bag[] bags;
+	static Item[] items;
 
 	public static void main(String[] args) {
 		/** Step 1: Read in the input file and arg for algorithm type. */
@@ -25,8 +27,8 @@ public class SolveCSP {
 		// Make arrays out of everything
 		Constraint[] c = cp.constraints.toArray(new Constraint[cp.constraints
 				.size()]);
-		Item[] items = cp.items.values().toArray(new Item[cp.items.size()]);
-		Bag[] bags = cp.bags.values().toArray(new Bag[cp.bags.size()]);
+		items = cp.items.values().toArray(new Item[cp.items.size()]);
+		bags = cp.bags.values().toArray(new Bag[cp.bags.size()]);
 
 		// Initialize tools
 		ConstraintManager cm = new ConstraintManager(c);
@@ -35,19 +37,12 @@ public class SolveCSP {
 
 		// Set up data structures
 		totalNumItems = items.length;
-		Stack<State> backStack = new Stack<State>();
 		State intialState = new State(bags, items);
 		State.initialize(bags, items);
 
 		// Initialize stack with item 1 + each bag --- do this same thing at
 		// each new level
-		for (Bag b : bags) {
-			State s_copy = intialState.deepCopy();
-			s_copy.intendedItem = intialState.getItemsLeft().get(0);
-			s_copy.intendedBag = b;
-			backStack.push(s_copy);
-		}
-		
+		pushBagsOntoStack(intialState);
 		
 		while (!backStack.isEmpty()) {
 			State to_try = backStack.pop();
@@ -74,13 +69,7 @@ public class SolveCSP {
 				return;
 			}
 			
-			// Fill the stack with more placements to try
-			for (Bag b : bags) {
-				State next = to_try.deepCopy();
-				next.intendedItem = to_try.getItemsLeft().get(0);
-				next.intendedBag = b;
-				backStack.push(next);
-			}
+			pushBagsOntoStack(to_try);
 
 		}
 		System.out.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
@@ -94,6 +83,32 @@ public class SolveCSP {
 	private static int numTabs(State s) {
 		return Math.max(0, totalNumItems - s.getItemsLeft().size() - 1);
 	}
+	
+	
+	/**
+	 * Push options for item in bag placement onto the stack to try next
+	 * 
+	 * @param to_copy
+	 */
+	private static void pushBagsOntoStack(State to_copy) {
+		// Fill the stack with more placements to try
+		Item next_item = to_copy.getItemsLeft().get(0);
+
+		// TODO Switch statement based on algorithm type
+		Bag[] le_bags = bags;
+
+		// Naive Implementation
+		for (Bag b : le_bags) {
+			State next = to_copy.deepCopy();
+			next.intendedItem = next_item;
+			next.intendedBag = b;
+			backStack.push(next);
+		}
+		
+	}
+	
+	
+	
 	
 
 }
