@@ -1,0 +1,29 @@
+##### - items
+C 10
+A 1
+B 12
+D 15
+G 100
+E 140
+##### - bags
+p 10
+q 10
+l 10
+m 10
+n 100
+o 141
+z 200
+r 100
+##### - deadline constraint
+1 14
+##### - unary inclusive
+C p
+##### - unary exclusive
+C q
+##### - binary equals
+A B
+B C
+##### - binary not equals
+D E
+##### - binary simultaneous
+A G p q

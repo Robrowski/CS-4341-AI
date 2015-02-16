@@ -15,4 +15,14 @@ public class Item {
 		this.weight = weight;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Item other = (Item) obj;
+		return this.name.equals(other.name) && weight == other.weight;
+	}
+
+	@Override
+	public String toString() {
+		return name + " " + weight;
+	}
 }

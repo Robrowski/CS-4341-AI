@@ -3,8 +3,8 @@ package common;
 public class Bag {
 	public String name;
 	public int weightCapacity;
-	public int lowerFit;
-	public int upperFit;
+	public int lowerFit = -1; // -1 == uninitialized
+	public int upperFit = -1;
 
 	/**
 	 * Create a bag with only knowing the name and weight capacity
@@ -36,16 +36,31 @@ public class Bag {
 	 * @param lowerFit
 	 *            the lowerFit to set
 	 */
-	public void setLowerFit(int lowerFit) {
+	public Bag setLowerFit(int lowerFit) {
 		this.lowerFit = lowerFit;
+		return this;
 	}
 
 	/**
 	 * @param upperFit
 	 *            the upperFit to set
 	 */
-	public void setUpperFit(int upperFit) {
+	public Bag setUpperFit(int upperFit) {
 		this.upperFit = upperFit;
+		return this;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Bag other = (Bag) obj;
+		// Only performing basic comparison
+		return this.name.equals(other.name)
+				&& weightCapacity == other.weightCapacity;
+	}
+
+	@Override
+	public String toString() {
+		return name + " " + weightCapacity;
 	}
 
 }
