@@ -7,10 +7,13 @@ import java.util.Map;
 
 public class State {
 
-	private Map<Bag, Integer> bags;
-	private Map<Item, Integer> items;
+	static Map<Bag, Integer> bags;
+	static Map<Item, Integer> items;
 
-	private ArrayList<Item> itemsLeft;
+	public ArrayList<Item> itemsLeft;
+
+	public Item intendedItem;
+	public Bag intendedBag;
 
 	/**
 	 * The stateTable is an array of [#bags][#items], so we can lookup if an
@@ -28,6 +31,15 @@ public class State {
 	 */
 	int[][] stateTable;
 
+	public State() {
+
+	}
+
+	public State(Bag[] allBags, Item[] allItems) {
+		itemsLeft = new ArrayList<Item>(Arrays.asList(allItems));
+		stateTable = new int[allBags.length][allItems.length];
+	}
+	
 	/**
 	 * A State represents where everything is in the world. It keeps track of
 	 * all of the Items that are currently in bags, and serves the dual purpose
@@ -35,26 +47,40 @@ public class State {
 	 * 
 	 * @param allBags
 	 * @param allItems
+	 * @return
 	 */
-	public State(Bag[] allBags, Item[] allItems) {
+	public static void initialize(Bag[] allBags, Item[] allItems) {
 		// Initialize the hashmaps to easily lookup the index a bag
 		// or item is in the constraint space table
 		bags = new HashMap<Bag, Integer>();
 		items = new HashMap<Item, Integer>();
-		itemsLeft = new ArrayList<Item>(Arrays.asList(allItems));
 
 		int index = 0;
 		for (Bag bag : allBags) {
-			this.bags.put(bag, index);
+			bags.put(bag, index);
 			index += 1;
 		}
 		index = 0;
 		for (Item item : allItems) {
-			this.items.put(item, index);
+			items.put(item, index);
 			index += 1;
 		}
 
-		stateTable = new int[allBags.length][allItems.length];
+
+	}
+
+	public State deepCopy() {
+		State s = new State();
+		s.itemsLeft = new ArrayList<Item>(itemsLeft);
+		int numBags = bags.keySet().size();
+		int numItems = items.keySet().size();
+
+		int[][] newStateTable = new int[numBags][numItems];
+		for (int i = 0; i < numBags; i++)
+			newStateTable[i] = Arrays.copyOf(this.stateTable[i], numItems);
+
+		s.stateTable = newStateTable;
+		return s;
 	}
 
 	/**
