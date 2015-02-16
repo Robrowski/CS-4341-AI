@@ -58,7 +58,7 @@ public class SolveCSP {
 					to_try)) {
 				placement_logger.println("Failed to place "
 						+ to_try.intendedItem + " in " + to_try.intendedBag,
-						numTabs(to_try));
+						numTabs(to_try) + 1);
 				continue; // Stop checking a failure of a branch
 			}
 			
@@ -83,8 +83,7 @@ public class SolveCSP {
 			}
 
 		}
-		System.out.println("Stack emptied... failed...");
-
+		System.out.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
 		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
 				new LinkedList<String>());
 		solution_logger.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
@@ -93,7 +92,7 @@ public class SolveCSP {
 	private static int totalNumItems = -1;
 
 	private static int numTabs(State s) {
-		return totalNumItems - s.getItemsLeft().size();
+		return Math.max(0, totalNumItems - s.getItemsLeft().size() - 1);
 	}
 	
 
