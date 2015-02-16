@@ -1,5 +1,7 @@
 package common;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,8 @@ public class State {
 
 	private Map<Bag, Integer> bags;
 	private Map<Item, Integer> items;
+
+	private ArrayList<Item> itemsLeft;
 
 	/**
 	 * The stateTable is an array of [#bags][#items], so we can lookup if an
@@ -37,6 +41,7 @@ public class State {
 		// or item is in the constraint space table
 		bags = new HashMap<Bag, Integer>();
 		items = new HashMap<Item, Integer>();
+		itemsLeft = new ArrayList<Item>(Arrays.asList(allItems));
 
 		int index = 0;
 		for (Bag bag : allBags) {
@@ -63,6 +68,15 @@ public class State {
 		int itemIndex = items.get(toPlace);
 
 		stateTable[bagIndex][itemIndex] = toPlace.weight;
+		itemsLeft.remove(toPlace);
+	}
+
+	/**
+	 * Get a list of all items that haven't been placed in a bag yet
+	 */
+
+	public ArrayList<Item> getItemsLeft() {
+		return itemsLeft;
 	}
 
 	/**
