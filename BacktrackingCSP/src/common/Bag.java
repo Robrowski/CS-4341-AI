@@ -4,7 +4,7 @@ public class Bag {
 	public String name;
 	public int weightCapacity;
 	public int lowerFit = -1; // -1 == uninitialized
-	public int upperFit = -1;
+	public int upperFit = Integer.MAX_VALUE;
 
 	/**
 	 * Create a bag with only knowing the name and weight capacity

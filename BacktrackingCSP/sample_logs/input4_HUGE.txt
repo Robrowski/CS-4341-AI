@@ -14,7 +14,7 @@ n 100
 o 141
 z 200
 r 100
-##### - deadline constraint
+##### - fitting constraint
 1 14
 ##### - unary inclusive
 C p

@@ -54,7 +54,7 @@ public class ConstraintManager {
 	public boolean canFit(Item toPlace, Bag inBag, State s) {
 		int[] baggedItems = s.getBagState(inBag);
 		int bagSum = toPlace.weight;
-		int numItems = 1;
+		int numItems = 1; // Assumed current piece is placed
 		for (int i = 0; i < baggedItems.length; i++) {
 			bagSum += baggedItems[i];
 			if (baggedItems[i] > 0)
