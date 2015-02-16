@@ -6,8 +6,8 @@ import common.State;
 
 public class NotEqualBinary implements Constraint {
 
-	private Item A;
-	private Item B;
+	public Item A;
+	public Item B;
 
 	/**
 	 * Make a not equal binary constraint, giving the two items that are not
