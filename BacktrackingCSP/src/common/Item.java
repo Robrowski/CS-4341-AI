@@ -25,4 +25,7 @@ public class Item {
 	public String toString() {
 		return name + " " + weight;
 	}
+
+	// TODO - Consider overriding hashCode for safety
+	// http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#hashCode()
 }
