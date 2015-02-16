@@ -70,6 +70,7 @@ public class SolveCSP {
 			if (to_try.getItemsLeft().size() == 0) {
 				placement_logger.println("Solved!", numTabs(to_try));
 				System.out.println("We did it! Gaaayyyy!");
+				to_try.printSolution();
 				return;
 			}
 			
@@ -83,6 +84,10 @@ public class SolveCSP {
 
 		}
 		System.out.println("Stack emptied... failed...");
+
+		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
+				new LinkedList<String>());
+		solution_logger.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
 	}
 	
 	private static int totalNumItems = -1;

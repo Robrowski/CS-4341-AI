@@ -3,12 +3,15 @@ package common;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class State {
 
 	static Map<Bag, Integer> bags;
 	static Map<Item, Integer> items;
+	static Map<Integer, Bag> bags_by_id;
+	static Map<Integer, Item> items_by_id;
 
 	public ArrayList<Item> itemsLeft;
 
@@ -53,20 +56,23 @@ public class State {
 		// Initialize the hashmaps to easily lookup the index a bag
 		// or item is in the constraint space table
 		bags = new HashMap<Bag, Integer>();
+		bags_by_id = new HashMap<Integer, Bag>();
+
 		items = new HashMap<Item, Integer>();
+		items_by_id = new HashMap<Integer, Item>();
 
 		int index = 0;
 		for (Bag bag : allBags) {
+			bags_by_id.put(index, bag);
 			bags.put(bag, index);
 			index += 1;
 		}
 		index = 0;
 		for (Item item : allItems) {
+			items_by_id.put(index, item);
 			items.put(item, index);
 			index += 1;
 		}
-
-
 	}
 
 	public State deepCopy() {
@@ -133,6 +139,33 @@ public class State {
 			}
 		}
 		return null;
+	}
+
+	/** Prints the solution as described in the assignment */
+	public void printSolution() {
+		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
+				new LinkedList<String>());
+
+		for (int bag_id = 0; bag_id < bags.size(); bag_id++) {
+						
+			Bag b = bags_by_id.get(bag_id);
+			solution_logger.print("Bag: " + b.name + "  Items: ");
+			
+			int num_items = 0, total_weight = 0;
+			for (int item_id = 0; item_id < items_by_id.size(); item_id++) {
+				if (stateTable[bag_id][item_id] <= 0)
+					continue;
+				Item i = items_by_id.get(item_id);
+				solution_logger.print(i.name + " ");
+				num_items++;
+				total_weight += stateTable[bag_id][item_id];
+			}
+			solution_logger.println("\nNumber of Items: " + num_items);
+			solution_logger.println("Total Weight: " + total_weight + "/"
+					+ b.weightCapacity);
+			solution_logger.println("Wasted Capacity: "
+					+ (b.weightCapacity - total_weight) + "\n");
+		}
 	}
 
 }
