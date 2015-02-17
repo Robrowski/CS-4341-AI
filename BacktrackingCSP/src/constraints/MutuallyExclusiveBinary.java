@@ -51,4 +51,12 @@ public class MutuallyExclusiveBinary implements Constraint {
 		return true;
 	}
 
+	@Override
+	public boolean appliesTo(Item given) {
+		if (this.itemA.name.equals(given.name)
+				|| this.itemB.name.equals(given.name))
+			return true;
+		return false;
+	}
+
 }

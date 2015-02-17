@@ -56,4 +56,11 @@ public class UnaryExclusive implements Constraint {
 		return true;
 	}
 
+	@Override
+	public boolean appliesTo(Item given) {
+		if (this.item.name.equals(given.name))
+			return true;
+		return false;
+	}
+
 }

@@ -46,4 +46,11 @@ public class NotEqualBinary implements Constraint {
 		return true;
 	}
 
+	@Override
+	public boolean appliesTo(Item given) {
+		if (this.A.name.equals(given.name) || this.B.name.equals(given.name))
+			return true;
+		return false;
+	}
+
 }
