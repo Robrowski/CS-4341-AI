@@ -117,7 +117,7 @@ public class StateTest {
 
 		newState.stateTable = newStateTable;
 		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
-		assertEquals(2, leastConstrained.size());
+		assertEquals(3, leastConstrained.size());
 		assertTrue(leastConstrained.contains(b));
 		assertTrue(leastConstrained.contains(c));
 
@@ -130,7 +130,7 @@ public class StateTest {
 
 		newState.stateTable = newStateTable;
 		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
-		assertEquals(1, leastConstrained.size());
+		assertEquals(3, leastConstrained.size());
 		assertTrue(leastConstrained.contains(c));
 
 	}
@@ -142,8 +142,22 @@ public class StateTest {
 
 		newState.stateTable = newStateTable;
 		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
-		assertEquals(1, leastConstrained.size());
+		assertEquals(3, leastConstrained.size());
 		assertTrue(leastConstrained.contains(c));
 
+	}
+
+	@Test
+	public void lcvOrderTest() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, -1 }, { 0, -1, -1 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
+
+		assertEquals(3, leastConstrained.size());
+		assertEquals(c, leastConstrained.get(0));
+		assertEquals(a, leastConstrained.get(1));
+		assertEquals(b, leastConstrained.get(2));
 	}
 }

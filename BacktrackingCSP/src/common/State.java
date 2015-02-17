@@ -2,9 +2,11 @@ package common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 public class State {
 
@@ -147,6 +149,10 @@ public class State {
 		int leastConstraints = Integer.MAX_VALUE;
 		ArrayList<Bag> leastConstrainedValues = new ArrayList<Bag>();
 
+		Comparator<ConstrainedBagCount> comparator = new MinConstrainedCountComparator();
+		PriorityQueue<ConstrainedBagCount> queue = new PriorityQueue<ConstrainedBagCount>(
+				comparator);
+
 		for (Bag b : bags.keySet()) {
 			int bagIdx = bags.get(b);
 			int bagConstraints = 0;
@@ -155,14 +161,13 @@ public class State {
 				if (bagVal == -1 || bagVal > 0)
 					bagConstraints++;
 			}
-			if (bagConstraints < leastConstraints) {
-				leastConstraints = bagConstraints;
-				// something better, wipe everything that was worse
-				leastConstrainedValues = new ArrayList<Bag>();
-				leastConstrainedValues.add(b);
-			} else if (bagConstraints == leastConstraints) {
-				leastConstrainedValues.add(b);
-			}
+			ConstrainedBagCount count = new ConstrainedBagCount(b,
+					bagConstraints);
+			queue.add(count);
+		}
+
+		while (queue.size() != 0) {
+			leastConstrainedValues.add(queue.remove().b);
 		}
 		return leastConstrainedValues;
 	}
