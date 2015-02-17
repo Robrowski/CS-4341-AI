@@ -1,4 +1,6 @@
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 import common.Bag;
@@ -16,16 +18,38 @@ public class SolveCSP {
 	static Item[] items;
 	static FileLogger placement_logger = new FileLogger("placement_log.txt",
 			new LinkedList<String>());
+	static ConstraintManager cm;
+
+	private static final int NORMAL = 0, MCV = 1, LCV = 2;
+	private static int mode = 0;
 
 	public static void main(String[] args) {
 		/** Step 1: Read in the input file and arg for algorithm type. */
-		if (args.length < 1 || args.length > 2) {
-			System.err.println("Need two arguments: INPUT_FILE_NAME ALGORITHM");
+		if (args.length < 1) {
+			System.err.println("Need to specify the file path");
 		}
+		
+		// Parse arguments
+		List<String> Largs = Arrays.asList(args);
+		if (Largs.contains("FC")){
+
+		}
+		if (Largs.contains("MCV")){
+			mode = MCV;
+		}	
+		if (Largs.contains("LCV")){
+			if (mode != NORMAL){
+				System.err.println("Too many algorithms specified...");
+				return;
+			}
+			mode = LCV;
+		}
+
+		// Read the problem in
 		ProblemParser cp = new ProblemParser(args[0], true);
 		cp.parse();
-		// String alg = args[1];
-
+	
+		
 		// Make arrays out of everything
 		Constraint[] c = cp.constraints.toArray(new Constraint[cp.constraints
 				.size()]);
@@ -33,7 +57,7 @@ public class SolveCSP {
 		bags = cp.bags.values().toArray(new Bag[cp.bags.size()]);
 
 		// Initialize tools
-		ConstraintManager cm = new ConstraintManager(c);
+		cm = new ConstraintManager(c);
 
 
 		// Set up data structures
@@ -98,6 +122,9 @@ public class SolveCSP {
 	 * @param to_copy
 	 */
 	private static void pushBagsOntoStack(State to_copy) {
+		if (bags.length == 0 || items.length == 0)
+			return;
+
 		/**
 		 * MRV = Minimum Remaining VALUES = MCV Most Constrained VARIABLE = pick
 		 * the item (variable) with the least amount of possible bags (values)
@@ -115,6 +142,11 @@ public class SolveCSP {
 		 */
 		// Fill the stack with more placements to try
 		Item next_item = to_copy.getItemsLeft().get(0);
+		if (mode == MCV) {
+			// How use Degree Heuristic
+			next_item = cm
+					.DegreeHeuristic(to_copy.getMostConstrainedVariable());
+		}
 
 		/**
 		 * LCV = Least Constraining VALUES = pick the bag (value) with the least
@@ -125,8 +157,10 @@ public class SolveCSP {
 		 * 
 		 * idea behind it: more room to succeed
 		 */
-		// TODO Switch statement based on algorithm type
 		Bag[] le_bags = bags;
+		if (mode == LCV)
+			le_bags = (Bag[]) to_copy.getLeastConstrainedValue().toArray(
+				new Bag[bags.length]);
 
 		// Naive Implementation
 		for (Bag b : le_bags) {
@@ -142,7 +176,7 @@ public class SolveCSP {
 		placement_logger.println("Fails: " + fails);
 		placement_logger.println("Successes: " + successes);
 		placement_logger.println("Consistency Checks: " + (fails + successes));
-
+		System.out.println("Consistency Checks: " + (fails + successes));
 	}
 	
 	
