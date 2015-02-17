@@ -111,11 +111,11 @@ public class CSP_Test_Runner {
 
 				}
 
-				System.out.print("	ConfigNum: " + configNum);
+				System.out.format("	%,2d", configNum);
 
 				int[] results = new int[num_tests];
 				long[] times = new long[num_tests];
-				long sum = 0, time_sum = 0;
+				long sum = 0, time_avg = 0;
 				// Repeatedly solve the problem and record results
 				for (int t = 0; t < num_tests; t++) {
 					time.start();
@@ -123,19 +123,17 @@ public class CSP_Test_Runner {
 					time.stop();
 					// System.out.println(SimpleTimer.elapsed_milli);
 					times[t] = SimpleTimer.elapsed_micro;
-					time_sum += SimpleTimer.elapsed_micro;
+					time_avg += SimpleTimer.elapsed_micro / num_tests;
 					sum += results[t];
 				}
-				System.out.println("Sorting results...");
 				Arrays.sort(results);
 				Arrays.sort(times);
 
-				System.out.print(" Checks Mean: " + (int) (sum / num_tests)
-						+ "   Median: " + results[num_tests / 2]);
+				System.out.format(" Checks Avg: %,7d  Median: %,7d",
+						(int) (sum / num_tests), results[num_tests / 2]);
 
-				System.out.println(" Times (us) Mean: " + (int) time_sum
-						/ num_tests
-						+ "   Median: " + times[num_tests / 2]);
+				System.out.format("		Times (us) Avg: %,7d  Median: %,7d\n",
+						(int) time_avg, times[num_tests / 2]);
 
 			}
 		}
