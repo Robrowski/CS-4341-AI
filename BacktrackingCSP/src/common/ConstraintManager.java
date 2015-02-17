@@ -94,4 +94,42 @@ public class ConstraintManager {
 
 		return mostConstrainedByRules;
 	}
+
+	/**
+	 * Checks that the given state is valid.
+	 * 
+	 * Validity 1: all bags are > 90% full Validity 2: all bags have the minimum
+	 * number of items.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public boolean solutionIsValid(State s, FileLogger l) {
+		for (int bag_id = 0; bag_id < State.bags.size(); bag_id++) {
+
+			Bag b = State.bags_by_id.get(bag_id);
+
+			int num_items = 0, total_weight = 0;
+			for (int item_id = 0; item_id < State.items_by_id.size(); item_id++) {
+				if (s.stateTable[bag_id][item_id] <= 0)
+					continue;
+				num_items++;
+				total_weight += s.stateTable[bag_id][item_id];
+			}
+
+			// Minimum weight of 90%
+			if (((float) total_weight / b.weightCapacity) < 0.90) {
+				l.println("Weight capactity not met");
+				return false;
+			}
+
+			// Minimum number of items.
+			if (num_items < b.lowerFit) {
+				l.println("Not enough items in bag: " + b.toString());
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

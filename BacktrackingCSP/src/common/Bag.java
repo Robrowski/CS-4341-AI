@@ -3,7 +3,7 @@ package common;
 public class Bag {
 	public String name;
 	public int weightCapacity;
-	public int lowerFit = -1; // -1 == uninitialized
+	public int lowerFit = 0; // -1 == uninitialized
 	public int upperFit = Integer.MAX_VALUE;
 
 	/**

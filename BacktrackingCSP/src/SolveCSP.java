@@ -87,6 +87,8 @@ public class SolveCSP {
 
 			// Check to see if we are done
 			if (to_try.getItemsLeft().size() == 0) {
+				if (!cm.solutionIsValid(to_try, placement_logger))
+					continue;
 				if (!batch_mode) {
 					placement_logger.println("Solved!", numTabs(to_try));
 					System.out.println("Solution found! See SOLUTION_log.txt");
