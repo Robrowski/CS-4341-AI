@@ -1,6 +1,6 @@
 package common;
 
-public class Bag {
+public class Bag implements Comparable {
 	public String name;
 	public int weightCapacity;
 	public int lowerFit = 0; // -1 == uninitialized
@@ -61,6 +61,11 @@ public class Bag {
 	@Override
 	public String toString() {
 		return "(" + name + " " + weightCapacity + ")";
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		return name.compareTo(((Bag) arg0).name);
 	}
 
 }

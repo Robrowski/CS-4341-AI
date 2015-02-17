@@ -1,6 +1,6 @@
 package common;
 
-public class Item {
+public class Item implements Comparable {
 	public String name;
 	public int weight;
 
@@ -24,6 +24,11 @@ public class Item {
 	@Override
 	public String toString() {
 		return "<" + name + " " + weight + ">";
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		return name.compareTo(((Item) arg0).name);
 	}
 
 	// TODO - Consider overriding hashCode for safety

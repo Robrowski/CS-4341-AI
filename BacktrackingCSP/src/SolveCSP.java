@@ -64,6 +64,7 @@ public class SolveCSP {
 	 * @param cp
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static int solve(ProblemParser cp) {
 		backStack = new Stack<State>();
 		if (batch_mode)
@@ -76,7 +77,11 @@ public class SolveCSP {
 				.size()]);
 		List<Item> Sitems = new ArrayList<Item>(cp.items.values());
 		List<Bag> SBags = new ArrayList<Bag>(cp.bags.values());
-		if (!ABC_mode) {// if no ABC, shuffle
+
+		if (ABC_mode) {// if no ABC, shuffle
+			Collections.sort(Sitems);
+			Collections.sort(SBags);
+		} else {
 			Collections.shuffle(Sitems);
 			Collections.shuffle(SBags);
 		}
@@ -97,6 +102,12 @@ public class SolveCSP {
 		
 		// Statistics counter
 		int fails = 0, successes = 0;
+
+		// If the file was empty, our stack will be too
+		if (backStack.isEmpty()) {
+			placement_logger.println("Solved!");
+			return 0;
+		}
 
 		while (!backStack.isEmpty()) {
 			State to_try = backStack.pop();
@@ -184,6 +195,9 @@ public class SolveCSP {
 			next_item = cm
 					.DegreeHeuristic(to_copy.getMostConstrainedVariable());
 		}
+
+		if (next_item == null)
+			return;
 
 		/**
 		 * LCV = Least Constraining VALUES = pick the bag (value) with the least

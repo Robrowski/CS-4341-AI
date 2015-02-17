@@ -120,6 +120,7 @@ public class CSP_Test_Runner {
 				System.out.println("	Mean: " + mean + "   Median: " + median);
 			}
 		}
+		System.out.println("\n DONE DONE DONE");
 	}
 
 }
