@@ -111,6 +111,38 @@ public class State {
 	}
 
 	/**
+	 * Return the variables with the least amount of possible bags to be put in
+	 */
+	public ArrayList<Item> getMostConstrainedVariable() {
+
+		int mostConstraints = 0;
+		ArrayList<Item> mostConstrainedVariables = new ArrayList<Item>();
+
+		for (Item i : itemsLeft) {
+			int itemIdx = items.get(i);
+			int itemConstraints = 0;
+			for (int bagIdx = 0; bagIdx < bags.keySet().size(); bagIdx++) {
+				if (stateTable[bagIdx][itemIdx] == -1)
+					itemConstraints++;
+			}
+			if (itemConstraints > mostConstraints) {
+				mostConstraints = itemConstraints;
+				// something better, wipe everything that was worse
+				mostConstrainedVariables = new ArrayList<Item>();
+				mostConstrainedVariables.add(i);
+			}
+			else if (itemConstraints == mostConstraints) {
+				mostConstrainedVariables.add(i);
+			}
+		}
+		return mostConstrainedVariables;
+	}
+
+	// * bag_a[ -1 -1 4 -1]
+	// * bag_b[ 7 4 -1 0 ]
+	// * bag_c[ -1 -1 -1 5 ]
+
+	/**
 	 * Return a bag's state, or the bag's row in the table.
 	 * 
 	 * @param bag

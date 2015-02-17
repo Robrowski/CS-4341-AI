@@ -1,6 +1,9 @@
 package common;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,8 +11,10 @@ import org.junit.Test;
 public class StateTest {
 	Bag a = new Bag("a", 10);
 	Bag b = new Bag("b", 10);
+	Bag c = new Bag("c", 10);
 	Item X = new Item("X", 5);
 	Item Y = new Item("Y", 3);
+	Item Z = new Item("Z", 3);
 
 	Bag[] bags;
 	Item[] items;
@@ -17,8 +22,8 @@ public class StateTest {
 	@Before
 	public void setUp() throws Exception {
 
-		bags = new Bag[] { a, b };
-		items = new Item[] { X, Y };
+		bags = new Bag[] { a, b, c };
+		items = new Item[] { X, Y, Z };
 		State.initialize(bags, items);
 
 	}
@@ -26,8 +31,8 @@ public class StateTest {
 	@Test
 	public void initStateTest() {
 		State newState = new State(bags, items);
-		assertEquals(2, newState.stateTable.length);
-		assertEquals(2, newState.stateTable[0].length);
+		assertEquals(bags.length, newState.stateTable.length);
+		assertEquals(items.length, newState.stateTable[0].length);
 	}
 
 	@Test
@@ -45,6 +50,43 @@ public class StateTest {
 
 		Bag in = newState.inBag(X);
 		assertEquals(null, in);
+	}
+
+	@Test
+	public void mcvEmptyStateTable() {
+		State newState = new State(bags, items);
+
+		ArrayList<Item> mostConstrained = newState.getMostConstrainedVariable();
+		assertEquals(bags.length, mostConstrained.size());
+	}
+
+	@Test
+	public void mcvOneImpossibleMove() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, -1 }, { 0, 0, 0 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+
+		ArrayList<Item> mostConstrained = newState.getMostConstrainedVariable();
+
+		assertEquals(1, mostConstrained.size());
+		assertEquals("Z", mostConstrained.get(0).name);
+
+	}
+
+	@Test
+	public void mcvTwoImpossibleMoves_TIE() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, -1 }, { 0, -1, 0 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+
+		ArrayList<Item> mostConstrained = newState.getMostConstrainedVariable();
+
+		assertEquals(2, mostConstrained.size());
+		assertTrue(mostConstrained.contains(Z));
+		assertTrue(mostConstrained.contains(Y));
+
 	}
 
 }
