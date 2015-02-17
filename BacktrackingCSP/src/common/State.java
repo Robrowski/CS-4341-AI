@@ -138,6 +138,35 @@ public class State {
 		return mostConstrainedVariables;
 	}
 
+	/**
+	 * Return the least constraining value (bag) or values if there is a tie. No
+	 * mention of tie breakers for LCV, so we will probably just take the first
+	 * item
+	 */
+	public ArrayList<Bag> getLeastConstrainedValue() {
+		int leastConstraints = Integer.MAX_VALUE;
+		ArrayList<Bag> leastConstrainedValues = new ArrayList<Bag>();
+
+		for (Bag b : bags.keySet()) {
+			int bagIdx = bags.get(b);
+			int bagConstraints = 0;
+			for (int itemIdx = 0; itemIdx < items.keySet().size(); itemIdx++) {
+				int bagVal = stateTable[bagIdx][itemIdx];
+				if (bagVal == -1 || bagVal > 0)
+					bagConstraints++;
+			}
+			if (bagConstraints < leastConstraints) {
+				leastConstraints = bagConstraints;
+				// something better, wipe everything that was worse
+				leastConstrainedValues = new ArrayList<Bag>();
+				leastConstrainedValues.add(b);
+			} else if (bagConstraints == leastConstraints) {
+				leastConstrainedValues.add(b);
+			}
+		}
+		return leastConstrainedValues;
+	}
+
 	// * bag_a[ -1 -1 4 -1]
 	// * bag_b[ 7 4 -1 0 ]
 	// * bag_c[ -1 -1 -1 5 ]

@@ -89,4 +89,61 @@ public class StateTest {
 
 	}
 
+	@Test
+	public void mcvThreeImpossibleMoves_noTie() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, -1 }, { 0, -1, -1 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+
+		ArrayList<Item> mostConstrained = newState.getMostConstrainedVariable();
+
+		assertEquals(1, mostConstrained.size());
+		assertEquals("Z", mostConstrained.get(0).name);
+	}
+
+	@Test
+	public void lcvEmptyStateTable() {
+		State newState = new State(bags, items);
+
+		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
+		assertEquals(items.length, leastConstrained.size());
+	}
+
+	@Test
+	public void lcvOneImpossibleMove_TIE() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, -1 }, { 0, 0, 0 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
+		assertEquals(2, leastConstrained.size());
+		assertTrue(leastConstrained.contains(b));
+		assertTrue(leastConstrained.contains(c));
+
+	}
+
+	@Test
+	public void lcvTwoImpossibleMoves_noTie() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, -1 }, { 0, 0, -1 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
+		assertEquals(1, leastConstrained.size());
+		assertTrue(leastConstrained.contains(c));
+
+	}
+	
+	@Test
+	public void lcvTwoItemPlaced_noTie() {
+		State newState = new State(bags, items);
+		int[][] newStateTable = { { 0, 0, 20 }, { 10, 0, 0 }, { 0, 0, 0 } };
+
+		newState.stateTable = newStateTable;
+		ArrayList<Bag> leastConstrained = newState.getLeastConstrainedValue();
+		assertEquals(1, leastConstrained.size());
+		assertTrue(leastConstrained.contains(c));
+
+	}
 }
