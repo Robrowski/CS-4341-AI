@@ -1,0 +1,19 @@
+p J L D 
+number of items: 3
+total weight: 31
+wasted capacity: 1
+
+q G C K 
+number of items: 3
+total weight: 25
+wasted capacity: 0
+
+r H I 
+number of items: 2
+total weight: 19
+wasted capacity: 1
+
+x F E 
+number of items: 2
+total weight: 13
+wasted capacity: 1

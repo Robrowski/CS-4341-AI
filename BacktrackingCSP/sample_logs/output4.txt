@@ -1,0 +1,9 @@
+p E G C D F 
+number of items: 5
+total weight: 37
+wasted capacity: 3
+
+q H I L K J 
+number of items: 5
+total weight: 51
+wasted capacity: 4

@@ -1,0 +1,318 @@
+
+options fowardChecking: false heuristics: false arcConsistency: false
+Trying variable: C
+Trying value: p
+Added <variable, value>: C, p
+Trying variable: D
+Trying value: p
+Added <variable, value>: D, p
+Trying variable: E
+Trying value: p
+Added <variable, value>: E, p
+Trying variable: F
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: G
+Trying value: p
+Added <variable, value>: G, p
+Trying variable: H
+Trying value: p
+Removed <variable, value>: H, p
+Trying value: q
+Added <variable, value>: H, q
+Trying variable: I
+Trying value: p
+Removed <variable, value>: I, p
+Trying value: q
+Added <variable, value>: I, q
+Trying variable: J
+Trying value: p
+Removed <variable, value>: J, p
+Trying value: q
+Added <variable, value>: J, q
+Trying variable: K
+Trying value: p
+Removed <variable, value>: K, p
+Trying value: q
+Added <variable, value>: K, q
+Trying variable: L
+Trying value: p
+Removed <variable, value>: L, p
+Trying value: q
+Added <variable, value>: L, q
+
+options fowardChecking: true heuristics: false arcConsistency: false
+Trying variable: C
+Trying value: p
+Added <variable, value>: C, p
+Trying variable: D
+Trying value: p
+Added <variable, value>: D, p
+Trying variable: E
+Trying value: p
+Added <variable, value>: E, p
+Trying variable: F
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: G
+Trying value: p
+Added <variable, value>: G, p
+Trying variable: H
+Trying value: p
+Removed <variable, value>: H, p
+Trying value: q
+Added <variable, value>: H, q
+Trying variable: I
+Trying value: p
+Removed <variable, value>: I, p
+Trying value: q
+Added <variable, value>: I, q
+Trying variable: J
+Trying value: p
+Removed <variable, value>: J, p
+Trying value: q
+Added <variable, value>: J, q
+Trying variable: K
+Trying value: p
+Removed <variable, value>: K, p
+Trying value: q
+Added <variable, value>: K, q
+Trying variable: L
+Trying value: p
+Removed <variable, value>: L, p
+Trying value: q
+Added <variable, value>: L, q
+
+options fowardChecking: false heuristics: true arcConsistency: false
+Trying variable: E
+Trying value: p
+Added <variable, value>: E, p
+Trying variable: H
+Trying value: p
+Added <variable, value>: H, p
+Trying variable: I
+Trying value: p
+Added <variable, value>: I, p
+Trying variable: G
+Trying value: q
+Added <variable, value>: G, q
+Trying variable: L
+Trying value: q
+Added <variable, value>: L, q
+Trying variable: K
+Trying value: q
+Added <variable, value>: K, q
+Trying variable: C
+Trying value: q
+Added <variable, value>: C, q
+Trying variable: D
+Trying value: q
+Added <variable, value>: D, q
+Trying variable: F
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: p
+Removed <variable, value>: J, p
+Trying value: q
+Removed <variable, value>: J, q
+Removed <variable, value>: F, p
+Trying value: q
+Removed <variable, value>: F, q
+Removed <variable, value>: D, q
+Trying value: p
+Added <variable, value>: D, p
+Trying variable: F
+Trying value: q
+Added <variable, value>: F, q
+Trying variable: J
+Trying value: p
+Removed <variable, value>: J, p
+Trying value: q
+Removed <variable, value>: J, q
+Removed <variable, value>: F, q
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, p
+Removed <variable, value>: D, p
+Removed <variable, value>: C, q
+Trying value: p
+Added <variable, value>: C, p
+Trying variable: D
+Trying value: q
+Added <variable, value>: D, q
+Trying variable: F
+Trying value: q
+Added <variable, value>: F, q
+Trying variable: J
+Trying value: p
+Removed <variable, value>: J, p
+Trying value: q
+Removed <variable, value>: J, q
+Removed <variable, value>: F, q
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Added <variable, value>: J, q
+
+options fowardChecking: true heuristics: true arcConsistency: false
+Trying variable: E
+Trying value: p
+Added <variable, value>: E, p
+Trying variable: H
+Trying value: p
+Added <variable, value>: H, p
+Trying variable: I
+Trying value: p
+Added <variable, value>: I, p
+Trying variable: G
+Trying value: q
+Added <variable, value>: G, q
+Trying variable: L
+Trying value: q
+Added <variable, value>: L, q
+Trying variable: K
+Trying value: q
+Added <variable, value>: K, q
+Trying variable: C
+Trying value: q
+Added <variable, value>: C, q
+Trying variable: D
+Trying value: q
+Added <variable, value>: D, q
+Trying variable: F
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, p
+Trying value: q
+Removed <variable, value>: F, q
+Removed <variable, value>: D, q
+Trying value: p
+Added <variable, value>: D, p
+Trying variable: F
+Trying value: q
+Added <variable, value>: F, q
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, q
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, p
+Removed <variable, value>: D, p
+Removed <variable, value>: C, q
+Trying value: p
+Added <variable, value>: C, p
+Trying variable: D
+Trying value: q
+Added <variable, value>: D, q
+Trying variable: F
+Trying value: q
+Added <variable, value>: F, q
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, q
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Added <variable, value>: J, q
+
+options fowardChecking: false heuristics: true arcConsistency: true
+Trying variable: E
+Trying value: p
+Added <variable, value>: E, p
+Trying variable: H
+Trying value: p
+Added <variable, value>: H, p
+Trying variable: I
+Trying value: p
+Added <variable, value>: I, p
+Trying variable: G
+Trying value: q
+Added <variable, value>: G, q
+Trying variable: L
+Trying value: q
+Added <variable, value>: L, q
+Trying variable: K
+Trying value: q
+Added <variable, value>: K, q
+Trying variable: C
+Trying value: q
+Added <variable, value>: C, q
+Trying variable: D
+Trying value: q
+Added <variable, value>: D, q
+Trying variable: F
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, p
+Trying value: q
+Removed <variable, value>: F, q
+Removed <variable, value>: D, q
+Trying value: p
+Added <variable, value>: D, p
+Trying variable: F
+Trying value: q
+Added <variable, value>: F, q
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, q
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, p
+Removed <variable, value>: D, p
+Removed <variable, value>: C, q
+Trying value: p
+Added <variable, value>: C, p
+Trying variable: D
+Trying value: q
+Added <variable, value>: D, q
+Trying variable: F
+Trying value: q
+Added <variable, value>: F, q
+Trying variable: J
+Trying value: q
+Removed <variable, value>: J, q
+Trying value: p
+Removed <variable, value>: J, p
+Removed <variable, value>: F, q
+Trying value: p
+Added <variable, value>: F, p
+Trying variable: J
+Trying value: q
+Added <variable, value>: J, q
