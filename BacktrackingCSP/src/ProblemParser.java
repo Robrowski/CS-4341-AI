@@ -35,6 +35,7 @@ public class ProblemParser {
 	public ProblemParser(String filename, boolean show_printstatements) {
 		this.fFilePath = Paths.get(filename);
 		this.print = show_printstatements;
+		this.parse();
 	}
 
 	/**

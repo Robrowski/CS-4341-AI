@@ -41,7 +41,7 @@ public class State {
 	}
 
 	public State(Bag[] allBags, Item[] allItems) {
-		itemsLeft = new ArrayList<Item>(Arrays.asList(allItems));
+		itemsLeft = new ArrayList<Item>(Arrays.asList(allItems.clone()));
 		stateTable = new int[allBags.length][allItems.length];
 	}
 	

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,49 +14,38 @@ import constraints.Constraint;
 
 public class SolveCSP {
 
-	static Stack<State> backStack = new Stack<State>();
+	static Stack<State> backStack;
 	static Bag[] bags;
 	static Item[] items;
 	static FileLogger placement_logger = new FileLogger("placement_log.txt",
 			new LinkedList<String>());
 	static ConstraintManager cm;
 
-	private static final int NORMAL = 0, MCV = 1, LCV = 2;
-	private static int mode = 0;
+	public static final int NORMAL = 0, MCV = 1, LCV = 2;
+	public static int mode = 0;
 
-	public static void main(String[] args) {
-		/** Step 1: Read in the input file and arg for algorithm type. */
-		if (args.length < 1) {
-			System.err.println("Need to specify the file path");
-		}
-		
-		// Parse arguments
-		List<String> Largs = Arrays.asList(args);
-		if (Largs.contains("FC")){
+	public static boolean batch_mode = false;
+	public static boolean ABC_mode = false;
+	public static boolean FC = false;
 
-		}
-		if (Largs.contains("MCV")){
-			mode = MCV;
-		}	
-		if (Largs.contains("LCV")){
-			if (mode != NORMAL){
-				System.err.println("Too many algorithms specified...");
-				return;
-			}
-			mode = LCV;
-		}
+	/**
+	 * Returns the number of node checked
+	 * 
+	 * @param Largs
+	 * @param cp
+	 * @return
+	 */
+	public static int solve(ProblemParser cp) {
+		backStack = new Stack<State>();
+		if (batch_mode)
+			placement_logger.deactivate();
 
-		// Read the problem in
-		ProblemParser cp = new ProblemParser(args[0], true);
-		cp.parse();
-	
-		
 		// Make arrays out of everything
 		Constraint[] c = cp.constraints.toArray(new Constraint[cp.constraints
 				.size()]);
 		List<Item> Sitems = new ArrayList<Item>(cp.items.values());
 		List<Bag> SBags = new ArrayList<Bag>(cp.bags.values());
-		if (!Largs.contains("ABC")) {// if no ABC, shuffle
+		if (!ABC_mode) {// if no ABC, shuffle
 			Collections.shuffle(Sitems);
 			Collections.shuffle(SBags);
 		}
@@ -66,7 +54,6 @@ public class SolveCSP {
 
 		// Initialize tools
 		cm = new ConstraintManager(c);
-
 
 		// Set up data structures
 		totalNumItems = items.length;
@@ -100,21 +87,29 @@ public class SolveCSP {
 
 			// Check to see if we are done
 			if (to_try.getItemsLeft().size() == 0) {
-				placement_logger.println("Solved!", numTabs(to_try));
-				System.out.println("We did it! Gaaayyyy!");
-				to_try.printSolution();
-				reportStats(fails, successes);
-				return;
+				if (!batch_mode) {
+					placement_logger.println("Solved!", numTabs(to_try));
+					System.out.println("Solution found! See SOLUTION_log.txt");
+					System.out.println("Consistency Checks: "
+							+ (fails + successes));
+					to_try.printSolution();
+					reportStats(fails, successes);
+				}
+				return fails + successes;
 			}
 			
 			pushBagsOntoStack(to_try);
 
 		}
-		reportStats(fails, successes);
-		System.out.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
-		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
+
+		if (!batch_mode) {
+			reportStats(fails, successes);
+			System.out.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
+			FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
 				new LinkedList<String>());
-		solution_logger.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
+			solution_logger.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
+		}
+		return fails + successes;
 	}
 	
 	private static int totalNumItems = -1;
@@ -184,7 +179,6 @@ public class SolveCSP {
 		placement_logger.println("Fails: " + fails);
 		placement_logger.println("Successes: " + successes);
 		placement_logger.println("Consistency Checks: " + (fails + successes));
-		System.out.println("Consistency Checks: " + (fails + successes));
 	}
 	
 	
