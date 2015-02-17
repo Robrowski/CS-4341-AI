@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -53,8 +55,14 @@ public class SolveCSP {
 		// Make arrays out of everything
 		Constraint[] c = cp.constraints.toArray(new Constraint[cp.constraints
 				.size()]);
-		items = cp.items.values().toArray(new Item[cp.items.size()]);
-		bags = cp.bags.values().toArray(new Bag[cp.bags.size()]);
+		List<Item> Sitems = new ArrayList<Item>(cp.items.values());
+		List<Bag> SBags = new ArrayList<Bag>(cp.bags.values());
+		if (!Largs.contains("ABC")) {// if no ABC, shuffle
+			Collections.shuffle(Sitems);
+			Collections.shuffle(SBags);
+		}
+		items = Sitems.toArray(new Item[Sitems.size()]);
+		bags = SBags.toArray(new Bag[SBags.size()]);
 
 		// Initialize tools
 		cm = new ConstraintManager(c);
