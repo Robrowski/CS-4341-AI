@@ -129,10 +129,10 @@ public class CSP_Test_Runner {
 				Arrays.sort(results);
 				Arrays.sort(times);
 
-				System.out.format(" Checks Avg, %,7d  ,Median, %,7d,",
+				System.out.format(" Checks Avg~ %,7d  ~Median~ %,7d~",
 						(int) (sum / num_tests), results[num_tests / 2]);
 
-				System.out.format("Times (us) Avg, %,7d  ,Median, %,7d\n",
+				System.out.format("Times (us) Avg~ %,7d  ~Median~ %,7d\n",
 						(int) time_avg, times[num_tests / 2]);
 
 			}
