@@ -52,7 +52,7 @@ public class CSP_Test_Runner {
 		return;
 	}
 
-	static final int num_tests = 3000;
+	static final int num_tests = 10000;
 
 	/** Runs a super duper batch test! */
 	private static void batch_test() {
@@ -115,7 +115,8 @@ public class CSP_Test_Runner {
 
 				int[] results = new int[num_tests];
 				long[] times = new long[num_tests];
-				long sum = 0, time_avg = 0;
+				long sum = 0;
+				double time_avg = 0;
 				// Repeatedly solve the problem and record results
 				for (int t = 0; t < num_tests; t++) {
 					time.start();
@@ -132,8 +133,8 @@ public class CSP_Test_Runner {
 				System.out.format(" Checks Avg~ %,7d  ~Median~ %,7d~",
 						(int) (sum / num_tests), results[num_tests / 2]);
 
-				System.out.format("Times (us) Avg~ %,7d  ~Median~ %,7d\n",
-						(int) time_avg, times[num_tests / 2]);
+				System.out.format("Times (us) Avg~ %,7f  ~Median~ %,7d\n",
+						time_avg, times[num_tests / 2]);
 
 			}
 		}
