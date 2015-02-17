@@ -1,9 +1,11 @@
 import java.util.Arrays;
 import java.util.List;
 
+import common.timing.SimpleTimer;
+
 
 public class CSP_Test_Runner {
-
+	public static final SimpleTimer time = SimpleTimer.getInstance();
 
 	static final String filePath = "sample_logs/";
 	static final String[] files = { "input1.txt", "input2.txt", "input3.txt",
@@ -41,7 +43,12 @@ public class CSP_Test_Runner {
 		}
 		// Read the problem in and solve it
 		ProblemParser cp = new ProblemParser(args[0], false);
+		time.start();
 		SolveCSP.solve(cp);
+		time.stop();
+		System.out.println("Time Taken: " + SimpleTimer.elapsed_micro + " us");
+		System.out.println("Time Taken: " + SimpleTimer.elapsed_milli + " ms");
+
 		return;
 	}
 
@@ -107,17 +114,29 @@ public class CSP_Test_Runner {
 				System.out.print("	ConfigNum: " + configNum);
 
 				int[] results = new int[num_tests];
-				long sum = 0;
+				long[] times = new long[num_tests];
+				long sum = 0, time_sum = 0;
 				// Repeatedly solve the problem and record results
 				for (int t = 0; t < num_tests; t++) {
+					time.start();
 					results[t] = SolveCSP.solve(cp);
+					time.stop();
+					// System.out.println(SimpleTimer.elapsed_milli);
+					times[t] = SimpleTimer.elapsed_micro;
+					time_sum += SimpleTimer.elapsed_micro;
 					sum += results[t];
 				}
+				System.out.println("Sorting results...");
 				Arrays.sort(results);
-				int median = results[num_tests / 2];
-				int mean = (int) (sum / num_tests);
+				Arrays.sort(times);
 
-				System.out.println("	Mean: " + mean + "   Median: " + median);
+				System.out.print(" Checks Mean: " + (int) (sum / num_tests)
+						+ "   Median: " + results[num_tests / 2]);
+
+				System.out.println(" Times (us) Mean: " + (int) time_sum
+						/ num_tests
+						+ "   Median: " + times[num_tests / 2]);
+
 			}
 		}
 		System.out.println("\n DONE DONE DONE");
