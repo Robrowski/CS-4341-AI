@@ -101,7 +101,7 @@ public class ProblemParserTest {
 
 	@Test
 	public void test_read_big_file() {
-		ProblemParser cp = new ProblemParser("sample_logs/input4_HUGE.txt",
+		ProblemParser cp = new ProblemParser("sample_logs/input7_rob.txt",
 				false);
 		cp.parse();
 
