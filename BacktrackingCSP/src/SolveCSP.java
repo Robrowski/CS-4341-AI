@@ -98,9 +98,33 @@ public class SolveCSP {
 	 * @param to_copy
 	 */
 	private static void pushBagsOntoStack(State to_copy) {
+		/**
+		 * MRV = Minimum Remaining VALUES = MCV Most Constrained VARIABLE = pick
+		 * the item (variable) with the least amount of possible bags (values)
+		 * to put it in
+		 * 
+		 * (useful only when forward checking and keeping tallies of impossible
+		 * outcomes)
+		 * 
+		 * idea behind it: Fail fast, pick variables with out many branches
+		 */
+
+		/**
+		 * DH = Degree Heuristic = tie breaker, pick the variable with the most
+		 * amount of constraints associated with it
+		 */
 		// Fill the stack with more placements to try
 		Item next_item = to_copy.getItemsLeft().get(0);
 
+		/**
+		 * LCV = Least Constraining VALUES = pick the bag (value) with the least
+		 * amount of constraints associated with them to allow maximum
+		 * flexibility
+		 * 
+		 * (Pick the bag with the least shit in it = more room for other shit)
+		 * 
+		 * idea behind it: more room to succeed
+		 */
 		// TODO Switch statement based on algorithm type
 		Bag[] le_bags = bags;
 

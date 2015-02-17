@@ -42,7 +42,7 @@ public class MutuallyExclusiveBinary implements Constraint {
 				&& bag.name.equals(this.bagB.name)) {
 			// check to see if ItemA is in BagA
 			Bag bagCheck = currentState.inBag(this.itemA);
-			if (bagA != null) {
+			if (bagA != null && bagCheck != null) {
 				// if item A is in Bag A, item B can't be put into bagB
 				if (bagCheck.name.equals(this.bagA.name))
 					return false;
