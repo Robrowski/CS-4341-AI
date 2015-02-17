@@ -28,6 +28,35 @@ public class SolveCSP {
 	public static boolean ABC_mode = false;
 	public static boolean FC = false;
 
+	private static void printConfiguration() {
+		System.out.println("Solving a CSP problem!");
+		System.out.println("Forward Checking: " + FC);
+		System.out.println("ABC Heuristic   : " + ABC_mode);
+		System.out.print("Mode            : ");
+
+		placement_logger.println("Solving a CSP problem!");
+		placement_logger.println("Forward Checking: " + FC);
+		placement_logger.println("ABC Heuristic   : " + ABC_mode);
+		placement_logger.print("Mode            : ");
+
+		switch (mode) {
+		case 1:
+			System.out.println("MCV");
+			placement_logger.println("MCV");
+			break;
+		case 2:
+			System.out.println("LCV");
+			placement_logger.println("MCV");
+			break;
+		default:
+			System.out.println("DEFAULT");
+			placement_logger.println("DEFAULT");
+			break;
+		}
+		System.out.println("");
+		placement_logger.println("");
+	}
+
 	/**
 	 * Returns the number of node checked
 	 * 
@@ -39,6 +68,8 @@ public class SolveCSP {
 		backStack = new Stack<State>();
 		if (batch_mode)
 			placement_logger.deactivate();
+		else
+			printConfiguration();
 
 		// Make arrays out of everything
 		Constraint[] c = cp.constraints.toArray(new Constraint[cp.constraints
@@ -113,7 +144,8 @@ public class SolveCSP {
 		}
 		return fails + successes;
 	}
-	
+
+
 	private static int totalNumItems = -1;
 
 	private static int numTabs(State s) {
