@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import constraints.Constraint;
 import constraints.EqualBinary;
+import constraints.MutuallyExclusiveBinary;
+import constraints.NotEqualBinary;
 import constraints.UnaryExclusive;
 import constraints.UnaryInclusive;
 
@@ -318,5 +320,164 @@ public class ConstraintManagerTest {
 
 		assertEquals(expectedStateTable, state.stateTable);
 	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneNotEqualBinary_XbeforeY() {
+		Constraint XY_BinaryNotEqual = new NotEqualBinary(X,Y);
+		constraints = new Constraint[] { XY_BinaryNotEqual };
 
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(X, c, state);
+		manager.forwardCheckUpdate(state, c, X);
+
+		int[][] expectedStateTable = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0 },
+				{ 5, -1, 0, 0 }, 
+				{ 0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneNotEqualBinary_YbeforeX() {
+		Constraint XY_BinaryNotEqual = new NotEqualBinary(X,Y);
+		constraints = new Constraint[] { XY_BinaryNotEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(Y, c, state);
+		manager.forwardCheckUpdate(state, c, Y);
+
+		int[][] expectedStateTable = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0 },
+				{ -1, 3, 0, 0 }, 
+				{ 0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneEqualBinary_XbeforeY() {
+		Constraint XY_BinaryEqual = new EqualBinary(X,Y);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(X, c, state);
+		manager.forwardCheckUpdate(state, c, X);
+
+		int[][] expectedStateTable = { 
+				{ 0, -1, 0, 0 }, 
+				{ 0, -1, 0, 0 },
+				{ 5,   0, 0, 0 },
+				{ 0, -1, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneEqualBinary_YbeforeX() {
+		Constraint XY_BinaryEqual = new EqualBinary(X,Y);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(Y, c, state);
+		manager.forwardCheckUpdate(state, c, Y);
+
+		int[][] expectedStateTable = { 
+				{ -1, 0, 0, 0 }, 
+				{ -1, 0, 0, 0 },
+				{ 0,  3, 0, 0 },
+				{ -1, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneMutuallyExclusive_YbeforeX_differentBags() {
+		Constraint XY_BinaryEqual = new MutuallyExclusiveBinary(X, Y, a, b);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(Y, b, state);
+		manager.forwardCheckUpdate(state, b, Y);
+
+		int[][] expectedStateTable = { 
+				{ -1, 0, 0, 0 }, 
+				{  0, 3, 0, 0 },
+				{  0, 0, 0, 0 },
+				{  0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneMutuallyExclusive_YbeforeX_SameBag() {
+		Constraint XY_BinaryEqual = new MutuallyExclusiveBinary(X, Y, b, b);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(Y, b, state);
+		manager.forwardCheckUpdate(state, b, Y);
+
+		int[][] expectedStateTable = { 
+				{  0, 0, 0, 0 }, 
+				{ -1, 3, 0, 0 },
+				{  0, 0, 0, 0 },
+				{  0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneMutuallyExclusive_XbeforeY_differentBags() {
+		Constraint XY_BinaryEqual = new MutuallyExclusiveBinary(X, Y, a, b);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(X, a, state);
+		manager.forwardCheckUpdate(state, a, X);
+
+		int[][] expectedStateTable = { 
+				{  5, 0, 0, 0 }, 
+				{  0,-1, 0, 0 },
+				{  0, 0, 0, 0 },
+				{  0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testOneMutuallyExclusive_XbeforeY_sameBag() {
+		Constraint XY_BinaryEqual = new MutuallyExclusiveBinary(X, Y, a, a);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+		manager.placeItemInBag(X, a, state);
+		manager.forwardCheckUpdate(state, a, X);
+
+		int[][] expectedStateTable = { 
+				{  5,-1, 0, 0 }, 
+				{  0, 0, 0, 0 },
+				{  0, 0, 0, 0 },
+				{  0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
 }

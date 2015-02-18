@@ -61,8 +61,13 @@ public class MutuallyExclusiveBinary implements Constraint {
 
 	@Override
 	public void forwardInvalidate(State currentState, Bag placed, Item given) {
-		// TODO Auto-generated method stub
-
+		if (given.name.equals(this.itemA.name)
+				&& placed.name.equals(this.bagA.name)) {
+			currentState.constrainSpace(this.itemB, this.bagB);
+		} else if (given.name.equals(this.itemB.name)
+				&& placed.name.equals(this.bagB.name)) {
+			currentState.constrainSpace(this.itemA, this.bagA);
+		}
 	}
 
 	@Override

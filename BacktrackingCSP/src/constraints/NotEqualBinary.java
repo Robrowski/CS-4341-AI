@@ -55,8 +55,11 @@ public class NotEqualBinary implements Constraint {
 
 	@Override
 	public void forwardInvalidate(State currentState, Bag placed, Item given) {
-		// TODO Auto-generated method stub
-
+		if (given.name.equals(this.A.name)) {
+			currentState.constrainSpace(B, placed);
+		} else if (given.name.equals(this.B.name)) {
+			currentState.constrainSpace(A, placed);
+		}
 	}
 
 	@Override

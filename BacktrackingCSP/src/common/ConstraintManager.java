@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import constraints.Constraint;
 import constraints.EqualBinary;
+import constraints.MutuallyExclusiveBinary;
+import constraints.NotEqualBinary;
 import constraints.UnaryExclusive;
 import constraints.UnaryInclusive;
 
@@ -65,6 +67,17 @@ public class ConstraintManager {
 		for (int i = 0; i < binEqToCheck.size(); i++) {
 			for (Constraint binEq : binEqToCheck) {
 				binEq.forwardInvalidate(s);
+			}
+		}
+	}
+
+	public void forwardCheckUpdate(State s, Bag placed, Item given) {
+		for (Constraint c : constraints) {
+			if (c.getClass() == NotEqualBinary.class
+					|| c.getClass() == EqualBinary.class
+					|| c.getClass() == MutuallyExclusiveBinary.class) {
+
+				c.forwardInvalidate(s, placed, given);
 			}
 		}
 	}

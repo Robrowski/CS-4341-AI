@@ -55,8 +55,19 @@ public class EqualBinary implements Constraint {
 
 	@Override
 	public void forwardInvalidate(State currentState, Bag placed, Item given) {
-		// TODO Auto-generated method stub
-
+		if (given.name.equals(this.A.name)) {
+			for (Bag b : State.bags.keySet()) {
+				if (!(placed.name.equals(b.name))) {
+					currentState.constrainSpace(B, b);
+				}
+			}
+		} else if (given.name.equals(this.B.name)) {
+			for (Bag b : State.bags.keySet()) {
+				if (!(placed.name.equals(b.name))) {
+					currentState.constrainSpace(A, b);
+				}
+			}
+		}
 	}
 
 	@Override
