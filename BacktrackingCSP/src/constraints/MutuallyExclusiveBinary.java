@@ -59,4 +59,16 @@ public class MutuallyExclusiveBinary implements Constraint {
 		return false;
 	}
 
+	@Override
+	public void forwardInvalidate(State currentState, Bag placed, Item given) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void forwardInvalidate(State currentState) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

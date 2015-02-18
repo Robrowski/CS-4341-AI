@@ -141,7 +141,34 @@ public class ConstraintManagerTest {
 		boolean result = manager.placeItemInBag(Y, b, state);
 
 		assertFalse(result);
+	}
 
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitUnaryInclusive() {
+		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
+		constraints = new Constraint[] { Z_UnaryInclusive_b };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		 int[][] expectedStateTable = { 
+				 { 0, 0, -1, 0 }, 
+				 { 0, 0, 0, 0 }, 
+				 { 0, 0, -1, 0 },
+				 { 0, 0, -1, 0 } };
+
+		// int bagIdx_b = state.bags.get(b);
+		// int bagIdx_a = state.bags.get(a);
+		// int bagIdx_c = state.bags.get(c);
+		// int bagIdx_d = state.bags.get(d);
+		// int itemIdx_Z = state.items.get(Z);
+		// assertEquals(0, state.stateTable[bagIdx_b][itemIdx_Z]);
+		// assertEquals(-1, state.stateTable[bagIdx_a][itemIdx_Z]);
+		// assertEquals(-1, state.stateTable[bagIdx_c][itemIdx_Z]);
+		// assertEquals(-1, state.stateTable[bagIdx_d][itemIdx_Z]);
+		
+		assertEquals(expectedStateTable, state.stateTable);
 	}
 
 }

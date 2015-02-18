@@ -3,6 +3,8 @@ package common;
 import java.util.ArrayList;
 
 import constraints.Constraint;
+import constraints.UnaryExclusive;
+import constraints.UnaryInclusive;
 
 public class ConstraintManager {
 	
@@ -45,6 +47,17 @@ public class ConstraintManager {
 		return true;
 	}
 	
+	public void initForwardChecking(State s) {
+		for (Constraint c : constraints) {
+			if (c.getClass() == UnaryInclusive.class
+					|| c.getClass() == UnaryExclusive.class) {
+
+				c.forwardInvalidate(s);
+
+			}
+		}
+	}
+
 	/**
 	 * Checks to see if an item can fit in the given bag, by checking to see how
 	 * full it is in terms of weight and number of items it can hold.

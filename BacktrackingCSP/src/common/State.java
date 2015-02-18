@@ -10,10 +10,10 @@ import java.util.PriorityQueue;
 
 public class State {
 
-	static Map<Bag, Integer> bags;
-	static Map<Item, Integer> items;
-	static Map<Integer, Bag> bags_by_id;
-	static Map<Integer, Item> items_by_id;
+	public static Map<Bag, Integer> bags;
+	public static Map<Item, Integer> items;
+	public static Map<Integer, Bag> bags_by_id;
+	public static Map<Integer, Item> items_by_id;
 
 	public ArrayList<Item> itemsLeft;
 
@@ -44,7 +44,7 @@ public class State {
 		itemsLeft = new ArrayList<Item>(Arrays.asList(allItems.clone()));
 		stateTable = new int[allBags.length][allItems.length];
 	}
-	
+
 	/**
 	 * A State represents where everything is in the world. It keeps track of
 	 * all of the Items that are currently in bags, and serves the dual purpose
@@ -103,6 +103,13 @@ public class State {
 
 		stateTable[bagIndex][itemIndex] = toPlace.weight;
 		itemsLeft.remove(toPlace);
+	}
+
+	public void constrainSpace(Item toPlace, Bag inBag) {
+		int bagIndex = bags.get(inBag);
+		int itemIndex = items.get(toPlace);
+
+		stateTable[bagIndex][itemIndex] = -1;
 	}
 
 	/**

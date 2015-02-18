@@ -74,4 +74,18 @@ public class UnaryInclusive implements Constraint {
 		return false;
 	}
 
+	@Override
+	public void forwardInvalidate(State currentState, Bag placed, Item given) {
+
+	}
+
+	@Override
+	public void forwardInvalidate(State currentState) {
+		for (Bag b : State.bags.keySet()) {
+			if (!isValid(currentState, b, this.item)) {
+				currentState.constrainSpace(this.item, b);
+			}
+		}
+	}
+
 }
