@@ -3,6 +3,7 @@ package common;
 import java.util.ArrayList;
 
 import constraints.Constraint;
+import constraints.EqualBinary;
 import constraints.UnaryExclusive;
 import constraints.UnaryInclusive;
 
@@ -48,12 +49,22 @@ public class ConstraintManager {
 	}
 	
 	public void initForwardChecking(State s) {
+		ArrayList<Constraint> binEqToCheck = new ArrayList<Constraint>();
 		for (Constraint c : constraints) {
 			if (c.getClass() == UnaryInclusive.class
 					|| c.getClass() == UnaryExclusive.class) {
 
 				c.forwardInvalidate(s);
-
+			}
+			if (c.getClass() == EqualBinary.class)
+				binEqToCheck.add(c);
+		}
+		// Have to iterate over the list N^2 In order to ensure that
+		// if there are binary equal links (B and C) and (C and D), that you get
+		// B and C and D correctly.
+		for (int i = 0; i < binEqToCheck.size(); i++) {
+			for (Constraint binEq : binEqToCheck) {
+				binEq.forwardInvalidate(s);
 			}
 		}
 	}

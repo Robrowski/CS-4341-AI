@@ -24,6 +24,17 @@ public class UnaryExclusive implements Constraint {
 	}
 
 	/**
+	 * Make a Unary Exclusive Constraint on an Item, and add a single bag
+	 * 
+	 * @param item
+	 */
+	public UnaryExclusive(Item item, Bag oneBag) {
+		this.item = item;
+		bags = new ArrayList<Bag>();
+		bags.add(oneBag);
+	}
+
+	/**
 	 * Make a Unary Exclusive Constraint on an Item, and the bags that the item
 	 * is not allowed to be in
 	 * 
@@ -71,8 +82,11 @@ public class UnaryExclusive implements Constraint {
 
 	@Override
 	public void forwardInvalidate(State currentState) {
-		// TODO Auto-generated method stub
-
+		for (Bag b : State.bags.keySet()) {
+			if (!isValid(currentState, b, this.item)) {
+				currentState.constrainSpace(this.item, b);
+			}
+		}
 	}
 
 }

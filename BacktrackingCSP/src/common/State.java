@@ -213,6 +213,10 @@ public class State {
 		return null;
 	}
 
+	public int getStateValue(Bag bag, Item item) {
+		return stateTable[bags.get(bag)][items.get(item)];
+	}
+
 	/** Prints the solution as described in the assignment */
 	public void printSolution() {
 		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",

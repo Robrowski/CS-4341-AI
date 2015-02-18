@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import constraints.Constraint;
 import constraints.EqualBinary;
+import constraints.UnaryExclusive;
 import constraints.UnaryInclusive;
 
 public class ConstraintManagerTest {
@@ -152,22 +153,169 @@ public class ConstraintManagerTest {
 		ConstraintManager manager = new ConstraintManager(constraints);
 		manager.initForwardChecking(state);
 
+		int[][] expectedStateTable = { 
+				{ 0, 0, -1, 0 }, 
+				{ 0, 0, 0, 0 },
+				{ 0, 0, -1, 0 }, 
+				{ 0, 0, -1, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitTwoUnaryInclusive() {
+		Constraint Z_UnaryInclusive_b = new UnaryInclusive(Z, b);
+		Constraint X_UnaryInclusive_c = new UnaryInclusive(X, c);
+		constraints = new Constraint[] { Z_UnaryInclusive_b, X_UnaryInclusive_c };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ -1, 0, -1, 0 }, 
+				{ -1, 0, 0, 0 },
+				{ 0, 0, -1, 0 }, 
+				{ -1, 0, -1, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitUnaryInclusive_MultipleBags() {
+		UnaryInclusive Z_UnaryInclusive_bc = new UnaryInclusive(Z);
+		Z_UnaryInclusive_bc.addBag(b);
+		Z_UnaryInclusive_bc.addBag(c);
+		constraints = new Constraint[] { Z_UnaryInclusive_bc};
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
 		 int[][] expectedStateTable = { 
 				 { 0, 0, -1, 0 }, 
 				 { 0, 0, 0, 0 }, 
-				 { 0, 0, -1, 0 },
+				 { 0, 0, 0, 0 },
 				 { 0, 0, -1, 0 } };
 
-		// int bagIdx_b = state.bags.get(b);
-		// int bagIdx_a = state.bags.get(a);
-		// int bagIdx_c = state.bags.get(c);
-		// int bagIdx_d = state.bags.get(d);
-		// int itemIdx_Z = state.items.get(Z);
-		// assertEquals(0, state.stateTable[bagIdx_b][itemIdx_Z]);
-		// assertEquals(-1, state.stateTable[bagIdx_a][itemIdx_Z]);
-		// assertEquals(-1, state.stateTable[bagIdx_c][itemIdx_Z]);
-		// assertEquals(-1, state.stateTable[bagIdx_d][itemIdx_Z]);
-		
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitUnaryExclusive() {
+		Constraint Z_UnaryExclusive_b = new UnaryExclusive(Z, b);
+		constraints = new Constraint[] { Z_UnaryExclusive_b };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, -1, 0 },
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitTwoUnaryExclusive() {
+		Constraint Z_UnaryExclusive_b = new UnaryExclusive(Z, b);
+		UnaryExclusive Y_UnaryExclusive_ad = new UnaryExclusive(Y, a);
+		Y_UnaryExclusive_ad.addBag(d);
+		constraints = new Constraint[] { Z_UnaryExclusive_b,
+				Y_UnaryExclusive_ad };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ 0, -1, 0, 0 }, 
+				{ 0, 0, -1, 0 },
+				{ 0, 0, 0, 0 }, 
+				{ 0, -1, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitEqualBinary_NoOtherConstraints() {
+		Constraint XY_BinaryEqual = new EqualBinary(X,Y);
+		constraints = new Constraint[] { XY_BinaryEqual };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0 },
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitEqualBinary_AndUnaryExclusive() {
+		Constraint XY_BinaryEqual = new EqualBinary(X,Y);
+		Constraint X_UnaryExclusive_a = new UnaryExclusive(X, a);
+		constraints = new Constraint[] { XY_BinaryEqual, X_UnaryExclusive_a };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ -1, -1, 0, 0 }, 
+				{ 0, 0, 0, 0 },
+				{ 0, 0, 0, 0 }, 
+				{ 0, 0, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testInitEqualBinary_AndUnaryInclusive() {
+		Constraint XY_BinaryEqual = new EqualBinary(X,Y);
+		Constraint X_UnaryInclusive_a = new UnaryInclusive(X, a);
+		constraints = new Constraint[] { XY_BinaryEqual, X_UnaryInclusive_a };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ 0, 0, 0, 0 }, 
+				{ -1, -1, 0, 0 },
+				{ -1, -1, 0, 0 }, 
+				{ -1, -1, 0, 0 } };
+
+		assertEquals(expectedStateTable, state.stateTable);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testManyConstraints() {
+		Constraint ZY_BinaryEqual = new EqualBinary(Z, Y);
+		Constraint XZ_BinaryEqual = new EqualBinary(X,Z);
+		Constraint W_UnaryInclusive_c = new UnaryInclusive(W, c);
+		UnaryExclusive Y_UnaryExclusive_bd = new  UnaryExclusive(Y,b);
+		Y_UnaryExclusive_bd.addBag(d);
+		constraints = new Constraint[] { XZ_BinaryEqual, ZY_BinaryEqual,
+				W_UnaryInclusive_c, Y_UnaryExclusive_bd };
+
+		ConstraintManager manager = new ConstraintManager(constraints);
+		manager.initForwardChecking(state);
+
+		int[][] expectedStateTable = { 
+				{ 0,  0, 0, -1 }, 
+				{ -1, -1, -1, -1 },
+				{ 0,  0, 0,  0 }, 
+				{ -1, -1, -1, -1 } };
+
 		assertEquals(expectedStateTable, state.stateTable);
 	}
 

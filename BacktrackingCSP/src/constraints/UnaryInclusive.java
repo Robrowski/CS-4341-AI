@@ -52,7 +52,7 @@ public class UnaryInclusive implements Constraint {
 	 * @param newBag
 	 */
 	public void addBag(Bag newBag) {
-		bags.add(newBag);
+		this.bags.add(newBag);
 	}
 
 	@Override
