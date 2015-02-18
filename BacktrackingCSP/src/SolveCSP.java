@@ -19,6 +19,8 @@ public class SolveCSP {
 	static Item[] items;
 	static FileLogger placement_logger = new FileLogger("placement_log.txt",
 			new LinkedList<String>());
+	static FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
+			new LinkedList<String>());
 	static ConstraintManager cm;
 
 	public static final int NORMAL = 0, MCV = 1, LCV = 2;
@@ -103,9 +105,24 @@ public class SolveCSP {
 		// Statistics counter
 		int fails = 0, successes = 0;
 
+		if ((bags.length > 0 && items.length == 0)
+				|| (bags.length == 0 && items.length > 0)) {
+			if (!batch_mode) {
+
+				solution_logger.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
+				placement_logger.println("FAIL");
+				System.out.println("FAIL");
+			}
+			return 0;
+		}
+
 		// If the file was empty, our stack will be too
 		if (backStack.isEmpty()) {
-			placement_logger.println("Solved!");
+			if (!batch_mode) {
+				placement_logger.println("Solved!");
+				solution_logger.println("SOLVED");
+				System.out.println("SUCCESS");
+			}
 			return 0;
 		}
 
@@ -149,8 +166,6 @@ public class SolveCSP {
 		if (!batch_mode) {
 			reportStats(fails, successes);
 			System.out.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
-			FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
-				new LinkedList<String>());
 			solution_logger.println("NO SOLUTION WAS FOUND. GG UNINSTALL");
 		}
 		return fails + successes;
