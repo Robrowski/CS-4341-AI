@@ -9,7 +9,7 @@ public class CSP_Test_Runner {
 
 	static final String filePath = "sample_logs/";
 	static final String[] files = { "input1.txt", "input2.txt", "input3.txt",
-			"input4.txt", "input5.txt", "input5_reordered.txt", "input6.txt",
+			"input4.txt", "input5.txt", "input6.txt",
 			"input7_rob.txt" };
 
 	public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class CSP_Test_Runner {
 
 		// Parse arguments
 		if (Largs.contains("FC")) {
-
+			SolveCSP.FC = true;
 		}
 		if (Largs.contains("MCV")) {
 			SolveCSP.mode = SolveCSP.MCV;

@@ -98,6 +98,10 @@ public class SolveCSP {
 		State intialState = new State(bags, items);
 		State.initialize(bags, items);
 
+		// If FC is enabled, initialize the stateTable with impossible moves
+		if (FC)
+			cm.initForwardChecking(intialState);
+
 		// Initialize stack with item 1 + each bag --- do this same thing at
 		// each new level
 		pushBagsOntoStack(intialState);
@@ -140,6 +144,17 @@ public class SolveCSP {
 				continue; // Stop checking a failure of a branch
 			}
 			successes++;
+
+			// If forward checking enabled, perform local update of invalid
+			// moves
+			if (FC) {
+				cm.forwardCheckUpdate(to_try, to_try.intendedBag,
+						to_try.intendedItem);
+				if (cm.checkDomainWipeout(to_try)) {
+					placement_logger.println("Domain Wipeout");
+					continue;
+				}
+			}
 			placement_logger.println("Successfully placed "
 					+ to_try.intendedItem + " in " + to_try.intendedBag,
 					numTabs(to_try));
@@ -223,11 +238,12 @@ public class SolveCSP {
 		 * 
 		 * idea behind it: more room to succeed
 		 */
-		Bag[] le_bags = bags;
+		ArrayList<Bag> le_bags = to_copy.getPossibleBags(next_item);
 		if (mode == LCV)
-			le_bags = (Bag[]) to_copy.getLeastConstrainedValue().toArray(
-				new Bag[bags.length]);
+			le_bags = to_copy.getLeastConstrainedValue();
 
+		if (le_bags == null)
+			return;
 		// Naive Implementation
 		for (Bag b : le_bags) {
 			State next = to_copy.deepCopy();

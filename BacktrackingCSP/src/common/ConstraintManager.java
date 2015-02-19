@@ -35,7 +35,8 @@ public class ConstraintManager {
 	 * @return true on success, false on failure.
 	 */
 	public boolean placeItemInBag(Item toPlace, Bag inBag, State s) {
-		if (canFit(toPlace, inBag, s)) {
+		if (canFit(toPlace, inBag, s)
+				&& !(s.getStateValue(inBag, toPlace) == -1)) {
 			for (Constraint c : constraints) {
 				if (!c.isValid(s, inBag, toPlace))
 					return false;
@@ -72,14 +73,30 @@ public class ConstraintManager {
 	}
 
 	public void forwardCheckUpdate(State s, Bag placed, Item given) {
-		for (Constraint c : constraints) {
-			if (c.getClass() == NotEqualBinary.class
-					|| c.getClass() == EqualBinary.class
-					|| c.getClass() == MutuallyExclusiveBinary.class) {
+		for (Constraint dc : constraints) {
+			for (Constraint c : constraints) {
+				if (c.getClass() == NotEqualBinary.class
+						|| c.getClass() == EqualBinary.class
+						|| c.getClass() == MutuallyExclusiveBinary.class) {
 
-				c.forwardInvalidate(s, placed, given);
+					c.forwardInvalidate(s, placed, given);
+				}
 			}
 		}
+	}
+
+	public boolean checkDomainWipeout(State s){
+		for (Item i : s.itemsLeft){
+			int domainCount = 0;
+			for (Bag b : s.bags.keySet()){
+				if (s.getStateValue(b, i) == -1)
+					domainCount++;
+			}
+			if (domainCount == s.bags.keySet().size()){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

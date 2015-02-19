@@ -120,6 +120,23 @@ public class State {
 	}
 
 	/**
+	 * Get bags that are not impossible for given item
+	 */
+	public ArrayList<Bag> getPossibleBags(Item i) {
+		ArrayList<Bag> possible = new ArrayList<Bag>();
+		for (Bag b : bags.keySet()) {
+			if (!(getStateValue(b, i) == -1)) {
+				possible.add(b);
+			}
+		}
+		if (possible.size() == 0)
+			return null;
+
+		return possible;
+
+	}
+
+	/**
 	 * Return the variables with the least amount of possible bags to be put in
 	 */
 	public ArrayList<Item> getMostConstrainedVariable() {
@@ -134,7 +151,9 @@ public class State {
 				if (stateTable[bagIdx][itemIdx] == -1)
 					itemConstraints++;
 			}
-			if (itemConstraints > mostConstraints) {
+			// Don't return items that are worse, or are impossible
+			if (itemConstraints > mostConstraints
+					&& itemConstraints < bags.keySet().size()) {
 				mostConstraints = itemConstraints;
 				// something better, wipe everything that was worse
 				mostConstrainedVariables = new ArrayList<Item>();
@@ -168,6 +187,8 @@ public class State {
 				if (bagVal == -1 || bagVal > 0)
 					bagConstraints++;
 			}
+			// // If bag a bag is completely full, don't bother trying to use it
+			// if (!(bagConstraints == items.keySet().size())) {
 			ConstrainedBagCount count = new ConstrainedBagCount(b,
 					bagConstraints);
 			queue.add(count);
