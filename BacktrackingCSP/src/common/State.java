@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -239,9 +238,7 @@ public class State {
 	}
 
 	/** Prints the solution as described in the assignment */
-	public void printSolution() {
-		FileLogger solution_logger = new FileLogger("SOLUTION_log.txt",
-				new LinkedList<String>());
+	public void printSolution(FileLogger solution_logger) {
 
 		for (int bag_id = 0; bag_id < bags.size(); bag_id++) {
 						

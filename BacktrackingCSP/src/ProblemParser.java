@@ -23,7 +23,7 @@ public class ProblemParser {
 	HashMap<String, Item> items = new HashMap<String, Item>();
 	HashMap<String, Bag> bags = new HashMap<String, Bag>();
 	
-	private Path fFilePath;
+	public Path fFilePath;
 	private boolean print;
 	private static String delims = " ", sec_delim = "#####";
 

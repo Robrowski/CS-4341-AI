@@ -69,10 +69,13 @@ public class SolveCSP {
 	@SuppressWarnings("unchecked")
 	public static int solve(ProblemParser cp) {
 		backStack = new Stack<State>();
-		if (batch_mode)
+		if (batch_mode) {
 			placement_logger.deactivate();
-		else
+		} else {
+			placement_logger.println(cp.fFilePath.toString());
+			solution_logger.println(cp.fFilePath.toString());
 			printConfiguration();
+		}
 
 		// Make arrays out of everything
 		Constraint[] c = cp.constraints.toArray(new Constraint[cp.constraints
@@ -168,7 +171,7 @@ public class SolveCSP {
 					System.out.println("Solution found! See SOLUTION_log.txt");
 					System.out.println("Consistency Checks: "
 							+ (fails + successes));
-					to_try.printSolution();
+					to_try.printSolution(solution_logger);
 					reportStats(fails, successes);
 				}
 				return fails + successes;
