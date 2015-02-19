@@ -124,7 +124,7 @@ public class CSP_Test_Runner {
 					time.stop();
 					// System.out.println(SimpleTimer.elapsed_milli);
 					times[t] = SimpleTimer.elapsed_micro;
-					time_avg += SimpleTimer.elapsed_micro / num_tests;
+					time_avg += (double) SimpleTimer.elapsed_micro / num_tests;
 					sum += results[t];
 				}
 				Arrays.sort(results);
@@ -133,7 +133,7 @@ public class CSP_Test_Runner {
 				System.out.format(" Checks Avg~ %,7d  ~Median~ %,7d~",
 						(int) (sum / num_tests), results[num_tests / 2]);
 
-				System.out.format("Times (us) Avg~ %,7f  ~Median~ %,7d\n",
+				System.out.format("Times (us) Avg~ %,7.0f  ~Median~ %,7d\n",
 						time_avg, times[num_tests / 2]);
 
 			}
