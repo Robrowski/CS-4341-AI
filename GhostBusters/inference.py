@@ -161,7 +161,7 @@ class ExactInference(InferenceModule):
 
             dif = math.fabs(trueDistance - noisyDistance)
             # The number below is the solution to 1 = X + X^2 ... X^7
-            robs = math.pow( 0.50201705517816551178 , dif)
+            p_correct_position = math.pow( 0.50201705517816551178 , dif)
 
             if emissionModel[trueDistance] > 0:
                allPossible[p] = (p_correct_position )*self.beliefs[p]
