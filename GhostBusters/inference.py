@@ -14,7 +14,7 @@
 
 import itertools
 import util
-import random
+import random, math
 import busters
 import game
 
@@ -144,7 +144,7 @@ class ExactInference(InferenceModule):
              of None will be returned if, and only if, the ghost is
              captured).
         """
-        noisyDistance = observation
+        noisyDistance = observation # always within 7 of true distance
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
 
@@ -154,14 +154,18 @@ class ExactInference(InferenceModule):
             setGhostPositions(gameState, (self.getJailPosition(),))
             return
 
-
-
         # Replace this code with a correct observation update
         allPossible = util.Counter()
         for p in self.legalPositions:
             trueDistance = util.manhattanDistance(p, pacmanPosition)
+
+            dif = math.fabs(trueDistance - noisyDistance)
+            # The number below is the solution to 1 = X + X^2 ... X^7
+            robs = math.pow( 0.50201705517816551178 , dif)
+
             if emissionModel[trueDistance] > 0:
-                allPossible[p] = 1.0
+               allPossible[p] = (p_correct_position )*self.beliefs[p]
+            
 
         "*** END YOUR CODE HERE ***"
 
