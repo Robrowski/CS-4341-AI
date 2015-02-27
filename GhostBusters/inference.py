@@ -149,23 +149,26 @@ class ExactInference(InferenceModule):
         pacmanPosition = gameState.getPacmanPosition()
 
         "*** YOUR CODE HERE ***"
+       
+        allPossible = util.Counter()
+
         #Ghost captured
         if noisyDistance is None: 
-            setGhostPositions(gameState, (self.getJailPosition(),))
-            return
+           allPossible[self.getJailPosition()] =1            
+        else:
+            # Replace this code with a correct observation update
+            for p in self.legalPositions:
+                trueDistance = util.manhattanDistance(p, pacmanPosition)
 
-        # Replace this code with a correct observation update
-        allPossible = util.Counter()
-        for p in self.legalPositions:
-            trueDistance = util.manhattanDistance(p, pacmanPosition)
-
-            dif = math.fabs(trueDistance - noisyDistance)
-            # The number below is the solution to 1 = X + X^2 ... X^7
-            p_correct_position = math.pow( 0.50201705517816551178 , dif)
-
-            if emissionModel[trueDistance] > 0:
-               allPossible[p] = (p_correct_position )*self.beliefs[p]
-            
+                # ROB's way (IT WORKS mostly)
+                # dif = math.fabs(trueDistance - noisyDistance)
+                # # # The number below is the solution to 1 = X + X^2 ... X^7
+                # p_correct_position = math.pow( 0.502017 , dif)
+                # if emissionModel[trueDistance] > 0:
+                #     allPossible[p] = (p_correct_position )*self.beliefs[p]
+                
+                # Actual way - usage of the emission model is based on the true distance
+                allPossible[p] = emissionModel[trueDistance]*self.beliefs[p]
 
         "*** END YOUR CODE HERE ***"
 
