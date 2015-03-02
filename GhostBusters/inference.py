@@ -327,7 +327,7 @@ class ParticleFilter(InferenceModule):
 
     def calculateWeights(self, pacmanPosition, emissionModel):
         """
-        Rob make this helper all by himself to calculate weights of particles based 
+        Rob made this helper all by himself to calculate weights of particles based 
         on their quantity
         """ 
         w = []
@@ -458,7 +458,6 @@ class JointParticleFilter:
                 if len(self.particles) == self.numParticles:
                     return
         
-
     def addGhostAgent(self, agent):
         """
         Each ghost agent is registered separately and stored (in case they are
@@ -505,6 +504,48 @@ class JointParticleFilter:
         emissionModels = [busters.getObservationDistribution(dist) for dist in noisyDistances]
 
         "*** YOUR CODE HERE ***"
+        ##### handle jailed ghosts first
+        # This is a horrible implementation because we might regenerate all our tuples N*g times... and 
+        # still have all the ghosts in jail...
+        for i in xrange(self.numGhosts):
+            if noisyDistances[i] is None:          
+                # turn all particles into jail particles
+                new_particles = []
+                for p in self.particles:
+                    new_particles.append(  self.getParticleWithGhostInJail(p, i))
+                self.particles = new_particles
+
+
+        # Split up the ghosts for laziness
+        split_particles = [[] for x in xrange(self.numGhosts)] 
+        for p in self.particles:
+            for i in xrange(self.numGhosts):
+                split_particles[i].append(p[i])
+
+        ###### Calculate weights
+        w = [self.calculateWeights(split_particles[i], pacmanPosition, emissionModels[i]) for i in xrange(self.numGhosts)] 
+   
+        #### Re initialize until the weights aren't all zero
+        # while (sum(w) == 0):
+        #     print "Particle weights = 0"
+        #     self.initializeUniformly(gameState)
+        #     w = self.calculateWeights(pacmanPosition, emissionModel) 
+        
+        for i in xrange(self.numGhosts):
+            split_particles[i] = util.nSample(w[i], split_particles[i], len(split_particles[i]))
+
+        self.particles = [ tuple([ p[i] for i in xrange(self.numGhosts)]) for p in split_particles]
+    
+    def calculateWeights(self, particles, pacmanPosition, emissionModel):
+        """
+        Rob made this helper all by himself to calculate weights of particles based 
+        on their quantity
+        """ 
+        w = []
+        for p in particles:
+            trueDistance = util.manhattanDistance(p, pacmanPosition)
+            w.append( emissionModel[trueDistance]) # is this the weight?!?!
+        return w
 
     def getParticleWithGhostInJail(self, particle, ghostIndex):
         """
