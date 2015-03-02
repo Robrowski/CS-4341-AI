@@ -163,4 +163,58 @@ class GreedyBustersAgent(BustersAgent):
             [beliefs for i, beliefs in enumerate(self.ghostBeliefs)
              if livingGhosts[i+1]]
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Details on the closest ghost
+        closest_pos = None
+        most_likely = 0
+        best_distance = -1
+
+        # For each ghost distribution
+        # 1. Get the most likely position
+        # 2. If that position is closer than any other ghost's most likely, keep it
+        for g_dist in livingGhostPositionDistributions:
+            pos = None
+            likelihood = 0
+            # For each position the ghost could be at
+            for p in g_dist.keys():
+                if g_dist[p] > likelihood: # get highest likelihood 
+                    pos = p
+                    likelihood = g_dist[p]
+            
+            new_dist = self.distancer.getDistance(pacmanPosition, pos)
+
+            # If the new ghost is closer or in a tie, the one with the better likelihood
+            if closest_pos is None or new_dist < best_distance or (new_dist == best_distance and likelihood > most_likely):
+                closest_pos = pos
+                most_likely = likelihood
+                best_distance = new_dist
+
+        # Details of the best move
+        best_move = None
+        best_move_distance = -1
+
+        # For each legal move, see if it brings pacman closer than the previous best
+        for action in legal:
+            successor = Actions.getSuccessor(pacmanPosition, action)
+            dist_after_moves = self.distancer.getDistance(successor, closest_pos)
+
+            if best_move is None or dist_after_moves < best_move_distance:
+                best_move = action
+                best_move_distance = dist_after_moves
+
+        return best_move
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
