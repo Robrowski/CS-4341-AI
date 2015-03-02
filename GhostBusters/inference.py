@@ -250,6 +250,7 @@ class ParticleFilter(InferenceModule):
     def __init__(self, ghostAgent, numParticles=300):
         InferenceModule.__init__(self, ghostAgent);
         self.setNumParticles(numParticles)
+        self.beliefs = None
 
     def setNumParticles(self, numParticles):
         self.numParticles = numParticles
@@ -280,10 +281,6 @@ class ParticleFilter(InferenceModule):
         for p in self.legalPositions:
             for x in xrange(num_of_each):
                 self.particles.append(p)
-
-        if self.numParticles != len(self.particles):
-            print "OH SHIT not enough particles..."
-
 
 
     def observe(self, observation, gameState):
@@ -317,21 +314,24 @@ class ParticleFilter(InferenceModule):
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
         "*** YOUR CODE HERE ***"
-        new_particles = []
+        # If ghost is captured
+        if noisyDistance is None or self.beliefs is not None:
+            self.beliefs = util.Counter()
+            self.beliefs[self.getJailPosition] = 1
+            self.beliefs.normalize
+            return
 
+        # Get the weights
+        w = []
         for p in self.particles:
-            if p == pacmanPosition:
-                new_particles.append(self.legalPositions[0])
-            else:
-                new_particles.append(p)
+            trueDistance = util.manhattanDistance(p, pacmanPosition)
+            w.append( emissionModel[trueDistance]) # is this the weight?!?!
 
-        # #Ghost captured
-        # if noisyDistance is None: 
-        #    allPossible[self.getJailPosition()] =1            
-        # else:
-        #     # Replace this code with a correct observation update
-        #     for p in self.legalPositions:
-        #         pass
+        self.particles = util.nSample(w, self.particles, len(self.particles))
+
+     
+
+       
 
     def elapseTime(self, gameState):
         """
@@ -358,6 +358,8 @@ class ParticleFilter(InferenceModule):
         Counter object)
         """
         "*** YOUR CODE HERE ***"
+        if self.beliefs is not None:
+            return self.beliefs
 
         # Calculate by counts
         nums = util.Counter()
