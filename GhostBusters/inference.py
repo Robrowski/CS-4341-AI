@@ -314,11 +314,13 @@ class ParticleFilter(InferenceModule):
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
         "*** YOUR CODE HERE ***"
-        # If ghost is captured, put it in jail. Screw updating the particles
+        # If ghost is captured, put it in jail. 
         if noisyDistance is None or self.beliefs is not None:
-            self.beliefs = util.Counter()
-            self.beliefs[self.getJailPosition()] = 1
-            self.beliefs.normalize
+            # turn all particles into jail particles
+            new_particles = []
+            for p in self.particles:
+                new_particles.append(self.getJailPosition())
+            self.particles = new_particles
             return
 
         # Get the weights
@@ -357,7 +359,15 @@ class ParticleFilter(InferenceModule):
         a belief distribution.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        new_particles = []
+        for p in self.particles:
+            # Get probability of ghost moving to these spaces from the current space
+            newPosDist = self.getPositionDistribution(self.setGhostPosition(gameState, p))
+            # Sample to see where that particle might go
+            new_particles.append( util.sample(newPosDist))
+
+        self.particles = new_particles
+        
 
     def getBeliefDistribution(self):
         """
@@ -367,9 +377,6 @@ class ParticleFilter(InferenceModule):
         Counter object)
         """
         "*** YOUR CODE HERE ***"
-        if self.beliefs is not None:
-            return self.beliefs
-
         # Calculate by counts
         nums = util.Counter()
         for p in self.particles:
