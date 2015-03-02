@@ -250,7 +250,6 @@ class ParticleFilter(InferenceModule):
     def __init__(self, ghostAgent, numParticles=300):
         InferenceModule.__init__(self, ghostAgent);
         self.setNumParticles(numParticles)
-        self.beliefs = None
 
     def setNumParticles(self, numParticles):
         self.numParticles = numParticles
@@ -269,13 +268,6 @@ class ParticleFilter(InferenceModule):
         weight with each position) is incorrect and may produce errors.
         """
         "*** YOUR CODE HERE ***"
-        # Make a uniform distribution randomly?
-        # b = util.Counter()
-        # for p in self.legalPositions: b[p] = 1.0
-        # b.normalize()
-        # self.particles = util.nSample(b.values(), self.legalPositions, self.numParticles)
-
-        # I think this is a uniform distribution
         self.particles = []
         num_of_each = self.numParticles / len(self.legalPositions)
         for p in self.legalPositions:
@@ -315,7 +307,7 @@ class ParticleFilter(InferenceModule):
         pacmanPosition = gameState.getPacmanPosition()
         "*** YOUR CODE HERE ***"
         # If ghost is captured, put it in jail. 
-        if noisyDistance is None or self.beliefs is not None:
+        if noisyDistance is None:
             # turn all particles into jail particles
             new_particles = []
             for p in self.particles:
@@ -458,6 +450,14 @@ class JointParticleFilter:
         weight with each position) is incorrect and may produce errors.
         """
         "*** YOUR CODE HERE ***"
+        self.particles = []
+        while 1:
+            for s in itertools.product(self.legalPositions , repeat=self.numGhosts):
+                self.particles.append(s)
+
+                if len(self.particles) == self.numParticles:
+                    return
+        
 
     def addGhostAgent(self, agent):
         """
@@ -571,8 +571,14 @@ class JointParticleFilter:
         self.particles = newParticles
 
     def getBeliefDistribution(self):
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        nums = util.Counter()
+        for p in self.particles:
+            if p not in nums:
+                nums[p] = 0
+            nums[p] += 1
+
+        nums.normalize()   
+        return nums
 
 # One JointInference module is shared globally across instances of MarginalInference
 jointInference = JointParticleFilter()
