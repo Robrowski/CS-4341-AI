@@ -268,6 +268,23 @@ class ParticleFilter(InferenceModule):
         weight with each position) is incorrect and may produce errors.
         """
         "*** YOUR CODE HERE ***"
+        # Make a uniform distribution randomly?
+        # b = util.Counter()
+        # for p in self.legalPositions: b[p] = 1.0
+        # b.normalize()
+        # self.particles = util.nSample(b.values(), self.legalPositions, self.numParticles)
+
+        # I think this is a uniform distribution
+        self.particles = []
+        num_of_each = self.numParticles / len(self.legalPositions)
+        for p in self.legalPositions:
+            for x in xrange(num_of_each):
+                self.particles.append(p)
+
+        if self.numParticles != len(self.particles):
+            print "OH SHIT not enough particles..."
+
+
 
     def observe(self, observation, gameState):
         """
@@ -300,7 +317,21 @@ class ParticleFilter(InferenceModule):
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        new_particles = []
+
+        for p in self.particles:
+            if p == pacmanPosition:
+                new_particles.append(self.legalPositions[0])
+            else:
+                new_particles.append(p)
+
+        # #Ghost captured
+        # if noisyDistance is None: 
+        #    allPossible[self.getJailPosition()] =1            
+        # else:
+        #     # Replace this code with a correct observation update
+        #     for p in self.legalPositions:
+        #         pass
 
     def elapseTime(self, gameState):
         """
@@ -327,7 +358,17 @@ class ParticleFilter(InferenceModule):
         Counter object)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        # Calculate by counts
+        nums = util.Counter()
+        for p in self.particles:
+            if p not in nums:
+                nums[p] = 0
+            nums[p] += 1
+
+        nums.normalize()   
+
+        return nums
 
 class MarginalInference(InferenceModule):
     """
