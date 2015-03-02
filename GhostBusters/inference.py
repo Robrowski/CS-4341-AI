@@ -314,24 +314,33 @@ class ParticleFilter(InferenceModule):
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
         "*** YOUR CODE HERE ***"
-        # If ghost is captured
+        # If ghost is captured, put it in jail. Screw updating the particles
         if noisyDistance is None or self.beliefs is not None:
             self.beliefs = util.Counter()
-            self.beliefs[self.getJailPosition] = 1
+            self.beliefs[self.getJailPosition()] = 1
             self.beliefs.normalize
             return
 
         # Get the weights
+        w = self.calculateWeights(pacmanPosition, emissionModel)
+        # Re initialize until the weights aren't all zero
+        while (sum(w) == 0):
+            print "Particle weights = 0"
+            self.initializeUniformly(gameState)
+            w = self.calculateWeights(pacmanPosition, emissionModel) 
+
+        self.particles = util.nSample(w, self.particles, len(self.particles))
+
+    def calculateWeights(self, pacmanPosition, emissionModel):
+        """
+        Rob make this helper all by himself to calculate weights of particles based 
+        on their quantity
+        """ 
         w = []
         for p in self.particles:
             trueDistance = util.manhattanDistance(p, pacmanPosition)
             w.append( emissionModel[trueDistance]) # is this the weight?!?!
-
-        self.particles = util.nSample(w, self.particles, len(self.particles))
-
-     
-
-       
+        return w
 
     def elapseTime(self, gameState):
         """
@@ -369,7 +378,6 @@ class ParticleFilter(InferenceModule):
             nums[p] += 1
 
         nums.normalize()   
-
         return nums
 
 class MarginalInference(InferenceModule):
