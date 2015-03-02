@@ -159,15 +159,6 @@ class ExactInference(InferenceModule):
             # Replace this code with a correct observation update
             for p in self.legalPositions:
                 trueDistance = util.manhattanDistance(p, pacmanPosition)
-
-                # ROB's way (IT WORKS mostly)
-                # dif = math.fabs(trueDistance - noisyDistance)
-                # # # The number below is the solution to 1 = X + X^2 ... X^7
-                # p_correct_position = math.pow( 0.502017 , dif)
-                # if emissionModel[trueDistance] > 0:
-                #     allPossible[p] = (p_correct_position )*self.beliefs[p]
-                
-                # Actual way - usage of the emission model is based on the true distance
                 allPossible[p] = emissionModel[trueDistance]*self.beliefs[p]
 
         "*** END YOUR CODE HERE ***"
@@ -229,7 +220,20 @@ class ExactInference(InferenceModule):
         positions after a time update from a particular position.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+       
+        newBeliefs = util.Counter()
+
+        for p in self.legalPositions:
+            # Get probability of ghost moving to these spaces from the current space
+            newPosDist = self.getPositionDistribution(self.setGhostPosition(gameState, p))
+
+            # For each position the ghost could go to, add the probability that it went there
+            for newPos in newPosDist.keys():
+                newBeliefs[newPos] += self.beliefs[p] * newPosDist[newPos]
+
+
+        newBeliefs.normalize()
+        self.beliefs = newBeliefs
 
     def getBeliefDistribution(self):
         return self.beliefs
