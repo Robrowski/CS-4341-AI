@@ -450,15 +450,16 @@ class JointParticleFilter:
         weight with each position) is incorrect and may produce errors.
         """
         "*** YOUR CODE HERE ***"
+        #### My way
         self.particles = []
-        while 1:
+        while len(self.particles) < self.numParticles:
             for s in itertools.product(self.legalPositions , repeat=self.numGhosts):
                 self.particles.append(s)
 
                 if len(self.particles) == self.numParticles:
-                    return
-        
-        # self.particles = [tuple([random.choice(self.legalPositions) for i in range(self.numGhosts)]) for j in range(self.numParticles)]
+                    break
+        random.shuffle(self.particles)
+
 
     def addGhostAgent(self, agent):
         """
