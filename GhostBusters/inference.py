@@ -511,7 +511,7 @@ class JointParticleFilter:
         split_particles, w = self.calculateWeightsAndSplit(pacmanPosition, emissionModels)
    
         #### Re initialize until the weights aren't all zero
-        while !self.weightsAreGood(w, noisyDistances):
+        while not self.weightsAreGood(w, noisyDistances):
             print "Particle weights = 0"
             self.initializeParticles()
             self.putGhostsInJail(noisyDistances)
@@ -533,7 +533,11 @@ class JointParticleFilter:
             self.particles.append(tuple(particle))
 
     def weightsAreGood(self, w, noisyDistances):
-        DO THIS CHECK + check to see if a ghost is in jail  (min([sum(w[i]) for i in xrange(self.numGhosts) ]) == 0)
+        for i in xrange(self.numGhosts):
+            if sum(w[i]) == 0 and noisyDistances[i] is not None:
+                return False
+
+        return True
         
     def calculateWeightsAndSplit(self, pacmanPosition, emissionModels):
         """
