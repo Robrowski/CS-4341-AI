@@ -511,13 +511,18 @@ class JointParticleFilter:
         split_particles, w = self.calculateWeightsAndSplit(pacmanPosition, emissionModels)
    
         #### Re initialize until the weights aren't all zero
-        # while (sum([sum(w[i]) for i in xrange(self.numGhosts) ]) == 0):
-        #     print "Particle weights = 0"
-        #     self.initializeParticles(gameState)
-        #     self.putGhostsInJail(noisyDistances)
-        #     w = self.calculateWeights(pacmanPosition, emissionModels) 
+        while !self.weightsAreGood(w, noisyDistances):
+            print "Particle weights = 0"
+            self.initializeParticles()
+            self.putGhostsInJail(noisyDistances)
+            split_particles, w = self.calculateWeightsAndSplit(pacmanPosition, emissionModels)
 
         for i in xrange(self.numGhosts):
+            if split_particles[i][0] == self.getJailPosition(i):
+                continue
+            if len(split_particles[i]) != self.numParticles or self.numParticles != len(w[i]):
+                print "What happened here"
+
             split_particles[i] = util.nSample(w[i], split_particles[i], self.numParticles)
 
         self.particles = []     
@@ -527,7 +532,9 @@ class JointParticleFilter:
                 particle.append(split_particles[i][x])
             self.particles.append(tuple(particle))
 
-    
+    def weightsAreGood(self, w, noisyDistances):
+        DO THIS CHECK + check to see if a ghost is in jail  (min([sum(w[i]) for i in xrange(self.numGhosts) ]) == 0)
+        
     def calculateWeightsAndSplit(self, pacmanPosition, emissionModels):
         """
         Rob made this helper all by himself to calculate weights of particles based 
